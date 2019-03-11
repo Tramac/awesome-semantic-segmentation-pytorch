@@ -1,1 +1,1 @@
-# awesome-semantic-segmentation-pytorch
+# Awesome Semantic Segmentation on PyTorch
