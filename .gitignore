@@ -23,6 +23,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+*.idea
 MANIFEST
 
 # PyInstaller
@@ -102,10 +103,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-<<<<<<< HEAD
 
 # pycharm
-*.idea
+.idea/
 
 # premodel
 *.pkl
@@ -113,5 +113,3 @@ venv.bak/
 
 # dataset
 .VOCdevket/
-=======
->>>>>>> 85094adb35d1bd1695142f4508d34c583efd4a34
