@@ -102,6 +102,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+<<<<<<< HEAD
 
 # pycharm
 *.idea
@@ -112,3 +113,5 @@ venv.bak/
 
 # dataset
 .VOCdevket/
+=======
+>>>>>>> 85094adb35d1bd1695142f4508d34c583efd4a34
