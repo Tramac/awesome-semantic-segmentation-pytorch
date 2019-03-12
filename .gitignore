@@ -108,6 +108,7 @@ venv.bak/
 .idea/
 
 # premodel
+weights/
 *.pkl
 *.pth
 
