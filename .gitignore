@@ -103,6 +103,9 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# pycharm
+*.idea
+
 # premodel
 *.pkl
 *.pth
