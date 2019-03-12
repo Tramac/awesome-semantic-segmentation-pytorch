@@ -110,3 +110,6 @@ venv.bak/
 # premodel
 *.pkl
 *.pth
+
+# dataset
+.VOCdevket/
