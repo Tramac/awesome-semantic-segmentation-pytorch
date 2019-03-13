@@ -189,4 +189,4 @@ if __name__ == '__main__':
     img = torch.randn((4, 3, 224, 224))
     model = vgg16(pretrained=True)
     out = model(img)
-    print(out.size())
+    print
