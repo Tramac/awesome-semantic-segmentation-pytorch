@@ -5,12 +5,13 @@ import numpy as np
 from PIL import Image
 from data_loader.utils import download_extract
 
+
 # MEAN = (104, 117, 123)
 MEAN = (0.485, 0.456, 0.406)
 STD = (0.229, 0.224, 0.225)
 
 VOC_CLASSES = (
-    'aeroplane', 'bicycle', 'bird', 'boat',
+    'background', 'aeroplane', 'bicycle', 'bird', 'boat',
     'bottle', 'bus', 'car', 'cat', 'chair',
     'cow', 'diningtable', 'dog', 'horse',
     'motorbike', 'person', 'pottedplant',

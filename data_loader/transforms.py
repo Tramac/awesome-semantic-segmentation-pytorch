@@ -10,7 +10,7 @@ import warnings
 import numpy as np
 from PIL import Image
 
-from . import functional as F
+from data_loader import functional as F
 
 if sys.version_info < (3, 3):
     Sequence = collections.Sequence
@@ -248,8 +248,8 @@ class RandomRotation(object):
         return img, label
 
 
-class Augmentation(object):
-    def __init__(self, rotate_degree=0, size=224, mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)):
+class TrainTransform(object):
+    def __init__(self, size=224, mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225), rotate_degree=90):
         self.augment = Compose([
             RandomRotation(rotate_degree),
             RandomResizedCrop(size),
@@ -260,3 +260,23 @@ class Augmentation(object):
 
     def __call__(self, img, label):
         return self.augment(img, label)
+
+
+class TestTransform(object):
+    def __init__(self, mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)):
+        self.augment = Compose([
+            ToTensor(),
+            Normalize(mean, std)
+        ])
+
+    def __call__(self, img, label):
+        return self.augment(img, label)
+
+
+if __name__ == '__main__':
+    img = Image.open('../datasets/VOCdevkit/VOC2012/JPEGImages/2007_000032.jpg').convert('RGB')
+    label = Image.open('../datasets/VOCdevkit/VOC2012/SegmentationClass/2007_000032.png')
+    transform = TrainTransform()
+    img, label = transform(img, label)
+    img = F.to_pil_image(img)
+    img.show()

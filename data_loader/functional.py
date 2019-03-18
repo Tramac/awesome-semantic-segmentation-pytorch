@@ -175,6 +175,16 @@ def normalize(tensor, mean, std, inplace=False):
 
     return tensor
 
+def denomalize(tensor, mean, std, inplace=False):
+    assert _is_tensor_image(tensor), 'tensor is not a torch image'
+    if not inplace:
+        tensor = tensor.clone()
+    mean = torch.tensor(mean, dtype=torch.float32, device=tensor.device)
+    std = torch.tensor(std, dtype=torch.float32, device=tensor.device)
+    tensor.mul_(std[:, None, None]).add_(mean[:, None, None])
+
+    return tensor
+
 
 def pad(img, padding, fill=0, padding_mode='constant'):
     """Pad the given PIL Image on all sides with specified padding mode and fill value."""
