@@ -25,16 +25,16 @@ python demo.py
 ```
 
 ## Model Zoo & Datasets
--------------------------------
-### Supported Model
+#### Supported Model
 - [FCN](https://arxiv.org/abs/1411.4038)
 
-### Supported Dataset
+#### Supported Dataset
 - VOC2012
 
 ## Result
-### PASCAL VOC 2012
+#### PASCAL VOC 2012
 |Methods|Backbone|TrainSet|EvalSet|Mean IoU|pixAcc|
+|:-:|:-:|:-:|:-:|:-:|:-:|
 |FCN32s|VGG16|train|val|||
 
 ## To Do
