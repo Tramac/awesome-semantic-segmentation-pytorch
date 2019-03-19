@@ -30,6 +30,7 @@ python demo.py
 
 #### Supported Dataset
 - VOC2012, [download](http://host.robots.ox.ac.uk/pascal/VOC/voc2012/VOCtrainval_11-May-2012.tar)
+- ADK20K, [download](http://groups.csail.mit.edu/vision/datasets/ADE20K/)
 
 ## Result
 #### PASCAL VOC 2012
