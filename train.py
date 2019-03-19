@@ -13,11 +13,6 @@ from models.utils import adjust_learning_rate
 from models.model_zoo import get_model
 from utils.score import SegmentationMetric
 
-
-def str2bool(v):
-    return v.lower() in ("yes", "true", "t", "1")
-
-
 parser = argparse.ArgumentParser(
     description='Semantic Segmentation Training With Pytorch')
 # model and dataset
