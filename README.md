@@ -9,21 +9,19 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 - [PyTorch 1.0](https://pytorch.org/get-started/locally/)
 - Python 3.x
 
-## Train
+## Usage
+#### Train
 ```
 python train.py
 ```
-
-## Evaluation
+#### Evaluation
 ```
 python eval.py
 ```
-
-## Run Demo
+#### Run Demo
 ```
 python demo.py
 ```
-
 ## Model Zoo & Datasets
 #### Supported Model
 - [FCN](https://arxiv.org/abs/1411.4038)
