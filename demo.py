@@ -50,7 +50,6 @@ def demo(config):
     pred = torch.argmax(output, 1).squeeze(0).cpu().numpy()
     mask = get_color_pallete(pred, args.dataset)
     outname = os.path.splitext(os.path.split(args.input_pic)[-1])[0] + '.png'
-    print(outname)
     mask.save(os.path.join(args.outdir, outname))
 
 

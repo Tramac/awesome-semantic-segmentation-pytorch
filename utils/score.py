@@ -46,6 +46,7 @@ class SegmentationMetric(object):
         """
         pixAcc = 1.0 * self.total_correct / (np.spacing(1) + self.total_label)
         IoU = 1.0 * self.total_inter / (np.spacing(1) + self.total_union)
+        # It has same result with np.nanmean() when all class exist
         mIoU = IoU.mean()
         return pixAcc, mIoU
 
@@ -66,32 +67,37 @@ class SegmentationMetric(object):
         self.total_label = 0
 
 
-def batch_pix_accuracy(output, target):
+def batch_pix_accuracy(predict, target):
     """PixAcc"""
     # inputs are numpy array, output 4D, target 3D
-    # the category -1 is ignored class, typically for background / boundary
-    predict = np.argmax(output.data.numpy().astype('int32'), 1) + 1
-    target = target.numpy().astype('int32') + 1
+    assert predict.shape == target.shape
+    predict = predict.astype('int64') + 1
+    target = target.astype('int64') + 1
+    # ignored boundary 255, after add 1, 256
+    target[target == 256] = 0
 
     pixel_labeled = np.sum(target > 0)
-    pixel_correct = np.sum(predict == target) * (target > 0)
+    pixel_correct = np.sum((predict == target) * (target > 0))
     assert pixel_correct <= pixel_labeled, "Correct area should be smaller than Labeled"
     return pixel_correct, pixel_labeled
 
 
-def batch_intersection_union(output, target, nclass):
+def batch_intersection_union(predict, target, nclass):
     """mIoU"""
     # inputs are numpy array, output 4D, target 3D
-    # the category -1 is ignored class, typically for background / boundary
+    assert predict.shape == target.shape
     mini = 1
     maxi = nclass
     nbins = nclass
-    predict = np.argmax(output.data.numpy().astype('int32'), 1) + 1
-    target = target.numpy().astype('int32') + 1
+    predict = predict.astype('int64') + 1
+    target = target.astype('int64') + 1
+    # ignored boundary 255, after add 1, 256
+    target[target == 256] = 0
 
     predict = predict * (target > 0).astype(predict.dtype)
     intersection = predict * (predict == target)
     # areas of intersection and union
+    # element 0 in intersection occur the main difference from np.bincount. set boundary to -1 is necessary.
     area_inter, _ = np.histogram(intersection, bins=nbins, range=(mini, maxi))
     area_pred, _ = np.histogram(predict, bins=nbins, range=(mini, maxi))
     area_lab, _ = np.histogram(target, bins=nbins, range=(mini, maxi))
@@ -111,8 +117,8 @@ def pixelAccuracy(imPred, imLab):
     """
     # Remove classes from unlabeled pixels in gt image.
     # We should not penalize detections in unlabeled portions of the image.
-    pixel_labeled = np.sum(imLab > 0)
-    pixel_correct = np.sum((imPred == imLab) * (imLab > 0))
+    pixel_labeled = np.sum(imLab >= 0)
+    pixel_correct = np.sum((imPred == imLab) * (imLab >= 0))
     pixel_accuracy = 1.0 * pixel_correct / pixel_labeled
     return (pixel_accuracy, pixel_correct, pixel_labeled)
 
@@ -128,7 +134,7 @@ def intersectionAndUnion(imPred, imLab, numClass):
     """
     # Remove classes from unlabeled pixels in gt image.
     # We should not penalize detections in unlabeled portions of the image.
-    imPred = imPred * (imLab > 0)
+    imPred = imPred * (imLab >= 0)
 
     # Compute area intersection:
     intersection = imPred * (imPred == imLab)
@@ -153,6 +159,8 @@ def hist_info(pred, label, num_cls):
 
 def compute_score(hist, correct, labeled):
     iu = np.diag(hist) / (hist.sum(1) + hist.sum(0) - np.diag(hist))
+    # print('right')
+    # print(iu)
     mean_IU = np.nanmean(iu)
     mean_IU_no_back = np.nanmean(iu[1:])
     freq = hist.sum(1) / hist.sum()

@@ -2,6 +2,9 @@ import os
 import numpy as np
 from PIL import Image
 
+__all__ = ['get_color_pallete', 'print_iou', 'set_img_color',
+           'show_prediction', 'show_colorful_images', 'save_colorful_images']
+
 
 def print_iou(iu, mean_pixel_acc, class_names=None, show_no_back=False):
     n = iu.size
@@ -11,7 +14,7 @@ def print_iou(iu, mean_pixel_acc, class_names=None, show_no_back=False):
             cls = 'Class %d:' % (i + 1)
         else:
             cls = '%d %s' % (i + 1, class_names[i])
-        lines.append('%-8s: %.3f%%' % (cls, iu[i] * 100))
+        # lines.append('%-8s: %.3f%%' % (cls, iu[i] * 100))
     mean_IU = np.nanmean(iu)
     mean_IU_no_back = np.nanmean(iu[1:])
     if show_no_back:
@@ -112,7 +115,6 @@ def _getvocpallete(num_cls):
 
 vocpallete = _getvocpallete(256)
 
-# pylint: disable=bad-whitespace
 adepallete = [
     0, 0, 0, 120, 120, 120, 180, 120, 120, 6, 230, 230, 80, 50, 50, 4, 200, 3, 120, 120, 80, 140, 140, 140, 204,
     5, 255, 230, 230, 230, 4, 250, 7, 224, 5, 255, 235, 255, 7, 150, 5, 61, 120, 120, 70, 8, 255, 51, 255, 6, 82,
