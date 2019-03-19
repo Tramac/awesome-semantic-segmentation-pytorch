@@ -1,9 +1,12 @@
 from __future__ import division
 
+import threading
 import numpy as np
 
+__all__ = ['SegmentationMetric', 'batch_pix_accuracy', 'batch_intersection_union',
+           'pixelAccuracy', 'intersectionAndUnion', 'hist_info', 'compute_score']
+
 """Evaluation Metrics for Semantic Segmentation"""
-import threading
 
 
 class SegmentationMetric(object):
