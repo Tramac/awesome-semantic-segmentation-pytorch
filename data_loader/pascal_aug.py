@@ -1,14 +1,15 @@
-"""Pascal VOC Semantic Segmentation Dataset."""
+"""Pascal Augmented VOC Semantic Segmentation Dataset."""
 import os
 import torch
+import scipy.io as sio
 import numpy as np
 
 from PIL import Image
 from .segbase import SegmentationDataset
 
 
-class VOCSegmentation(SegmentationDataset):
-    """Pascal VOC Semantic Segmentation Dataset.
+class VOCAugSegmentation(SegmentationDataset):
+    """Pascal VOC Augmented Semantic Segmentation Dataset.
 
     Parameters
     ----------
@@ -28,30 +29,27 @@ class VOCSegmentation(SegmentationDataset):
     >>>     transforms.Normalize([.485, .456, .406], [.229, .224, .225]),
     >>> ])
     >>> # Create Dataset
-    >>> trainset = VOCSegmentation(split='train', transform=input_transform)
+    >>> trainset = VOCAugSegmentation(split='train', transform=input_transform)
     >>> # Create Training Loader
     >>> train_data = data.DataLoader(
     >>>     trainset, 4, shuffle=True,
     >>>     num_workers=4)
     """
-    BASE_DIR = 'VOC2012'
+    BASE_DIR = 'VOCaug/dataset/'
     NUM_CLASS = 21
 
-    def __init__(self, root='./datasets/VOCdevkit', split='train', mode=None, transform=None, **kwargs):
-        super(VOCSegmentation, self).__init__(root, split, mode, transform, **kwargs)
-        _voc_root = os.path.join(root, self.BASE_DIR)
-        _mask_dir = os.path.join(_voc_root, 'SegmentationClass')
-        _image_dir = os.path.join(_voc_root, 'JPEGImages')
+    def __init__(self, root='./datasets/voc', split='train', mode=None, transform=None, **kwargs):
+        super(VOCAugSegmentation, self).__init__(root, split, mode, transform, **kwargs)
         # train/val/test splits are pre-cut
-        _splits_dir = os.path.join(_voc_root, 'ImageSets/Segmentation')
+        _voc_root = os.path.join(root, self.BASE_DIR)
+        _mask_dir = os.path.join(_voc_root, 'cls')
+        _image_dir = os.path.join(_voc_root, 'img')
         if split == 'train':
-            _split_f = os.path.join(_splits_dir, 'train.txt')
+            _split_f = os.path.join(_voc_root, 'trainval.txt')
         elif split == 'val':
-            _split_f = os.path.join(_splits_dir, 'val.txt')
-        elif split == 'test':
-            _split_f = os.path.join(_splits_dir, 'test.txt')
+            _split_f = os.path.join(_voc_root, 'val.txt')
         else:
-            raise RuntimeError('Unknown dataset split.')
+            raise RuntimeError('Unknown dataset split: {}'.format(split))
 
         self.images = []
         self.masks = []
@@ -60,41 +58,36 @@ class VOCSegmentation(SegmentationDataset):
                 _image = os.path.join(_image_dir, line.rstrip('\n') + ".jpg")
                 assert os.path.isfile(_image)
                 self.images.append(_image)
-                if split != 'test':
-                    _mask = os.path.join(_mask_dir, line.rstrip('\n') + ".png")
-                    assert os.path.isfile(_mask)
-                    self.masks.append(_mask)
+                _mask = os.path.join(_mask_dir, line.rstrip('\n') + ".mat")
+                assert os.path.isfile(_mask)
 
-        if split != 'test':
-            assert (len(self.images) == len(self.masks))
+        assert (len(self.images) == len(self.masks))
 
     def __getitem__(self, index):
         img = Image.open(self.images[index]).convert('RGB')
-        if self.mode == 'test':
-            img = self._img_transform(img)
-            if self.transform is not None:
-                img = self.transform(img)
-            return img, os.path.basename(self.images[index])
-        mask = Image.open(self.masks[index])
-        # synchronized transform
+        target = self._load_mat(self.masks[index])
+        # synchrosized transform
         if self.mode == 'train':
-            img, mask = self._sync_transform(img, mask)
+            img, target = self._sync_transform(img, target)
         elif self.mode == 'val':
-            img, mask = self._val_sync_transform(img, mask)
+            img, target = self._val_sync_transform(img, target)
         else:
-            assert self.mode == 'testval'
-            img, mask = self._img_transform(img), self._mask_transform(mask)
+            raise RuntimeError('unknown mode for dataloader: {}'.format(self.mode))
         # general resize, normalize and toTensor
         if self.transform is not None:
             img = self.transform(img)
-
-        return img, mask
-
-    def __len__(self):
-        return len(self.images)
+        return img, target
 
     def _mask_transform(self, mask):
         return torch.LongTensor(np.array(mask).astype('int32'))
+
+    def _load_mat(self, filename):
+        mat = sio.loadmat(filename, mat_dtype=True, squeeze_me=True, struct_as_record=False)
+        mask = mat['GTcls'].Segmentation
+        return Image.fromarray(mask)
+
+    def __len__(self):
+        return len(self.images)
 
     @property
     def classes(self):

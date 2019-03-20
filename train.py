@@ -19,7 +19,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('--model', type=str, default='fcn32s_vgg16',
                     help='model name (default: fcn32)')
 parser.add_argument('--dataset', type=str, default='pascal_voc',
-                    help='dataset name (default: pascal_voc. choice=[pascal_voc, ade20k, cityscapes]')
+                    help='dataset name (default: pascal_voc. choice=[pascal_voc, pascal_aug, ade20k, citys]')
 parser.add_argument('--base-size', type=int, default=520,
                     help='base image size')
 parser.add_argument('--crop-size', type=int, default=480,
