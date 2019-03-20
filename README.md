@@ -46,5 +46,6 @@ python ade20k.py --download-dir ./datasets/ade
 
 ## To Do
 - [x] Update VOC dataloader
+- [ ] Update FCN model
 - [ ] Add more semantic segmentation models
 - [x] Add Cityscapes, ADE, COCO datasets
