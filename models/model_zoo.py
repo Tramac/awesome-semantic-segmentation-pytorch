@@ -1,7 +1,7 @@
 from .fcn import *
 from .pspnet import *
 
-__all__ = ['get_model', 'get_model_list']
+__all__ = ['get_model', 'get_model_list', 'get_segmentation_model']
 
 _models = {
     'fcn32s_vgg16': fcn32s_vgg16,
@@ -35,3 +35,10 @@ def get_model_list():
         Entire list of model names in model_zoo.
     """
     return _models.keys()
+
+
+def get_segmentation_model(model, **kwargs):
+    models = {
+        'psp': get_psp,
+    }
+    return models[model](**kwargs)

@@ -2,15 +2,7 @@
 import torch.nn as nn
 from .resnet import resnet50, resnet101, resnet152
 
-__all__ = ['get_segmentation_model', 'SegBaseModel']
-
-
-def get_segmentation_model(model, **kwargs):
-    from .pspnet import get_psp
-    models = {
-        'psp': get_psp,
-    }
-    return models[model](**kwargs)
+__all__ = ['SegBaseModel']
 
 
 class SegBaseModel(nn.Module):

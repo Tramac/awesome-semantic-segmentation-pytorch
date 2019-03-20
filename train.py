@@ -10,14 +10,17 @@ import torch.backends.cudnn as cudnn
 from torchvision import transforms
 from data_loader import get_segmentation_dataset
 from models.utils import adjust_learning_rate
-from models.model_zoo import get_model
+from models.model_zoo import get_segmentation_model
 from utils.score import SegmentationMetric
+from utils.loss import MixSoftmaxCrossEntropyLoss
 
 parser = argparse.ArgumentParser(
     description='Semantic Segmentation Training With Pytorch')
 # model and dataset
-parser.add_argument('--model', type=str, default='fcn32s_vgg16',
+parser.add_argument('--model', type=str, default='psp',
                     help='model name (default: fcn32)')
+parser.add_argument('--backbone', type=str, default='resnet50',
+                        help='backbone name (default: resnet50)')
 parser.add_argument('--dataset', type=str, default='pascal_voc',
                     help='dataset name (default: pascal_voc. choice=[pascal_voc, pascal_aug, ade20k, citys]')
 parser.add_argument('--base-size', type=int, default=520,
@@ -27,11 +30,15 @@ parser.add_argument('--crop-size', type=int, default=480,
 parser.add_argument('--train-split', type=str, default='train',
                     help='dataset train split (default: train)')
 # training hyper params
+parser.add_argument('--aux', action='store_true', default=True,
+                        help='Auxiliary loss')
+parser.add_argument('--aux-weight', type=float, default=0.5,
+                        help='auxiliary loss weight')
 parser.add_argument('--epochs', type=int, default=200, metavar='N',
                     help='number of epochs to train (default: 50)')
 parser.add_argument('--start_epoch', type=int, default=0,
                     metavar='N', help='start epochs (default:0)')
-parser.add_argument('--batch-size', type=int, default=1, metavar='N',
+parser.add_argument('--batch-size', type=int, default=2, metavar='N',
                     help='input batch size for training (default: 4)')
 parser.add_argument('--lr', type=float, default=1e-4, metavar='LR',
                     help='learning rate (default: 1e-4)')
@@ -86,7 +93,8 @@ class Trainer(object):
                                           shuffle=False)
 
         # create network
-        self.model = get_model(args.model, num_classes=args.num_classes)
+        self.model = get_segmentation_model(model=args.model, dataset=args.dataset, backbone=args.backbone,
+                                            aux=args.aux, crop_size=args.crop_size)
         # for multi-GPU
         if torch.cuda.device_count() > 1:
             self.model = torch.nn.DataParallel(self.model, device_ids=[0, 1, 2])
@@ -101,7 +109,9 @@ class Trainer(object):
                 self.model.load_state_dict(torch.load(args.resume, map_location=lambda storage, loc: storage))
 
         # create criterion
-        self.criterion = nn.CrossEntropyLoss(ignore_index=255).to(device)
+        # self.criterion = nn.CrossEntropyLoss(ignore_index=255).to(device)
+        self.criterion = MixSoftmaxCrossEntropyLoss(args.aux, args.aux_weight, ignore_label=255).to(device)
+
 
         # optimizer
         self.optimizer = torch.optim.SGD(self.model.parameters(),
