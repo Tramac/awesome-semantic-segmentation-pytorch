@@ -7,8 +7,8 @@ import torch.nn as nn
 import torch.utils.data as data
 import torch.backends.cudnn as cudnn
 
-from data_loader.transforms import TrainTransform, TestTransform
-from data_loader.voc import VOCSegmentation
+from torchvision import transforms
+from data_loader import get_segmentation_dataset
 from models.utils import adjust_learning_rate
 from models.model_zoo import get_model
 from utils.score import SegmentationMetric
@@ -20,10 +20,14 @@ parser.add_argument('--model', type=str, default='fcn32s_vgg16',
                     help='model name (default: fcn32)')
 parser.add_argument('--dataset_root', default='./datasets',
                     help='Dataset root directory path')
-parser.add_argument('--dataset', default='VOC2012', choices=['VOC2007', 'VOC2012'],
-                    type=str, help='VOC2007 or VOC2012')
+parser.add_argument('--dataset', type=str, default='pascal_voc',
+                    help='dataset name (default: pascal_voc)')
+parser.add_argument('--base-size', type=int, default=520,
+                    help='base image size')
 parser.add_argument('--crop-size', type=int, default=480,
                     help='crop image size')
+parser.add_argument('--train-split', type=str, default='train',
+                    help='dataset train split (default: train)')
 # training hyper params
 parser.add_argument('--epochs', type=int, default=200, metavar='N',
                     help='number of epochs to train (default: 50)')
@@ -66,22 +70,19 @@ class Trainer(object):
         self.args = args
 
         # image transform
-        train_transform = TrainTransform(args.crop_size)
-        val_transform = TestTransform()
-
+        input_transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize([.485, .456, .406], [.229, .224, .225]),
+        ])
         # dataset and dataloader
-        train_dataset = VOCSegmentation(root=args.dataset_root,
-                                        year=args.dataset[3:],
-                                        image_set='train',
-                                        transform=train_transform)
+        data_kwargs = {'transform': input_transform, 'base_size': args.base_size, 'crop_size': args.crop_size}
+        train_dataset = get_segmentation_dataset(args.dataset, split=args.train_split, mode='train', **data_kwargs)
+        val_dataset = get_segmentation_dataset(args.dataset, split='val', mode='val', **data_kwargs)
+
         self.train_loader = data.DataLoader(dataset=train_dataset,
                                             batch_size=args.batch_size,
                                             shuffle=True)
-        val_dataset = VOCSegmentation(root=args.dataset_root,
-                                      year=args.dataset[3:],
-                                      image_set='val',
-                                      transform=val_transform
-                                      )
+
         self.val_loader = data.DataLoader(dataset=val_dataset,
                                           batch_size=1,
                                           shuffle=False)

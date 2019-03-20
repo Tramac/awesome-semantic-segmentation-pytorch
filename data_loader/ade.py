@@ -1,7 +1,8 @@
 """Pascal ADE20K Semantic Segmentation Dataset."""
 import os
-import numpy as np
+import torch
 import torch.utils.data as data
+import numpy as np
 
 from PIL import Image
 from .segbase import SegmentationDataset
@@ -55,7 +56,7 @@ class ADE20KSegmentation(SegmentationDataset):
         mask = Image.open(self.masks[index])
         # synchrosized transform
         if self.mode == 'train':
-            img, mask = self._sync_tansform(img, mask)
+            img, mask = self._sync_transform(img, mask)
         elif self.mode == 'val':
             img, mask = self._val_sync_transform(img, mask)
         else:
@@ -67,7 +68,7 @@ class ADE20KSegmentation(SegmentationDataset):
         return img, mask
 
     def _mask_transform(self, mask):
-        return np.array(mask).astype('int32') - 1
+        return torch.LongTensor(np.array(mask).astype('int32') - 1)
 
     def __len__(self):
         return len(self.images)
