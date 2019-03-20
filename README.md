@@ -37,6 +37,6 @@ python demo.py
 |FCN32s|VGG16|train|val|||
 
 ## To Do
-- [ ] Update VOC dataloader
+- [x] Update VOC dataloader
 - [ ] Add more semantic segmentation models
 - [ ] Add Cityscapes, ~~ADE~~, COCO datasets
