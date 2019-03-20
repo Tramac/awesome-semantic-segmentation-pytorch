@@ -31,7 +31,7 @@ class ADE20KSegmentation(SegmentationDataset):
     >>> trainset = ADE20KSegmentation(split='train', transform=input_transform)
     >>> # Create Training Loader
     >>> train_data = data.DataLoader(
-    >>>     trainset, 4, shuffle=True, last_batch='rollover',
+    >>>     trainset, 4, shuffle=True,
     >>>     num_workers=4)
     """
     BASE_DIR = 'ADEChallengeData2016'
