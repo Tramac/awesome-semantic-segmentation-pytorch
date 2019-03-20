@@ -1,7 +1,6 @@
 """Pascal ADE20K Semantic Segmentation Dataset."""
 import os
 import torch
-import torch.utils.data as data
 import numpy as np
 
 from PIL import Image
@@ -14,7 +13,7 @@ class ADE20KSegmentation(SegmentationDataset):
     Parameters
     ----------
     root : string
-        Path to VOCdevkit folder. Default is './datasets/ade'
+        Path to ADE20K folder. Default is './datasets/ade'
     split: string
         'train', 'val' or 'test'
     transform : callable, optional
@@ -22,6 +21,7 @@ class ADE20KSegmentation(SegmentationDataset):
     Examples
     --------
     >>> from torchvision import transforms
+    >>> import torch.utils.data as data
     >>> # Transforms for Normalization
     >>> input_transform = transforms.Compose([
     >>>     transforms.ToTensor(),

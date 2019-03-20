@@ -6,8 +6,8 @@ import argparse
 import torch
 import torch.utils.data as data
 
-from data_loader.transforms import TestTransform
-from data_loader.voc import VOCSegmentation
+from torchvision import transforms
+from data_loader import get_segmentation_dataset
 from models.model_zoo import get_model
 from utils.score import SegmentationMetric
 from utils.visualize import get_color_pallete
@@ -18,10 +18,12 @@ parser.add_argument('--model', type=str, default='fcn32s_vgg16',
                     help='model name (default: fcn32)')
 parser.add_argument('--save-folder', default='./weights',
                     help='Directory for saving checkpoint models')
-parser.add_argument('--dataset_root', default='./datasets',
-                    help='Dataset root directory path')
-parser.add_argument('--dataset', default='VOC2012', choices=['VOC2007', 'VOC2012'],
-                    type=str, help='VOC2007 or VOC2012')
+parser.add_argument('--dataset', type=str, default='pascal_voc',
+                    help='dataset name (default: pascal_voc. choice=[pascal_voc, ade20k, cityscapes]')
+parser.add_argument('--base-size', type=int, default=520,
+                    help='base image size')
+parser.add_argument('--crop-size', type=int, default=480,
+                    help='crop image size')
 parser.add_argument('--num_classes', default=21, type=int,
                     help='Number of classes.')
 parser.add_argument('--save-result', default=False,
@@ -38,13 +40,14 @@ def eval(config):
         if not os.path.exists(config.outdir):
             os.makedirs(config.outdir)
     # image transform
-    input_transform = TestTransform([.485, .456, .406], [.229, .224, .225])
+    input_transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize([.485, .456, .406], [.229, .224, .225]),
+    ])
 
     # dataset and dataloader
-    test_dataset = VOCSegmentation(root=args.dataset_root,
-                                   year=args.dataset[3:],
-                                   image_set='val',
-                                   transform=input_transform)
+    data_kwargs = {'transform': input_transform, 'base_size': args.base_size, 'crop_size': args.crop_size}
+    test_dataset = get_segmentation_dataset(args.dataset, split='val', mode='val', **data_kwargs)
 
     test_loader = data.DataLoader(dataset=test_dataset,
                                   batch_size=1,
