@@ -6,7 +6,6 @@ import numpy as np
 
 from tqdm import trange
 from PIL import Image
-from utils import try_import_pycocotools
 from .segbase import SegmentationDataset
 
 
@@ -44,7 +43,6 @@ class COCOSegmentation(SegmentationDataset):
     def __init__(self, root='./datasets/coco', split='train', mode=None, transform=None, **kwargs):
         super(COCOSegmentation, self).__init__(root, split, mode, transform, **kwargs)
         # lazy import pycocotools
-        try_import_pycocotools()
         from pycocotools.coco import COCO
         from pycocotools import mask
         if split == 'train':

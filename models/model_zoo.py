@@ -1,12 +1,20 @@
 from .fcn import *
+from .pspnet import *
 
 __all__ = ['get_model', 'get_model_list']
 
 _models = {
     'fcn32s_vgg16': fcn32s_vgg16,
     'fcn16s_vgg16': fcn16s_vgg16,
-    'fcn8s_vgg16': fcn8s_vgg16
+    'fcn8s_vgg16': fcn8s_vgg16,
+    'psp_resnet50_voc': get_psp_resnet50_voc,
+    'psp_resnet50_ade': get_psp_resnet50_ade,
+    'psp_resnet101_voc': get_psp_resnet101_voc,
+    'psp_resnet101_ade': get_psp_resnet101_ade,
+    'psp_resnet101_citys': get_psp_resnet101_citys,
+    'psp_resnet101_coco': get_psp_resnet101_coco,
 }
+
 
 def get_model(name, **kwargs):
     name = name.lower()
@@ -16,6 +24,7 @@ def get_model(name, **kwargs):
         raise ValueError(err_str)
     net = _models[name](**kwargs)
     return net
+
 
 def get_model_list():
     """Get the entire list of model names in model_zoo.
