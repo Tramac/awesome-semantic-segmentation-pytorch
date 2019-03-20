@@ -36,6 +36,7 @@ python ade20k.py --download-dir ./datasets/ade
 - VOCAug, [download](http://www.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/semantic_contours/benchmark.tgz)
 - ADK20K, [download](http://groups.csail.mit.edu/vision/datasets/ADE20K/)
 - Cityscapes, [download](https://www.cityscapes-dataset.com/downloads/)
+- COCO
 
 ## Result
 #### PASCAL VOC 2012
@@ -45,5 +46,6 @@ python ade20k.py --download-dir ./datasets/ade
 
 ## To Do
 - [x] Update VOC dataloader
+- [ ] Update FCN model
 - [ ] Add more semantic segmentation models
-- [ ] Add ~~Cityscapes, ADE~~, COCO datasets
+- [x] Add Cityscapes, ADE, COCO datasets
