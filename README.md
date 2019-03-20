@@ -25,6 +25,7 @@ python demo.py --model fcn32s_vgg16 --input-pic ./datasets/test.jpg
 ## Model Zoo & Datasets
 #### Supported Model
 - [FCN](https://arxiv.org/abs/1411.4038)
+- [PSPNet](https://arxiv.org/pdf/1612.01105.pdf)
 
 #### Supported Dataset
 You can run script to download dataset, such as:
