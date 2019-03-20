@@ -27,7 +27,7 @@ python demo.py --model fcn32s_vgg16 --input-pic ./datasets/test.jpg
 - [FCN](https://arxiv.org/abs/1411.4038)
 
 #### Supported Dataset
-You can run scrip to download dataset, such as:
+You can run script to download dataset, such as:
 ```
 cd ./datasets
 python ade20k.py --download-dir ./datasets/ade
