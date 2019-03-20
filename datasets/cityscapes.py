@@ -1,9 +1,8 @@
 """Prepare Cityscapes dataset"""
 import os
-import errno
 import argparse
 import zipfile
-from utils.download import download
+from utils import download, makedirs, check_sha1
 
 _TARGET_DIR = os.path.expanduser('~/PycharmProjects/Data_zoo/citys')
 
@@ -23,13 +22,13 @@ def download_city(path, overwrite=False):
         ('gtFine_trainvaltest.zip', '99f532cb1af174f5fcc4c5bc8feea8c66246ddbc'),
         ('leftImg8bit_trainvaltest.zip', '2c0b77ce9933cc635adda307fbba5566f5d9d404')]
     download_dir = os.path.join(path, 'downloads')
-    try:
-        os.makedirs(download_dir)
-    except OSError as exc:
-        if exc.errno != errno.EEXIST:
-            raise
-    for url, checksum in _CITY_DOWNLOAD_URLS:
-        filename = download(url, path=download_dir, overwrite=overwrite, sha1_hash=checksum)
+    makedirs(download_dir)
+    for filename, checksum in _CITY_DOWNLOAD_URLS:
+        if not check_sha1(filename, checksum):
+            raise UserWarning('File {} is downloaded but the content hash does not match. ' \
+                              'The repo may be outdated or download may be incomplete. ' \
+                              'If the "repo_url" is overridden, consider switching to ' \
+                              'the default repo.'.format(filename))
         # extract
         with zipfile.ZipFile(filename, "r") as zip_ref:
             zip_ref.extractall(path=path)
@@ -38,6 +37,7 @@ def download_city(path, overwrite=False):
 
 if __name__ == '__main__':
     args = parse_args()
+    makedirs(os.path.expanduser('~/PycharmProjects/Data_zoo'))
     if args.download_dir is not None:
         if os.path.isdir(_TARGET_DIR):
             os.remove(_TARGET_DIR)

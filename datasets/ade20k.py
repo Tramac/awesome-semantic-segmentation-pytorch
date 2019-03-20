@@ -1,11 +1,9 @@
 """Prepare ADE20K dataset"""
 import os
-import errno
 import argparse
 import zipfile
-from utils.download import download
+from utils import download, makedirs
 
-# _TARGET_DIR = os.path.expanduser('./ade')
 _TARGET_DIR = os.path.expanduser('~/PycharmProjects/Data_zoo/ade')
 
 
@@ -27,11 +25,7 @@ def download_ade(path, overwrite=False):
             'http://data.csail.mit.edu/places/ADEchallenge/release_test.zip',
             'e05747892219d10e9243933371a497e905a4860c'), ]
     download_dir = os.path.join(path, 'downloads')
-    try:
-        os.makedirs(download_dir)
-    except OSError as exc:
-        if exc.errno != errno.EEXIST:
-            raise
+    makedirs(download_dir)
     for url, checksum in _AUG_DOWNLOAD_URLS:
         filename = download(url, path=download_dir, overwrite=overwrite, sha1_hash=checksum)
         # extract
@@ -41,6 +35,7 @@ def download_ade(path, overwrite=False):
 
 if __name__ == '__main__':
     args = parse_args()
+    makedirs(os.path.expanduser('~/PycharmProjects/Data_zoo'))
     if args.download_dir is not None:
         if os.path.isdir(_TARGET_DIR):
             os.remove(_TARGET_DIR)
