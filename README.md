@@ -33,6 +33,7 @@ cd ./datasets
 python ade20k.py --download-dir ./datasets/ade
 ```
 - VOC2012, [download](http://host.robots.ox.ac.uk/pascal/VOC/voc2012/VOCtrainval_11-May-2012.tar)
+- VOCAug, [download](http://www.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/semantic_contours/benchmark.tgz)
 - ADK20K, [download](http://groups.csail.mit.edu/vision/datasets/ADE20K/)
 - Cityscapes, [download](https://www.cityscapes-dataset.com/downloads/)
 
