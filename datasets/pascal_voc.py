@@ -5,7 +5,7 @@ import argparse
 import tarfile
 from utils import download, makedirs
 
-_TARGET_DIR = os.path.expanduser('~/PycharmProjects/Data_zoo/ade')
+_TARGET_DIR = os.path.expanduser('~/PycharmProjects/Data_zoo/VOCdevkit')
 
 
 def parse_args():
@@ -65,7 +65,7 @@ def download_aug(path, overwrite=False):
                             outfile.write(line)
 
 
-if __name__ == '__name__':
+if __name__ == '__main__':
     args = parse_args()
     path = os.path.expanduser(args.download_dir)
     if not os.path.isfile(path) or not os.path.isdir(os.path.join(path, 'VOC2007')) \
