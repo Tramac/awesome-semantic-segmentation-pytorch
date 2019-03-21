@@ -30,7 +30,7 @@ class PSPNet(SegBaseModel):
         "Pyramid scene parsing network." *CVPR*, 2017
     """
 
-    def __init__(self, nclass, backbone='resnet50', aux=True, pretrained_base=True,
+    def __init__(self, nclass, backbone='resnet50', aux=False, pretrained_base=True,
                  base_size=520, crop_size=480, **kwargs):
         super(PSPNet, self).__init__(nclass, aux, backbone, base_size=base_size, crop_size=crop_size,
                                      pretrained_base=pretrained_base, **kwargs)

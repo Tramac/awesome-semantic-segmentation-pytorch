@@ -39,6 +39,7 @@ def get_model_list():
 
 def get_segmentation_model(model, **kwargs):
     models = {
+        'fcn32s': get_fcn,
         'psp': get_psp,
     }
     return models[model](**kwargs)

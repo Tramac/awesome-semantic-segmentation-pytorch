@@ -20,6 +20,6 @@ class MixSoftmaxCrossEntropyLoss(nn.Module):
 
     def forward(self, preds, target, **kwargs):
         if self.aux:
-            return self._aux_forward(*preds, target, **kwargs)
+            return self._aux_forward(preds[0], preds[1], target, **kwargs)
         else:
-            return self.criterion1(*preds, target)
+            return self.criterion1(preds, target)

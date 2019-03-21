@@ -6,19 +6,19 @@ import torch.nn.functional as F
 from models.vgg import vgg16
 from models.utils import weights_init
 
-__all__ = ['fcn32s_vgg16', 'fcn16s_vgg16', 'fcn8s_vgg16']
+__all__ = ['get_fcn', 'fcn32s_vgg16', 'fcn16s_vgg16', 'fcn8s_vgg16']
 
 
 class FCN32s(nn.Module):
     """There are some difference from original fcn"""
 
-    def __init__(self, num_classes, init_weights=False):
+    def __init__(self, nclass, backbone='vgg16', pretrained_base=True, base_size=520, crop_size=480, **kwargs):
         super(FCN32s, self).__init__()
-        self.features = vgg16(pretrained=True).features
-        self.head = _FCNHead(512, num_classes)
-
-        if init_weights:
-            self._initialize_weights()
+        if backbone == 'vgg16':
+            self.features = vgg16(pretrained=pretrained_base).features
+        else:
+            raise RuntimeError('unknown backbone: {}'.format(backbone))
+        self.head = _FCNHead(512, nclass)
 
     def forward(self, x):
         pool5 = self.features(x)
@@ -32,16 +32,16 @@ class FCN32s(nn.Module):
 
 
 class FCN16s(nn.Module):
-    def __init__(self, num_classes, init_weights=True):
+    def __init__(self, nclass, backbone='vgg16', pretrained_base=True, base_size=520, crop_size=480, **kwargs):
         super(FCN16s, self).__init__()
-        self.features = vgg16(pretrained=True).features
+        if backbone == 'vgg16':
+            self.features = vgg16(pretrained=pretrained_base).features
+        else:
+            raise RuntimeError('unknown backbone: {}'.format(backbone))
         self.pool4 = nn.Sequential(*self.features[:24])
         self.pool5 = nn.Sequential(*self.features[24:])
-        self.head = _FCNHead(512, num_classes)
-        self.score_pool4 = nn.Conv2d(512, num_classes, 1)
-
-        if init_weights:
-            self._initialize_weights()
+        self.head = _FCNHead(512, nclass)
+        self.score_pool4 = nn.Conv2d(512, nclass, 1)
 
     def forward(self, x):
         pool4 = self.pool4(x)
@@ -63,18 +63,18 @@ class FCN16s(nn.Module):
 
 
 class FCN8s(nn.Module):
-    def __init__(self, num_classes, init_weights=True):
+    def __init__(self, nclass, backbone='vgg16', pretrained_base=True, base_size=520, crop_size=480, **kwargs):
         super(FCN8s, self).__init__()
-        self.features = vgg16(pretrained=True).features
+        if backbone == 'vgg16':
+            self.features = vgg16(pretrained=pretrained_base).features
+        else:
+            raise RuntimeError('unknown backbone: {}'.format(backbone))
         self.pool3 = nn.Sequential(*self.features[:17])
         self.pool4 = nn.Sequential(*self.features[17:24])
         self.pool5 = nn.Sequential(*self.features[24:])
-        self.head = _FCNHead(512, num_classes)
-        self.score_pool3 = nn.Conv2d(256, num_classes, 1)
-        self.score_pool4 = nn.Conv2d(512, num_classes, 1)
-
-        if init_weights:
-            self._initialize_weights()
+        self.head = _FCNHead(512, nclass)
+        self.score_pool3 = nn.Conv2d(256, nclass, 1)
+        self.score_pool4 = nn.Conv2d(512, nclass, 1)
 
     def forward(self, x):
         pool3 = self.pool3(x)
@@ -115,6 +115,22 @@ class _FCNHead(nn.Module):
 
     def forward(self, x):
         return self.block(x)
+
+
+def get_fcn(dataset='pascal_voc', backbone='resnet50', pretrained=False, root='~/.torch/models',
+            pretrained_base=True, **kwargs):
+    acronyms = {
+        'pascal_voc': 'voc',
+        'pascal_aug': 'voc',
+        'ade20k': 'ade',
+        'coco': 'coco',
+        'citys': 'citys',
+    }
+    from data_loader import datasets
+    model = FCN32s(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
+    if pretrained:
+        model.load_state_dict(torch.load('fcn_%s_%s' % (backbone, acronyms[dataset])))
+    return model
 
 
 def fcn32s_vgg16(num_classes=21):

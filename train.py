@@ -17,10 +17,10 @@ from utils.loss import MixSoftmaxCrossEntropyLoss
 parser = argparse.ArgumentParser(
     description='Semantic Segmentation Training With Pytorch')
 # model and dataset
-parser.add_argument('--model', type=str, default='psp',
-                    help='model name (default: fcn32)')
-parser.add_argument('--backbone', type=str, default='resnet50',
-                        help='backbone name (default: resnet50)')
+parser.add_argument('--model', type=str, default='fcn32s',
+                    help='model name (default: fcn32s)')
+parser.add_argument('--backbone', type=str, default='vgg16',
+                    help='backbone name (default: resnet50)')
 parser.add_argument('--dataset', type=str, default='pascal_voc',
                     help='dataset name (default: pascal_voc. choice=[pascal_voc, pascal_aug, ade20k, citys]')
 parser.add_argument('--base-size', type=int, default=520,
@@ -30,15 +30,15 @@ parser.add_argument('--crop-size', type=int, default=480,
 parser.add_argument('--train-split', type=str, default='train',
                     help='dataset train split (default: train)')
 # training hyper params
-parser.add_argument('--aux', action='store_true', default=True,
-                        help='Auxiliary loss')
+parser.add_argument('--aux', action='store_true', default=False,
+                    help='Auxiliary loss')
 parser.add_argument('--aux-weight', type=float, default=0.5,
-                        help='auxiliary loss weight')
+                    help='auxiliary loss weight')
 parser.add_argument('--epochs', type=int, default=200, metavar='N',
                     help='number of epochs to train (default: 50)')
 parser.add_argument('--start_epoch', type=int, default=0,
                     metavar='N', help='start epochs (default:0)')
-parser.add_argument('--batch-size', type=int, default=2, metavar='N',
+parser.add_argument('--batch-size', type=int, default=1, metavar='N',
                     help='input batch size for training (default: 4)')
 parser.add_argument('--lr', type=float, default=1e-4, metavar='LR',
                     help='learning rate (default: 1e-4)')
@@ -109,9 +109,7 @@ class Trainer(object):
                 self.model.load_state_dict(torch.load(args.resume, map_location=lambda storage, loc: storage))
 
         # create criterion
-        # self.criterion = nn.CrossEntropyLoss(ignore_index=255).to(device)
         self.criterion = MixSoftmaxCrossEntropyLoss(args.aux, args.aux_weight, ignore_label=255).to(device)
-
 
         # optimizer
         self.optimizer = torch.optim.SGD(self.model.parameters(),

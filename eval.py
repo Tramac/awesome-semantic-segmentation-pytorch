@@ -8,22 +8,24 @@ import torch.utils.data as data
 
 from torchvision import transforms
 from data_loader import get_segmentation_dataset
-from models.model_zoo import get_model
+from models.model_zoo import get_segmentation_model
 from utils.score import SegmentationMetric
 from utils.visualize import get_color_pallete
 
 parser = argparse.ArgumentParser(
     description='Semantic Segmentation Evaluation')
-parser.add_argument('--model', type=str, default='fcn32s_vgg16',
+parser.add_argument('--model', type=str, default='fcn32s',
                     help='model name (default: fcn32)')
-parser.add_argument('--save-folder', default='./weights',
-                    help='Directory for saving checkpoint models')
+parser.add_argument('--backbone', type=str, default='vgg16',
+                    help='backbone name (default: resnet50)')
 parser.add_argument('--dataset', type=str, default='pascal_voc',
                     help='dataset name (default: pascal_voc, pascal_aug. choice=[pascal_voc, ade20k, citys]')
 parser.add_argument('--base-size', type=int, default=520,
                     help='base image size')
 parser.add_argument('--crop-size', type=int, default=480,
                     help='crop image size')
+parser.add_argument('--save-folder', default='./weights',
+                    help='Directory for saving checkpoint models')
 parser.add_argument('--num_classes', default=21, type=int,
                     help='Number of classes.')
 parser.add_argument('--save-result', default=False,
@@ -54,9 +56,11 @@ def eval(config):
                                   shuffle=False)
 
     # create network
-    model = get_model(config.model, num_classes=config.num_classes).to(device)
-    model.load_state_dict(torch.load(os.path.join(config.save_folder, config.model + '_' + config.dataset + '.pth'),
-                                     map_location='cpu'))
+    model = get_segmentation_model(model=args.model, dataset=args.dataset, backbone=args.backbone,
+                                   crop_size=args.crop_size)
+    model.load_state_dict(torch.load(
+        os.path.join(config.save_folder, config.model + '_' + config.backbone + '_' + config.dataset + '.pth'),
+        map_location='cpu'))
     print('Finished loading model!')
 
     metric = SegmentationMetric(config.num_classes)
