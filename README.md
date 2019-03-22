@@ -1,9 +1,12 @@
 # Awesome Semantic Segmentation on PyTorch
 
-<p align="center"><img width="100%" src="datasets/cityscapes_demo_img.png" /></p>
+<p align="center"><img width="80%" src="datasets/cityscapes_demo_img.png" /></p>
 
 --------------------------------------------------------------------------------
 This project aims at providing a concise, easy-to-use, modular reference implementation for semantic segmentation models using PyTorch.
+
+## Update
+- Move ```./weights``` to ```～/.torch/models```
 
 ## Requisites
 - [PyTorch 1.0](https://pytorch.org/get-started/locally/)
@@ -12,15 +15,15 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 ## Usage
 #### Train
 ```
-python train.py --model fcn32s_vgg16 --dataset pascal_voc
+python train.py --model fcn32s --backbone vgg16 --dataset pascal_voc
 ```
 #### Evaluation
 ```
-python eval.py --model fcn32s_vgg16 --dataset pascal_voc
+python eval.py --model fcn32s --backbone vgg16 --dataset pascal_voc
 ```
 #### Run Demo
 ```
-python demo.py --model fcn32s_vgg16 --input-pic ./datasets/test.jpg
+python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 ```
 ## Model Zoo & Datasets
 #### Supported Model
@@ -50,3 +53,5 @@ python ade20k.py --download-dir ./datasets/ade
 - [x] Update FCN model
 - [ ] Add more semantic segmentation models (in process)
 - [x] Add Cityscapes, ADE, COCO datasets
+- [ ] Train process
+- [ ] Find difference between ```cuda``` and ```only cpu```
