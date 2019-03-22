@@ -13,8 +13,6 @@ parser.add_argument('--model', type=str, default='fcn32s_vgg16_voc',
                     help='model name (default: fcn32_vgg16)')
 parser.add_argument('--save-folder', default='~/.torch/models',
                     help='Directory for saving checkpoint models')
-parser.add_argument('--dataset', default='VOC2012', choices=['VOC2007', 'VOC2012'],
-                    type=str, help='VOC2007 or VOC2012')
 parser.add_argument('--input-pic', type=str, default='./datasets/VOCdevkit/VOC2012/JPEGImages/2007_000032.jpg',
                     help='path to the input picture')
 parser.add_argument('--outdir', default='./eval', type=str,
@@ -36,8 +34,7 @@ def demo(config):
     image = Image.open(config.input_pic).convert('RGB')
     images = transform(image).unsqueeze(0).to(device)
 
-
-    model = get_model(args.model, pretrained=True).to(device)
+    model = get_model(args.model, pretrained=True, root=args.save_folder).to(device)
     print('Finished loading model!')
 
     model.eval()
