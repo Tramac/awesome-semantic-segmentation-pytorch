@@ -5,6 +5,9 @@
 --------------------------------------------------------------------------------
 This project aims at providing a concise, easy-to-use, modular reference implementation for semantic segmentation models using PyTorch.
 
+## Update
+- Move ```./weights``` to ```～/.torch/models```
+
 ## Requisites
 - [PyTorch 1.0](https://pytorch.org/get-started/locally/)
 - Python 3.x
