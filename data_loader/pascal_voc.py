@@ -13,7 +13,7 @@ class VOCSegmentation(SegmentationDataset):
     Parameters
     ----------
     root : string
-        Path to VOCdevkit folder. Default is './datasets/voc'
+        Path to VOCdevkit folder. Default is './datasets/VOCdevkit'
     split: string
         'train', 'val' or 'test'
     transform : callable, optional

@@ -14,15 +14,14 @@ from models.model_zoo import get_segmentation_model
 from utils.score import SegmentationMetric
 from utils.loss import MixSoftmaxCrossEntropyLoss
 
-parser = argparse.ArgumentParser(
-    description='Semantic Segmentation Training With Pytorch')
+parser = argparse.ArgumentParser(description='Semantic Segmentation Training With Pytorch')
 # model and dataset
-parser.add_argument('--model', type=str, default='fcn32s',
+parser.add_argument('--model', type=str, default='fcn32s', choices=['fcn32s/pspnet'],
                     help='model name (default: fcn32s)')
-parser.add_argument('--backbone', type=str, default='vgg16',
+parser.add_argument('--backbone', type=str, default='vgg16', choices=['vgg16/resnet50/resnet101/resnet152'],
                     help='backbone name (default: resnet50)')
-parser.add_argument('--dataset', type=str, default='pascal_voc',
-                    help='dataset name (default: pascal_voc. choice=[pascal_voc, pascal_aug, ade20k, citys]')
+parser.add_argument('--dataset', type=str, default='pascal_voc', choices=['pascal_voc/pascal_aug/ade20k/citys'],
+                    help='dataset name (default: pascal_voc)')
 parser.add_argument('--base-size', type=int, default=520,
                     help='base image size')
 parser.add_argument('--crop-size', type=int, default=480,
@@ -55,9 +54,7 @@ parser.add_argument('--decay-mode', default='step', type=str,
 # checking point
 parser.add_argument('--resume', type=str, default=None,
                     help='put the path to resuming file if needed')
-parser.add_argument('--num_classes', default=21, type=int,
-                    help='Number of classes.')
-parser.add_argument('--save-folder', default='./weights',
+parser.add_argument('--save-folder', default='./torch/models',
                     help='Directory for saving checkpoint models')
 # evaluation only
 parser.add_argument('--eval', action='store_true', default=False,
@@ -118,7 +115,7 @@ class Trainer(object):
                                          weight_decay=args.weight_decay)
 
         # evaluation metrics
-        self.metric = SegmentationMetric(args.num_classes)
+        self.metric = SegmentationMetric(train_dataset.num_class)
 
     def train(self):
         self.model.train()
@@ -150,9 +147,8 @@ class Trainer(object):
             # save every 10 epoch
             if epoch != 0 and epoch % 10 == 0:
                 print('Saving state, epoch:', epoch)
-                torch.save(self.model.state_dict(),
-                           os.path.join(args.save_folder, args.model + '_' + args.dataset + str(total_step) + '.pth'))
-        torch.save(self.model.state_dict(), os.path.join(args.save_folder, args.model + '_' + args.dataset + '.pth'))
+                self.save_checkpoint()
+        self.save_checkpoint()
 
     def validation(self, epoch):
         # total_inter, total_union, total_correct, total_label = 0, 0, 0, 0
@@ -165,6 +161,15 @@ class Trainer(object):
             self.metric.update(output.numpy(), target.numpy())
             pixAcc, mIoU = self.metric.get()
             print('Epoch %d, validation pixAcc: %.3f, mIoU: %.3f' % (epoch, pixAcc, mIoU))
+
+    def save_checkpoint(self):
+        """Save Checkpoint"""
+        directory = os.path.expanduser(args.save_folder)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        filename = '{}_{}_{}.pth'.format(args.model, args.backbone, args.dataset)
+        save_path = os.path.join(directory, filename)
+        torch.save(self.model.state_dict(), save_path)
 
 
 if __name__ == '__main__':

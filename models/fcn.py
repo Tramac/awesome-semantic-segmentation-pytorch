@@ -5,8 +5,10 @@ import torch.nn.functional as F
 
 from models.vgg import vgg16
 from models.utils import weights_init
+from models.model_store import get_model_file
 
-__all__ = ['get_fcn', 'fcn32s_vgg16', 'fcn16s_vgg16', 'fcn8s_vgg16']
+__all__ = ['get_fcn32s', 'get_fcn16s', 'get_fcn8s',
+           'get_fcn32s_vgg16_voc', 'get_fcn16s_vgg16_voc', 'get_fcn8s_vgg16_voc']
 
 
 class FCN32s(nn.Module):
@@ -117,11 +119,11 @@ class _FCNHead(nn.Module):
         return self.block(x)
 
 
-def get_fcn(dataset='pascal_voc', backbone='resnet50', pretrained=False, root='~/.torch/models',
-            pretrained_base=True, **kwargs):
+def get_fcn32s(dataset='pascal_voc', backbone='vgg16', pretrained=False, root='~/.torch/models',
+               pretrained_base=True, **kwargs):
     acronyms = {
-        'pascal_voc': 'voc',
-        'pascal_aug': 'voc',
+        'pascal_voc': 'pascal_voc',
+        'pascal_aug': 'pascal_aug',
         'ade20k': 'ade',
         'coco': 'coco',
         'citys': 'citys',
@@ -129,26 +131,49 @@ def get_fcn(dataset='pascal_voc', backbone='resnet50', pretrained=False, root='~
     from data_loader import datasets
     model = FCN32s(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
     if pretrained:
-        model.load_state_dict(torch.load('fcn_%s_%s' % (backbone, acronyms[dataset])))
+        model.load_state_dict(torch.load(get_model_file('fcn32s_%s_%s' % (backbone, acronyms[dataset]), root=root)))
     return model
 
 
-def fcn32s_vgg16(num_classes=21):
-    model = FCN32s(num_classes)
+def get_fcn16s(dataset='pascal_voc', backbone='vgg16', pretrained=False, root='~/.torch/models',
+               pretrained_base=True, **kwargs):
+    acronyms = {
+        'pascal_voc': 'pascal_voc',
+        'pascal_aug': 'pascal_aug',
+        'ade20k': 'ade',
+        'coco': 'coco',
+        'citys': 'citys',
+    }
+    from data_loader import datasets
+    model = FCN16s(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
+    if pretrained:
+        model.load_state_dict(torch.load(get_model_file('fcn32s_%s_%s' % (backbone, acronyms[dataset]), root=root)))
     return model
 
 
-def fcn16s_vgg16(num_classes=21):
-    model = FCN16s(num_classes)
+def get_fcn8s(dataset='pascal_voc', backbone='vgg16', pretrained=False, root='~/.torch/models',
+              pretrained_base=True, **kwargs):
+    acronyms = {
+        'pascal_voc': 'pascal_voc',
+        'pascal_aug': 'pascal_aug',
+        'ade20k': 'ade',
+        'coco': 'coco',
+        'citys': 'citys',
+    }
+    from data_loader import datasets
+    model = FCN8s(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
+    if pretrained:
+        model.load_state_dict(torch.load(get_model_file('fcn32s_%s_%s' % (backbone, acronyms[dataset]), root=root)))
     return model
 
 
-def fcn8s_vgg16(num_classes=21):
-    model = FCN8s(num_classes)
-    return model
+def get_fcn32s_vgg16_voc(**kwargs):
+    return get_fcn32s('pascal_voc', 'vgg16', **kwargs)
 
 
-if __name__ == '__main__':
-    img = torch.randn((4, 3, 512, 512))
-    model = fcn32s_vgg16(21)
-    out = model(img)
+def get_fcn16s_vgg16_voc(**kwargs):
+    return get_fcn16s('pascal_voc', 'vgg16', **kwargs)
+
+
+def get_fcn8s_vgg16_voc(**kwargs):
+    return get_fcn8s('pascal_voc', 'vgg16', **kwargs)

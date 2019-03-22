@@ -24,8 +24,6 @@ parser.add_argument('--base-size', type=int, default=520,
                     help='base image size')
 parser.add_argument('--crop-size', type=int, default=480,
                     help='crop image size')
-parser.add_argument('--save-folder', default='./weights',
-                    help='Directory for saving checkpoint models')
 parser.add_argument('--num_classes', default=21, type=int,
                     help='Number of classes.')
 parser.add_argument('--save-result', default=False,
@@ -57,10 +55,7 @@ def eval(config):
 
     # create network
     model = get_segmentation_model(model=args.model, dataset=args.dataset, backbone=args.backbone,
-                                   crop_size=args.crop_size)
-    model.load_state_dict(torch.load(
-        os.path.join(config.save_folder, config.model + '_' + config.backbone + '_' + config.dataset + '.pth'),
-        map_location='cpu'))
+                                   pretrained=True, crop_size=args.crop_size)
     print('Finished loading model!')
 
     metric = SegmentationMetric(config.num_classes)

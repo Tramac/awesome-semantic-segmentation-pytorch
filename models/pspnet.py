@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from models.model_store import get_model_file
 from models.segbase import SegBaseModel
 
 __all__ = ['PSPNet', 'get_psp', 'get_psp_resnet50_voc', 'get_psp_resnet50_ade', 'get_psp_resnet101_voc',
@@ -134,8 +135,8 @@ def get_psp(dataset='pascal_voc', backbone='resnet50', pretrained=False, root='~
     >>> print(model)
     """
     acronyms = {
-        'pascal_voc': 'voc',
-        'pascal_aug': 'voc',
+        'pascal_voc': 'pascal_voc',
+        'pascal_aug': 'pascal_aug',
         'ade20k': 'ade',
         'coco': 'coco',
         'citys': 'citys',
@@ -143,7 +144,7 @@ def get_psp(dataset='pascal_voc', backbone='resnet50', pretrained=False, root='~
     from data_loader import datasets
     model = PSPNet(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
     if pretrained:
-        model.load_state_dict(torch.load('psp_%s_%s' % (backbone, acronyms[dataset])))
+        model.load_state_dict(torch.load(get_model_file('psp_%s_%s' % (backbone, acronyms[dataset]), root=root)))
     return model
 
 

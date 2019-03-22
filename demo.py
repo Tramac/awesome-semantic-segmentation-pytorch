@@ -5,20 +5,18 @@ import torch
 from torchvision import transforms
 from PIL import Image
 from utils.visualize import get_color_pallete
-from models.model_zoo import get_model
+from models import get_model
 
 parser = argparse.ArgumentParser(
     description='Predict segmentation result from a given image')
-parser.add_argument('--model', type=str, default='fcn32s_vgg16',
+parser.add_argument('--model', type=str, default='fcn32s_vgg16_voc',
                     help='model name (default: fcn32_vgg16)')
-parser.add_argument('--save-folder', default='./weights',
+parser.add_argument('--save-folder', default='~/.torch/models',
                     help='Directory for saving checkpoint models')
 parser.add_argument('--dataset', default='VOC2012', choices=['VOC2007', 'VOC2012'],
                     type=str, help='VOC2007 or VOC2012')
 parser.add_argument('--input-pic', type=str, default='./datasets/VOCdevkit/VOC2012/JPEGImages/2007_000032.jpg',
                     help='path to the input picture')
-parser.add_argument('--num_classes', default=21, type=int,
-                    help='Number of classes.')
 parser.add_argument('--outdir', default='./eval', type=str,
                     help='path to save the predict result')
 args = parser.parse_args()
@@ -38,9 +36,8 @@ def demo(config):
     image = Image.open(config.input_pic).convert('RGB')
     images = transform(image).unsqueeze(0).to(device)
 
-    model = get_model(args.model, num_classes=config.num_classes).to(device)
-    model.load_state_dict(torch.load(os.path.join(config.save_folder, args.model + '_' + args.dataset + '.pth'),
-                                     map_location='cpu'))
+
+    model = get_model(args.model, pretrained=True).to(device)
     print('Finished loading model!')
 
     model.eval()
