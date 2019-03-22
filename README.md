@@ -15,15 +15,15 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 ## Usage
 #### Train
 ```
-python train.py --model fcn32s_vgg16 --dataset pascal_voc
+python train.py --model fcn32s --backbone vgg16 --dataset pascal_voc
 ```
 #### Evaluation
 ```
-python eval.py --model fcn32s_vgg16 --dataset pascal_voc
+python eval.py --model fcn32s --backbone vgg16 --dataset pascal_voc
 ```
 #### Run Demo
 ```
-python demo.py --model fcn32s_vgg16 --input-pic ./datasets/test.jpg
+python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 ```
 ## Model Zoo & Datasets
 #### Supported Model
