@@ -1,6 +1,6 @@
 # Awesome Semantic Segmentation on PyTorch
 
-<p align="center"><img width="100%" src="datasets/cityscapes_demo_img.png" /></p>
+<p align="center"><img width="80%" src="datasets/cityscapes_demo_img.png" /></p>
 
 --------------------------------------------------------------------------------
 This project aims at providing a concise, easy-to-use, modular reference implementation for semantic segmentation models using PyTorch.
@@ -53,3 +53,5 @@ python ade20k.py --download-dir ./datasets/ade
 - [x] Update FCN model
 - [ ] Add more semantic segmentation models (in process)
 - [x] Add Cityscapes, ADE, COCO datasets
+- [ ] Train process
+- [ ] Find difference between ```cuda``` and ```only cpu```
