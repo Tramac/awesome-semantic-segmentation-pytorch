@@ -26,7 +26,7 @@ parser.add_argument('--crop-size', type=int, default=480,
                     help='crop image size')
 parser.add_argument('--num_classes', default=21, type=int,
                     help='Number of classes.')
-parser.add_argument('--save-result', default=False,
+parser.add_argument('--save-result', default=True,
                     help='save the predict')
 parser.add_argument('--outdir', default='./eval', type=str,
                     help='path to save the predict result')

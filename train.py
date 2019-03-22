@@ -24,7 +24,7 @@ parser.add_argument('--dataset', type=str, default='pascal_voc', choices=['pasca
                     help='dataset name (default: pascal_voc)')
 parser.add_argument('--base-size', type=int, default=520,
                     help='base image size')
-parser.add_argument('--crop-size', type=int, default=480,
+parser.add_argument('--crop-size', type=int, default=224,
                     help='crop image size')
 parser.add_argument('--train-split', type=str, default='train',
                     help='dataset train split (default: train)')
@@ -33,7 +33,7 @@ parser.add_argument('--aux', action='store_true', default=False,
                     help='Auxiliary loss')
 parser.add_argument('--aux-weight', type=float, default=0.5,
                     help='auxiliary loss weight')
-parser.add_argument('--epochs', type=int, default=200, metavar='N',
+parser.add_argument('--epochs', type=int, default=1, metavar='N',
                     help='number of epochs to train (default: 50)')
 parser.add_argument('--start_epoch', type=int, default=0,
                     metavar='N', help='start epochs (default:0)')
@@ -47,14 +47,14 @@ parser.add_argument('--weight-decay', type=float, default=1e-4, metavar='M',
                     help='w-decay (default: 5e-4)')
 parser.add_argument('--gamma', default=0.1, type=float,
                     help='Gamma update for SGD')
-parser.add_argument('--decay-step', default=200, type=int,
-                    help='Sets the lr to the init lr decayed by 10 every decay_step epochs')
 parser.add_argument('--decay-mode', default='step', type=str,
                     help='lr decay mode, step/poly')
+parser.add_argument('--decay-step', default=200, type=int,
+                    help='Sets the lr to the init lr decayed by 10 every decay_step epochs')
 # checking point
 parser.add_argument('--resume', type=str, default=None,
                     help='put the path to resuming file if needed')
-parser.add_argument('--save-folder', default='./torch/models',
+parser.add_argument('--save-folder', default='~/.torch/models',
                     help='Directory for saving checkpoint models')
 # evaluation only
 parser.add_argument('--eval', action='store_true', default=False,
@@ -123,7 +123,7 @@ class Trainer(object):
         start_time = time.time()
         for epoch in range(args.start_epoch, args.epochs):
             for i, (images, targets) in enumerate(self.train_loader):
-                adjust_learning_rate(args, self.optimizer, epoch)
+                cur_lr = adjust_learning_rate(args, self.optimizer, epoch)
 
                 images = images.to(device)
                 targets = targets.to(device)
@@ -137,11 +137,11 @@ class Trainer(object):
 
                 total_step += 1
                 if total_step % 10 == 0:
-                    print('Epoch: [%2d/%2d] Iter [%4d/%4d] || Time: %4.4f sec || Loss: %.4f' % (
+                    print('Epoch: [%2d/%2d] Iter [%4d/%4d] || Time: %4.4f sec || lr: %.8f || Loss: %.4f' % (
                         epoch, args.epochs, i + 1, len(self.train_loader) // args.batch_size, time.time() - start_time,
-                        loss.item()))
+                        cur_lr, loss.item()))
 
-            if not args.no_eval:
+            if not args.no_val:
                 self.validation(epoch)
 
             # save every 10 epoch
