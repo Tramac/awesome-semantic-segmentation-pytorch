@@ -55,7 +55,7 @@ def eval(config):
 
     # create network
     model = get_segmentation_model(model=args.model, dataset=args.dataset, backbone=args.backbone,
-                                   pretrained=True, crop_size=args.crop_size)
+                                   pretrained=True, crop_size=args.crop_size).to(device)
     print('Finished loading model!')
 
     metric = SegmentationMetric(config.num_classes)
@@ -67,7 +67,7 @@ def eval(config):
         outputs = model(image)
 
         pred = torch.argmax(outputs, 1)
-        pred = pred.data.numpy()
+        pred = pred.cpu().data.numpy()
         label = label.numpy()
 
         metric.update(pred, label)
