@@ -1,6 +1,6 @@
 # Awesome Semantic Segmentation on PyTorch
 
-<p align="center"><img width="80%" src="datasets/cityscapes_demo_img.png" /></p>
+<p align="center"><img width="100%" src="datasets/ADE_demo_img.png" /></p>
 
 --------------------------------------------------------------------------------
 This project aims at providing a concise, easy-to-use, modular reference implementation for semantic segmentation models using PyTorch.
