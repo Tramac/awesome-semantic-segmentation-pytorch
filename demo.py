@@ -41,7 +41,7 @@ def demo(config):
     with torch.no_grad():
         output = model(images)
 
-    pred = torch.argmax(output, 1).squeeze(0).cpu().numpy()
+    pred = torch.argmax(output[0], 1).squeeze(0).cpu().numpy()
     mask = get_color_pallete(pred, args.dataset)
     outname = os.path.splitext(os.path.split(args.input_pic)[-1])[0] + '.png'
     mask.save(os.path.join(args.outdir, outname))
