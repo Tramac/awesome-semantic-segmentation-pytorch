@@ -1,6 +1,6 @@
 # Awesome Semantic Segmentation on PyTorch
 
-<p align="center"><img width="80%" src="datasets/cityscapes_demo_img.png" /></p>
+<p align="center"><img width="70%" src="datasets/ADE_demo_img.png" /></p>
 
 --------------------------------------------------------------------------------
 This project aims at providing a concise, easy-to-use, modular reference implementation for semantic segmentation models using PyTorch.
@@ -8,6 +8,7 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 ## Update
 - Move ```./weights``` to ```～/.torch/models```
 - Add ResnetV1b
+- Add lr scheculer
 
 ## Requisites
 - [PyTorch 1.0](https://pytorch.org/get-started/locally/)
