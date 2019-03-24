@@ -49,13 +49,10 @@ python ade20k.py --download-dir ./datasets/ade
 |Methods|Backbone|TrainSet|EvalSet|Mean IoU|pixAcc|
 |:-:|:-:|:-:|:-:|:-:|:-:|
 |FCN32s|VGG16|train|val|27.75%|81.47%|
-|FCN16s|VGG16|train|val|26.49%|80.14%|
+|FCN16s|VGG16|train|val|49.16%|85.98%|
 
 ## To Do
-- [x] Update VOC dataloader
-- [x] Update FCN model
 - [ ] Add more semantic segmentation models (in process)
-- [x] Add Cityscapes, ADE, COCO datasets
 - [ ] Train process
 - [ ] Find difference between ```cuda``` and ```only cpu```
 - [ ] Why is the performance so terrible?
