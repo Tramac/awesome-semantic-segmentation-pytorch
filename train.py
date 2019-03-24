@@ -9,14 +9,14 @@ import torch.backends.cudnn as cudnn
 
 from torchvision import transforms
 from data_loader import get_segmentation_dataset
-from models.utils import adjust_learning_rate
 from models.model_zoo import get_segmentation_model
+from utils.lr_scheduler import LRScheduler
 from utils.score import SegmentationMetric
 from utils.loss import MixSoftmaxCrossEntropyLoss
 
 parser = argparse.ArgumentParser(description='Semantic Segmentation Training With Pytorch')
 # model and dataset
-parser.add_argument('--model', type=str, default='fcn32s', choices=['fcn32s/pspnet'],
+parser.add_argument('--model', type=str, default='fcn16s', choices=['fcn32s/pspnet'],
                     help='model name (default: fcn32s)')
 parser.add_argument('--backbone', type=str, default='vgg16', choices=['vgg16/resnet50/resnet101/resnet152'],
                     help='backbone name (default: resnet50)')
@@ -24,7 +24,7 @@ parser.add_argument('--dataset', type=str, default='pascal_voc', choices=['pasca
                     help='dataset name (default: pascal_voc)')
 parser.add_argument('--base-size', type=int, default=520,
                     help='base image size')
-parser.add_argument('--crop-size', type=int, default=224,
+parser.add_argument('--crop-size', type=int, default=480,
                     help='crop image size')
 parser.add_argument('--train-split', type=str, default='train',
                     help='dataset train split (default: train)')
@@ -33,24 +33,18 @@ parser.add_argument('--aux', action='store_true', default=False,
                     help='Auxiliary loss')
 parser.add_argument('--aux-weight', type=float, default=0.5,
                     help='auxiliary loss weight')
-parser.add_argument('--epochs', type=int, default=1, metavar='N',
-                    help='number of epochs to train (default: 50)')
+parser.add_argument('--epochs', type=int, default=60, metavar='N',
+                    help='number of epochs to train (default: 60)')
 parser.add_argument('--start_epoch', type=int, default=0,
                     metavar='N', help='start epochs (default:0)')
-parser.add_argument('--batch-size', type=int, default=1, metavar='N',
+parser.add_argument('--batch-size', type=int, default=8, metavar='N',
                     help='input batch size for training (default: 4)')
-parser.add_argument('--lr', type=float, default=1e-4, metavar='LR',
+parser.add_argument('--lr', type=float, default=1e-2, metavar='LR',
                     help='learning rate (default: 1e-4)')
 parser.add_argument('--momentum', type=float, default=0.9, metavar='M',
                     help='momentum (default: 0.9)')
 parser.add_argument('--weight-decay', type=float, default=1e-4, metavar='M',
                     help='w-decay (default: 5e-4)')
-parser.add_argument('--gamma', default=0.1, type=float,
-                    help='Gamma update for SGD')
-parser.add_argument('--decay-mode', default='step', type=str,
-                    help='lr decay mode, step/poly')
-parser.add_argument('--decay-step', default=200, type=int,
-                    help='Sets the lr to the init lr decayed by 10 every decay_step epochs')
 # checking point
 parser.add_argument('--resume', type=str, default=None,
                     help='put the path to resuming file if needed')
@@ -114,16 +108,22 @@ class Trainer(object):
                                          momentum=args.momentum,
                                          weight_decay=args.weight_decay)
 
+        # lr scheduling
+        self.lr_scheduler = LRScheduler(mode='poly', base_lr=args.lr, nepochs=args.epochs,
+                                        iters_per_epoch=len(self.train_loader), power=0.9)
+
         # evaluation metrics
         self.metric = SegmentationMetric(train_dataset.num_class)
 
     def train(self):
         self.model.train()
-        total_step = 0
+        cur_iters = 0
         start_time = time.time()
         for epoch in range(args.start_epoch, args.epochs):
             for i, (images, targets) in enumerate(self.train_loader):
-                cur_lr = adjust_learning_rate(args, self.optimizer, epoch)
+                cur_lr = self.lr_scheduler(cur_iters)
+                for param_group in self.optimizer.param_groups:
+                    param_group['lr'] = cur_lr
 
                 images = images.to(device)
                 targets = targets.to(device)
@@ -135,11 +135,11 @@ class Trainer(object):
                 loss.backward()
                 self.optimizer.step()
 
-                total_step += 1
-                if total_step % 10 == 0:
+                cur_iters += 1
+                if cur_iters % 10 == 0:
                     print('Epoch: [%2d/%2d] Iter [%4d/%4d] || Time: %4.4f sec || lr: %.8f || Loss: %.4f' % (
-                        epoch, args.epochs, i + 1, len(self.train_loader) // args.batch_size, time.time() - start_time,
-                        cur_lr, loss.item()))
+                        epoch, args.epochs, i + 1, len(self.train_loader),
+                        time.time() - start_time, cur_lr, loss.item()))
 
             if not args.no_val:
                 self.validation(epoch)

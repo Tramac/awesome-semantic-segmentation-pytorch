@@ -208,9 +208,14 @@ def resnet101_v1b(pretrained=False, **kwargs):
 def resnet152_v1b(pretrained=False, **kwargs):
     model = ResNetV1b(BottleneckV1b, [3, 8, 36, 3], **kwargs)
     if pretrained:
-        old_dict = model_zoo.load_url(model_urls['resnet101'])
+        old_dict = model_zoo.load_url(model_urls['resnet152'])
         model_dict = model.state_dict()
         old_dict = {k: v for k, v in old_dict.items() if (k in model_dict)}
         model_dict.update(old_dict)
         model.load_state_dict(model_dict)
     return model
+
+
+if __name__ == '__main__':
+    model = resnet50_v1b(True)
+    # print(model)
