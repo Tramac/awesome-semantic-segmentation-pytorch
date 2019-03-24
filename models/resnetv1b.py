@@ -88,7 +88,7 @@ class BottleneckV1b(nn.Module):
 
 class ResNetV1b(nn.Module):
 
-    def __init__(self, block, layers, num_classes=1000, dilated=False, zero_init_residual=False):
+    def __init__(self, block, layers, num_classes=1000, dilated=True, zero_init_residual=False):
         super(ResNetV1b, self).__init__()
         self.inplanes = 64
         self.conv1 = nn.Conv2d(3, 64, 7, 2, 3, bias=False)
@@ -98,7 +98,7 @@ class ResNetV1b(nn.Module):
         self.layer1 = self._make_layer(block, 64, layers[0])
         self.layer2 = self._make_layer(block, 128, layers[1], stride=2)
         if dilated:
-            self.layer3 = self._make_layer(block, 256, layers[2], stride=2, dilation=2)
+            self.layer3 = self._make_layer(block, 256, layers[2], stride=1, dilation=2)
             self.layer4 = self._make_layer(block, 512, layers[3], stride=1, dilation=4)
         else:
             self.layer3 = self._make_layer(block, 256, layers[2], stride=2)
@@ -217,5 +217,8 @@ def resnet152_v1b(pretrained=False, **kwargs):
 
 
 if __name__ == '__main__':
+    import torch
+
+    img = torch.randn(4, 3, 224, 224)
     model = resnet50_v1b(True)
-    # print(model)
+    output = model(img)

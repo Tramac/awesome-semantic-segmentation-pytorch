@@ -16,15 +16,15 @@ from utils.loss import MixSoftmaxCrossEntropyLoss
 
 parser = argparse.ArgumentParser(description='Semantic Segmentation Training With Pytorch')
 # model and dataset
-parser.add_argument('--model', type=str, default='fcn16s', choices=['fcn32s/pspnet'],
+parser.add_argument('--model', type=str, default='psp', choices=['fcn32s/fcn16s/fcn8s/psp'],
                     help='model name (default: fcn32s)')
-parser.add_argument('--backbone', type=str, default='vgg16', choices=['vgg16/resnet50/resnet101/resnet152'],
+parser.add_argument('--backbone', type=str, default='resnet50', choices=['vgg16/resnet50/resnet101/resnet152'],
                     help='backbone name (default: resnet50)')
 parser.add_argument('--dataset', type=str, default='pascal_voc', choices=['pascal_voc/pascal_aug/ade20k/citys'],
                     help='dataset name (default: pascal_voc)')
 parser.add_argument('--base-size', type=int, default=520,
                     help='base image size')
-parser.add_argument('--crop-size', type=int, default=480,
+parser.add_argument('--crop-size', type=int, default=224,
                     help='crop image size')
 parser.add_argument('--train-split', type=str, default='train',
                     help='dataset train split (default: train)')
@@ -37,7 +37,7 @@ parser.add_argument('--epochs', type=int, default=60, metavar='N',
                     help='number of epochs to train (default: 60)')
 parser.add_argument('--start_epoch', type=int, default=0,
                     metavar='N', help='start epochs (default:0)')
-parser.add_argument('--batch-size', type=int, default=8, metavar='N',
+parser.add_argument('--batch-size', type=int, default=2, metavar='N',
                     help='input batch size for training (default: 4)')
 parser.add_argument('--lr', type=float, default=1e-2, metavar='LR',
                     help='learning rate (default: 1e-4)')

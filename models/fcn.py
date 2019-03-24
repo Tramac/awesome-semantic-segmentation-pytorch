@@ -14,28 +14,41 @@ __all__ = ['get_fcn32s', 'get_fcn16s', 'get_fcn8s',
 class FCN32s(nn.Module):
     """There are some difference from original fcn"""
 
-    def __init__(self, nclass, backbone='vgg16', pretrained_base=True, base_size=520, crop_size=480, **kwargs):
+    def __init__(self, nclass, backbone='vgg16', aux=False, pretrained_base=True,
+                 base_size=520, crop_size=480, **kwargs):
         super(FCN32s, self).__init__()
+        self.aux = aux
         if backbone == 'vgg16':
             self.features = vgg16(pretrained=pretrained_base).features
         else:
             raise RuntimeError('unknown backbone: {}'.format(backbone))
         self.head = _FCNHead(512, nclass)
+        if aux:
+            self.auxlayer = _FCNHead(512, nclass)
 
     def forward(self, x):
         pool5 = self.features(x)
+
+        outputs = []
         out = self.head(pool5)
         out = F.interpolate(out, x.size()[2:], mode='bilinear', align_corners=True)
+        outputs.append(out)
 
-        return out
+        if self.aux:
+            auxout = self.auxlayer(pool5)
+            auxout = F.interpolate(auxout, x.size()[2:], mode='bilinear', align_corners=True)
+            outputs.append(auxout)
+
+        return tuple(outputs)
 
     def _initialize_weights(self):
         self.head.apply(weights_init)
 
 
 class FCN16s(nn.Module):
-    def __init__(self, nclass, backbone='vgg16', pretrained_base=True, base_size=520, crop_size=480, **kwargs):
+    def __init__(self, nclass, backbone='vgg16', aux=False, pretrained_base=True, base_size=520, crop_size=480, **kwargs):
         super(FCN16s, self).__init__()
+        self.aux = aux
         if backbone == 'vgg16':
             self.features = vgg16(pretrained=pretrained_base).features
         else:
@@ -44,10 +57,14 @@ class FCN16s(nn.Module):
         self.pool5 = nn.Sequential(*self.features[24:])
         self.head = _FCNHead(512, nclass)
         self.score_pool4 = nn.Conv2d(512, nclass, 1)
+        if aux:
+            self.auxlayer = _FCNHead(512, nclass)
 
     def forward(self, x):
         pool4 = self.pool4(x)
         pool5 = self.pool5(pool4)
+
+        outputs = []
         score_fr = self.head(pool5)
 
         score_pool4 = self.score_pool4(pool4)
@@ -56,8 +73,14 @@ class FCN16s(nn.Module):
         fuse_pool4 = upscore2 + score_pool4
 
         out = F.interpolate(fuse_pool4, x.size()[2:], mode='bilinear', align_corners=True)
+        outputs.append(out)
 
-        return out
+        if self.aux:
+            auxout = self.auxlayer(pool5)
+            auxout = F.interpolate(auxout, x.size()[2:], mode='bilinear', align_corners=True)
+            outputs.append(auxout)
+
+        return tuple(outputs)
 
     def _initialize_weights(self):
         self.head.apply(weights_init)
@@ -65,8 +88,9 @@ class FCN16s(nn.Module):
 
 
 class FCN8s(nn.Module):
-    def __init__(self, nclass, backbone='vgg16', pretrained_base=True, base_size=520, crop_size=480, **kwargs):
+    def __init__(self, nclass, backbone='vgg16', aux=False, pretrained_base=True, base_size=520, crop_size=480, **kwargs):
         super(FCN8s, self).__init__()
+        self.aux = aux
         if backbone == 'vgg16':
             self.features = vgg16(pretrained=pretrained_base).features
         else:
@@ -77,11 +101,15 @@ class FCN8s(nn.Module):
         self.head = _FCNHead(512, nclass)
         self.score_pool3 = nn.Conv2d(256, nclass, 1)
         self.score_pool4 = nn.Conv2d(512, nclass, 1)
+        if aux:
+            self.auxlayer = _FCNHead(512, nclass)
 
     def forward(self, x):
         pool3 = self.pool3(x)
         pool4 = self.pool4(pool3)
         pool5 = self.pool5(pool4)
+
+        outputs = []
         score_fr = self.head(pool5)
 
         score_pool4 = self.score_pool4(pool4)
@@ -94,8 +122,14 @@ class FCN8s(nn.Module):
         fuse_pool3 = upscore_pool4 + score_pool3
 
         out = F.interpolate(fuse_pool3, x.size()[2:], mode='bilinear', align_corners=True)
+        outputs.append(out)
 
-        return out
+        if self.aux:
+            auxout = self.auxlayer(pool5)
+            auxout = F.interpolate(auxout, x.size()[2:], mode='bilinear', align_corners=True)
+            outputs.append(auxout)
+
+        return tuple(outputs)
 
     def _initialize_weights(self):
         self.head.apply(weights_init)

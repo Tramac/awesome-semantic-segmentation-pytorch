@@ -8,18 +8,18 @@ class MixSoftmaxCrossEntropyLoss(nn.Module):
         super(MixSoftmaxCrossEntropyLoss, self).__init__()
         self.aux = aux
         self.aux_weight = aux_weight
-        self.criterion1 = nn.CrossEntropyLoss(ignore_index=ignore_label)
-        if aux:
-            self.criterion2 = nn.CrossEntropyLoss(ignore_index=ignore_label)
+        self.criterion = nn.CrossEntropyLoss(ignore_index=ignore_label)
 
     def _aux_forward(self, pred1, pred2, label, **kwargs):
-        loss1 = self.criterion1(pred1, label)
-        loss2 = self.criterion2(pred2, label)
+        loss1 = self.criterion(pred1, label, **kwargs)
+        loss2 = self.criterion(pred2, label, **kwargs)
 
         return loss1 + self.aux_weight * loss2
 
-    def forward(self, preds, target, **kwargs):
+    def forward(self, pred, label, **kwargs):
         if self.aux:
-            return self._aux_forward(preds[0], preds[1], target, **kwargs)
+            assert (len(pred) == 2)
+            return self._aux_forward(pred[0], pred[1], label, **kwargs)
         else:
-            return self.criterion1(preds, target)
+            assert (len(pred) == 1)
+            return self.criterion(pred[0], label, **kwargs)

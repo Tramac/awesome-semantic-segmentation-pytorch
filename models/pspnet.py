@@ -35,8 +35,7 @@ class PSPNet(SegBaseModel):
                  base_size=520, crop_size=480, **kwargs):
         super(PSPNet, self).__init__(nclass, aux, backbone, base_size=base_size, crop_size=crop_size,
                                      pretrained_base=pretrained_base, **kwargs)
-        # conv in layer3 and layer4, resnet should be dilated rate=2, height, width = //8
-        self.head = _PSPHead(nclass, height=self._up_kwargs['height'] // 32, width=self._up_kwargs['width'] // 32,
+        self.head = _PSPHead(nclass, height=self._up_kwargs['height'] // 8, width=self._up_kwargs['width'] // 8,
                              **kwargs)
         if self.aux:
             self.auxlayer = nn.Sequential(
