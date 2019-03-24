@@ -24,8 +24,6 @@ parser.add_argument('--base-size', type=int, default=520,
                     help='base image size')
 parser.add_argument('--crop-size', type=int, default=480,
                     help='crop image size')
-parser.add_argument('--num_classes', default=21, type=int,
-                    help='Number of classes.')
 parser.add_argument('--save-result', default=True,
                     help='save the predict')
 parser.add_argument('--outdir', default='./eval', type=str,
@@ -58,7 +56,7 @@ def eval(config):
                                    pretrained=True, crop_size=args.crop_size).to(device)
     print('Finished loading model!')
 
-    metric = SegmentationMetric(config.num_classes)
+    metric = SegmentationMetric(test_dataset.num_class)
 
     model.eval()
     for i, (image, label) in enumerate(test_loader):
@@ -66,7 +64,7 @@ def eval(config):
 
         outputs = model(image)
 
-        pred = torch.argmax(outputs, 1)
+        pred = torch.argmax(outputs[0], 1)
         pred = pred.cpu().data.numpy()
         label = label.numpy()
 
