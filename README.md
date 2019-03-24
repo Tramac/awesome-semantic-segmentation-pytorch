@@ -7,6 +7,7 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 
 ## Update
 - Move ```./weights``` to ```～/.torch/models```
+- Add ResnetV1b
 
 ## Requisites
 - [PyTorch 1.0](https://pytorch.org/get-started/locally/)
@@ -46,7 +47,8 @@ python ade20k.py --download-dir ./datasets/ade
 #### PASCAL VOC 2012
 |Methods|Backbone|TrainSet|EvalSet|Mean IoU|pixAcc|
 |:-:|:-:|:-:|:-:|:-:|:-:|
-|FCN32s|VGG16|train|val|||
+|FCN32s|VGG16|train|val|27.75%|81.47%|
+|FCN16s|VGG16|train|val|26.49%|80.14%|
 
 ## To Do
 - [x] Update VOC dataloader
@@ -55,3 +57,4 @@ python ade20k.py --download-dir ./datasets/ade
 - [x] Add Cityscapes, ADE, COCO datasets
 - [ ] Train process
 - [ ] Find difference between ```cuda``` and ```only cpu```
+- [ ] Why is the performance so terrible?
