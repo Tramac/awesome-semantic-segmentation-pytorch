@@ -47,7 +47,7 @@ python ade20k.py --download-dir ./datasets/ade
 #### PASCAL VOC 2012
 |Methods|Backbone|TrainSet|EvalSet|Mean IoU|pixAcc|
 |:-:|:-:|:-:|:-:|:-:|:-:|
-|FCN32s|VGG16|train|val|||
+|FCN32s|VGG16|train|val|27.75%|81.47%|
 
 ## To Do
 - [x] Update VOC dataloader
