@@ -8,7 +8,7 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 ## Update
 - Move ```./weights``` to ```～/.torch/models```
 - Add ResnetV1b
-- Add lr scheculer
+- Add DeepLabv3
 
 ## Requisites
 - [PyTorch 1.0](https://pytorch.org/get-started/locally/)
@@ -49,12 +49,13 @@ python ade20k.py --download-dir ./datasets/ade
 #### PASCAL VOC 2012
 |Methods|Backbone|TrainSet|EvalSet|Mean IoU|pixAcc|
 |:-:|:-:|:-:|:-:|:-:|:-:|
-|FCN32s|VGG16|train|val|47.50%|85.39%|
-|FCN16s|VGG16|train|val|49.16%|85.98%|
-|FCN8s|VGG16|train|val|48.87%|85.02%|
+|FCN32s|vgg16|train|val|47.50%|85.39%|
+|FCN16s|vgg16|train|val|49.16%|85.98%|
+|FCN8s|vgg16|train|val|48.87%|85.02%|
+|PSPNet|resnet50|train|val|63.44%|89.78%|
 
 ## To Do
 - [ ] Add more semantic segmentation models (in process)
 - [ ] Train process
 - [ ] Find difference between ```cuda``` and ```only cpu```
-- [ ] Why is the performance so terrible?
+- [ ] ~~Why is the performance so terrible?~~
