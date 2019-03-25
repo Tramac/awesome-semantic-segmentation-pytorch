@@ -50,7 +50,7 @@ python ade20k.py --download-dir ./datasets/ade
 |:-:|:-:|:-:|:-:|:-:|:-:|
 |FCN32s|VGG16|train|val|47.50%|85.39%|
 |FCN16s|VGG16|train|val|49.16%|85.98%|
-|FCN16s|VGG16|train|val|48.87%|85.02%|
+|FCN8s|VGG16|train|val|48.87%|85.02%|
 
 ## To Do
 - [ ] Add more semantic segmentation models (in process)
