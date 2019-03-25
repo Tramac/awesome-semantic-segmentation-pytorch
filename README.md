@@ -30,7 +30,8 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 ## Model Zoo & Datasets
 #### Supported Model
 - [FCN](https://arxiv.org/abs/1411.4038)
-- [PSPNet](https://arxiv.org/pdf/1612.01105.pdf)
+- [PSPNet](https://arxiv.org/pdf/1612.01105)
+- [DeepLabv3](https://arxiv.org/abs/1706.05587)
 
 #### Supported Dataset
 You can run script to download dataset, such as:
@@ -50,7 +51,7 @@ python ade20k.py --download-dir ./datasets/ade
 |:-:|:-:|:-:|:-:|:-:|:-:|
 |FCN32s|VGG16|train|val|47.50%|85.39%|
 |FCN16s|VGG16|train|val|49.16%|85.98%|
-|FCN16s|VGG16|train|val|48.87%|85.02%|
+|FCN8s|VGG16|train|val|48.87%|85.02%|
 
 ## To Do
 - [ ] Add more semantic segmentation models (in process)
