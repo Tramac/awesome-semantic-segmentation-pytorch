@@ -7,8 +7,8 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 
 ## Update
 - Move ```./weights``` to ```～/.torch/models```
-- Add ResnetV1b
 - Add DeepLabv3
+- Change Pascal VOC label 255 to -1
 
 ## Requisites
 - [PyTorch 1.0](https://pytorch.org/get-started/locally/)
