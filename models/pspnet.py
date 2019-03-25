@@ -70,7 +70,7 @@ def _PSP1x1Conv(in_channels, out_channels, norm_layer, norm_kwargs):
 
 
 class _PyramidPooling(nn.Module):
-    def __init__(self, in_channels, height=64, width=60, **kwargs):
+    def __init__(self, in_channels, height=60, width=60, **kwargs):
         super(_PyramidPooling, self).__init__()
         out_channels = int(in_channels / 4)
         self._up_kwargs = {'height': height, 'width': width}

@@ -153,7 +153,7 @@ def get_deeplabv3(dataset='pascal_voc', backbone='resnet50', pretrained=False, r
     from data_loader import datasets
     model = DeepLabV3(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
     if pretrained:
-        model.load_state_dict(torch.load(get_model_file('psp_%s_%s' % (backbone, acronyms[dataset]), root=root)))
+        model.load_state_dict(torch.load(get_model_file('deeplabv3_%s_%s' % (backbone, acronyms[dataset]), root=root)))
     return model
 
 
