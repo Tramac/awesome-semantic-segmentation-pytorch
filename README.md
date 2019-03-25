@@ -30,8 +30,8 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 ## Model Zoo & Datasets
 #### Supported Model
 - [FCN](https://arxiv.org/abs/1411.4038)
-- [PSPNet](https://arxiv.org/pdf/1612.01105.pdf)
-- [DeepLabv3]
+- [PSPNet](https://arxiv.org/pdf/1612.01105)
+- [DeepLabv3](https://arxiv.org/abs/1706.05587)
 
 #### Supported Dataset
 You can run script to download dataset, such as:
