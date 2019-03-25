@@ -16,7 +16,7 @@ from utils.loss import MixSoftmaxCrossEntropyLoss
 
 parser = argparse.ArgumentParser(description='Semantic Segmentation Training With Pytorch')
 # model and dataset
-parser.add_argument('--model', type=str, default='psp', choices=['fcn32s/fcn16s/fcn8s/psp'],
+parser.add_argument('--model', type=str, default='psp', choices=['fcn32s/fcn16s/fcn8s/psp/deeplabv3'],
                     help='model name (default: fcn32s)')
 parser.add_argument('--backbone', type=str, default='resnet50', choices=['vgg16/resnet50/resnet101/resnet152'],
                     help='backbone name (default: resnet50)')

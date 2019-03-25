@@ -75,13 +75,17 @@ class _DeepLabHead(nn.Module):
         return self.block(x)
 
 
-def _ASPPConv(in_channels, out_channels, atrous_rate, norm_layer, norm_kwargs):
-    block = nn.Sequential(
-        nn.Conv2d(in_channels, out_channels, 3, padding=atrous_rate, dilation=atrous_rate, bias=False),
-        norm_layer(out_channels, **({} if norm_kwargs is None else norm_kwargs)),
-        nn.ReLU(True)
-    )
-    return block
+class _ASPPConv(nn.Module):
+    def __init__(self, in_channels, out_channels, atrous_rate, norm_layer, norm_kwargs):
+        super(_ASPPConv, self).__init__()
+        self.block = nn.Sequential(
+            nn.Conv2d(in_channels, out_channels, 3, padding=atrous_rate, dilation=atrous_rate, bias=False),
+            norm_layer(out_channels, **({} if norm_kwargs is None else norm_kwargs)),
+            nn.ReLU(True)
+        )
+
+    def forward(self, x):
+        return self.block(x)
 
 
 class _AsppPooling(nn.Module):
@@ -106,26 +110,19 @@ class _ASPP(nn.Module):
     def __init__(self, in_channels, atrous_rates, norm_layer, norm_kwargs, height=60, width=60):
         super(_ASPP, self).__init__()
         out_channels = 256
-        b0 = nn.Sequential(
+        self.b0 = nn.Sequential(
             nn.Conv2d(in_channels, out_channels, 1, bias=False),
             norm_layer(out_channels, **({} if norm_kwargs is None else norm_kwargs)),
             nn.ReLU(True)
         )
 
         rate1, rate2, rate3 = tuple(atrous_rates)
-        b1 = _ASPPConv(in_channels, out_channels, rate1, norm_layer, norm_kwargs)
-        b2 = _ASPPConv(in_channels, out_channels, rate2, norm_layer, norm_kwargs)
-        b3 = _ASPPConv(in_channels, out_channels, rate3, norm_layer, norm_kwargs)
-        b4 = _AsppPooling(in_channels, out_channels, norm_layer=norm_layer, norm_kwargs=norm_kwargs,
-                          height=height, width=width)
+        self.b1 = _ASPPConv(in_channels, out_channels, rate1, norm_layer, norm_kwargs)
+        self.b2 = _ASPPConv(in_channels, out_channels, rate2, norm_layer, norm_kwargs)
+        self.b3 = _ASPPConv(in_channels, out_channels, rate3, norm_layer, norm_kwargs)
+        self.b4 = _AsppPooling(in_channels, out_channels, norm_layer=norm_layer, norm_kwargs=norm_kwargs,
+                               height=height, width=width)
 
-        self.concurent = nn.Sequential(
-            b0,
-            b1,
-            b2,
-            b3,
-            b4
-        )
         self.project = nn.Sequential(
             nn.Conv2d(5 * out_channels, out_channels, 1, bias=False),
             norm_layer(out_channels, **({} if norm_kwargs is None else norm_kwargs)),
@@ -134,7 +131,12 @@ class _ASPP(nn.Module):
         )
 
     def forward(self, x):
-        x = self.concurent(x)
+        feat1 = self.b0(x)
+        feat2 = self.b1(x)
+        feat3 = self.b2(x)
+        feat4 = self.b3(x)
+        feat5 = self.b4(x)
+        x = torch.cat((feat1, feat2, feat3, feat4, feat5), dim=1)
         x = self.project(x)
         return x
 
@@ -181,5 +183,5 @@ def get_deeplabv3_resnet152_ade(**kwargs):
 
 if __name__ == '__main__':
     model = get_deeplabv3_resnet50_voc()
-    img = torch.randn(4, 3, 480, 480)
+    img = torch.randn(2, 3, 480, 480)
     output = model(img)

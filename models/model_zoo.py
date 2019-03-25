@@ -1,6 +1,7 @@
 """Model store which handles pretrained models """
 from .fcn import *
 from .pspnet import *
+from .deeplabv3 import *
 
 __all__ = ['get_model', 'get_model_list', 'get_segmentation_model']
 
@@ -14,6 +15,12 @@ _models = {
     'psp_resnet101_ade': get_psp_resnet101_ade,
     'psp_resnet101_citys': get_psp_resnet101_citys,
     'psp_resnet101_coco': get_psp_resnet101_coco,
+    'deeplabv3_resnet50_voc': get_deeplabv3_resnet50_voc,
+    'deeplabv3_resnet101_voc': get_deeplabv3_resnet101_voc,
+    'deeplabv3_resnet152_voc': get_deeplabv3_resnet152_voc,
+    'deeplabv3_resnet50_ade': get_deeplabv3_resnet50_ade,
+    'deeplabv3_resnet101_ade': get_deeplabv3_resnet101_ade,
+    'deeplabv3_resnet152_ade': get_deeplabv3_resnet152_ade,
 }
 
 
@@ -37,5 +44,6 @@ def get_segmentation_model(model, **kwargs):
         'fcn16s': get_fcn16s,
         'fcn8s': get_fcn8s,
         'psp': get_psp,
+        'deeplabv3': get_deeplabv3,
     }
     return models[model](**kwargs)
