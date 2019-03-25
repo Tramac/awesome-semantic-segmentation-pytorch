@@ -24,7 +24,7 @@ parser.add_argument('--dataset', type=str, default='pascal_voc', choices=['pasca
                     help='dataset name (default: pascal_voc)')
 parser.add_argument('--base-size', type=int, default=520,
                     help='base image size')
-parser.add_argument('--crop-size', type=int, default=224,
+parser.add_argument('--crop-size', type=int, default=480,
                     help='crop image size')
 parser.add_argument('--train-split', type=str, default='train',
                     help='dataset train split (default: train)')
@@ -37,7 +37,7 @@ parser.add_argument('--epochs', type=int, default=60, metavar='N',
                     help='number of epochs to train (default: 60)')
 parser.add_argument('--start_epoch', type=int, default=0,
                     metavar='N', help='start epochs (default:0)')
-parser.add_argument('--batch-size', type=int, default=2, metavar='N',
+parser.add_argument('--batch-size', type=int, default=4, metavar='N',
                     help='input batch size for training (default: 4)')
 parser.add_argument('--lr', type=float, default=1e-2, metavar='LR',
                     help='learning rate (default: 1e-4)')
