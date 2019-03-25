@@ -4,7 +4,7 @@ import torch
 import numpy as np
 
 from PIL import Image
-from .segbase import SegmentationDataset
+from data_loader.segbase import SegmentationDataset
 
 
 class ADE20KSegmentation(SegmentationDataset):
@@ -153,10 +153,10 @@ def _get_ade20k_pairs(folder, mode='train'):
         img_folder = os.path.join(folder, 'images/validation')
         mask_folder = os.path.join(folder, 'annotations/validation')
     for filename in os.listdir(img_folder):
-        basename, _ = os.path.join(img_folder, filename)
+        basename, _ = os.path.splitext(filename)
         if filename.endswith(".jpg"):
             imgpath = os.path.join(img_folder, filename)
-            maskname = basename + 'png'
+            maskname = basename + '.png'
             maskpath = os.path.join(mask_folder, maskname)
             if os.path.isfile(maskpath):
                 img_paths.append(imgpath)
@@ -165,3 +165,8 @@ def _get_ade20k_pairs(folder, mode='train'):
                 print('cannot find the mask:', maskpath)
 
     return img_paths, mask_paths
+
+
+if __name__ == '__main__':
+    train_dataset = ADE20KSegmentation()
+    img, mask = train_dataset[0]

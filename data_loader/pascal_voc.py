@@ -94,7 +94,9 @@ class VOCSegmentation(SegmentationDataset):
         return len(self.images)
 
     def _mask_transform(self, mask):
-        return torch.LongTensor(np.array(mask).astype('int32'))
+        target = np.array(mask).astype('int32')
+        target[target == 255] = -1
+        return torch.LongTensor(np.array(target).astype('int32'))
 
     @property
     def classes(self):

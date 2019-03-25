@@ -76,8 +76,6 @@ def batch_pix_accuracy(predict, target):
     assert predict.shape == target.shape
     predict = predict.astype('int64') + 1
     target = target.astype('int64') + 1
-    # ignored boundary 255, after add 1, 256
-    target[target == 256] = 0
 
     pixel_labeled = np.sum(target > 0)
     pixel_correct = np.sum((predict == target) * (target > 0))
@@ -94,8 +92,6 @@ def batch_intersection_union(predict, target, nclass):
     nbins = nclass
     predict = predict.astype('int64') + 1
     target = target.astype('int64') + 1
-    # ignored boundary 255, after add 1, 256
-    target[target == 256] = 0
 
     predict = predict * (target > 0).astype(predict.dtype)
     intersection = predict * (predict == target)

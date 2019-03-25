@@ -16,11 +16,11 @@ from utils.loss import MixSoftmaxCrossEntropyLoss
 
 parser = argparse.ArgumentParser(description='Semantic Segmentation Training With Pytorch')
 # model and dataset
-parser.add_argument('--model', type=str, default='psp', choices=['fcn32s/fcn16s/fcn8s/psp/deeplabv3'],
+parser.add_argument('--model', type=str, default='fcn32s', choices=['fcn32s/fcn16s/fcn8s/psp/deeplabv3'],
                     help='model name (default: fcn32s)')
-parser.add_argument('--backbone', type=str, default='resnet50', choices=['vgg16/resnet50/resnet101/resnet152'],
+parser.add_argument('--backbone', type=str, default='vgg16', choices=['vgg16/resnet50/resnet101/resnet152'],
                     help='backbone name (default: resnet50)')
-parser.add_argument('--dataset', type=str, default='pascal_voc', choices=['pascal_voc/pascal_aug/ade20k/citys'],
+parser.add_argument('--dataset', type=str, default='ade20k', choices=['pascal_voc/pascal_aug/ade20k/citys'],
                     help='dataset name (default: pascal_voc)')
 parser.add_argument('--base-size', type=int, default=520,
                     help='base image size')
@@ -100,7 +100,7 @@ class Trainer(object):
                 self.model.load_state_dict(torch.load(args.resume, map_location=lambda storage, loc: storage))
 
         # create criterion
-        self.criterion = MixSoftmaxCrossEntropyLoss(args.aux, args.aux_weight, ignore_label=255).to(device)
+        self.criterion = MixSoftmaxCrossEntropyLoss(args.aux, args.aux_weight, ignore_label=-1).to(device)
 
         # optimizer
         self.optimizer = torch.optim.SGD(self.model.parameters(),
