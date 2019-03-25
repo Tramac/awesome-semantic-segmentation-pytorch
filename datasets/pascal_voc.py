@@ -5,7 +5,7 @@ import argparse
 import tarfile
 from utils import download, makedirs
 
-_TARGET_DIR = os.path.expanduser('~/PycharmProjects/Data_zoo/VOCdevkit')
+_TARGET_DIR = os.path.expanduser('~/PycharmProjects/Data_zoo/voc')
 
 
 def parse_args():

@@ -60,6 +60,7 @@ class VOCAugSegmentation(SegmentationDataset):
                 self.images.append(_image)
                 _mask = os.path.join(_mask_dir, line.rstrip('\n') + ".mat")
                 assert os.path.isfile(_mask)
+                self.masks.append(_mask)
 
         assert (len(self.images) == len(self.masks))
 

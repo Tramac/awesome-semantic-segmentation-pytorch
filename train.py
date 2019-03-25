@@ -20,7 +20,7 @@ parser.add_argument('--model', type=str, default='fcn32s', choices=['fcn32s/fcn1
                     help='model name (default: fcn32s)')
 parser.add_argument('--backbone', type=str, default='vgg16', choices=['vgg16/resnet50/resnet101/resnet152'],
                     help='backbone name (default: resnet50)')
-parser.add_argument('--dataset', type=str, default='ade20k', choices=['pascal_voc/pascal_aug/ade20k/citys'],
+parser.add_argument('--dataset', type=str, default='pascal_aug', choices=['pascal_voc/pascal_aug/ade20k/citys'],
                     help='dataset name (default: pascal_voc)')
 parser.add_argument('--base-size', type=int, default=520,
                     help='base image size')
@@ -37,7 +37,7 @@ parser.add_argument('--epochs', type=int, default=60, metavar='N',
                     help='number of epochs to train (default: 60)')
 parser.add_argument('--start_epoch', type=int, default=0,
                     metavar='N', help='start epochs (default:0)')
-parser.add_argument('--batch-size', type=int, default=4, metavar='N',
+parser.add_argument('--batch-size', type=int, default=1, metavar='N',
                     help='input batch size for training (default: 4)')
 parser.add_argument('--lr', type=float, default=1e-2, metavar='LR',
                     help='learning rate (default: 1e-4)')

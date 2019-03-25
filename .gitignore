@@ -115,6 +115,7 @@ weights/
 # dataset
 .VOCdevket/
 VOCdevket
+voc/
 ade/
 .eval/
 eval/
