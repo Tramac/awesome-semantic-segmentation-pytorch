@@ -157,10 +157,12 @@ class Trainer(object):
         for i, (image, target) in enumerate(self.val_loader):
             image = image.to(device)
 
-            output = self.model(image)
-            self.metric.update(output.numpy(), target.numpy())
+            outputs = self.model(image)
+            pred = torch.argmax(outputs[0], 1)
+            pred = pred.cpu().data.numpy()
+            self.metric.update(pred, target.numpy())
             pixAcc, mIoU = self.metric.get()
-            print('Epoch %d, validation pixAcc: %.3f, mIoU: %.3f' % (epoch, pixAcc, mIoU))
+            print('Epoch %d, Sample %d, validation pixAcc: %.3f, mIoU: %.3f' % (epoch, i + 1, pixAcc, mIoU))
 
     def save_checkpoint(self):
         """Save Checkpoint"""
