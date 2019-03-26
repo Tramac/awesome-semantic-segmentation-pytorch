@@ -70,12 +70,12 @@ def eval(config):
 
         metric.update(pred, label)
         pixAcc, mIoU = metric.get()
-        print('pixAcc: %.3f%%, mIoU: %.3f%%' % (pixAcc * 100, mIoU * 100))
+        print('Sample %d, validation pixAcc: %.3f%%, mIoU: %.3f%%' % (i + 1, pixAcc * 100, mIoU * 100))
 
         if config.save_result:
             predict = pred.squeeze(0)
             mask = get_color_pallete(predict, config.dataset)
-            mask.save(os.path.join(config.outdir, 'seg_' + str(i) + '_.png'))
+            mask.save(os.path.join(config.outdir, 'seg_{}.png'.format(i)))
 
 
 if __name__ == '__main__':
