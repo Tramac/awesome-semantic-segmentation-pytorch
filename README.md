@@ -54,6 +54,7 @@ python ade20k.py --download-dir ./datasets/ade
 |FCN8s|vgg16|train|val|48.87%|85.02%|
 |PSPNet|resnet50|train|val|63.44%|89.78%|
 |DeepLabv3|resnet50|train|val|60.15%|88.36%|
+
 Note: epochs=60
 
 ## To Do
