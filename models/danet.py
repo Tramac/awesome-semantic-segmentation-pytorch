@@ -4,7 +4,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from models.segbase import SegBaseModel
-from models.model_store import get_model_file
 
 __all__ = ['DANet', 'get_danet', 'get_danet_resnet50_citys',
            'get_danet_resnet101_citys', 'get_danet_resnet152_citys']
@@ -163,7 +162,7 @@ class _DAHead(nn.Module):
         return tuple(outputs)
 
 
-def get_danet(dataset='pascal_voc', backbone='resnet50', pretrained=False,
+def get_danet(dataset='citys', backbone='resnet50', pretrained=False,
               root='~/.torch/models', pretrained_base=True, **kwargs):
     r"""Dual Attention Network
 
@@ -193,6 +192,7 @@ def get_danet(dataset='pascal_voc', backbone='resnet50', pretrained=False,
     from data_loader import datasets
     model = DANet(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
     if pretrained:
+        from models.model_store import get_model_file
         model.load_state_dict(torch.load(get_model_file('danet_%s_%s' % (backbone, acronyms[dataset]), root=root)))
     return model
 

@@ -16,11 +16,14 @@ from utils.loss import MixSoftmaxCrossEntropyLoss
 
 parser = argparse.ArgumentParser(description='Semantic Segmentation Training With Pytorch')
 # model and dataset
-parser.add_argument('--model', type=str, default='fcn32s', choices=['fcn32s/fcn16s/fcn8s/psp/deeplabv3/danet'],
+parser.add_argument('--model', type=str, default='denseaspp',
+                    choices=['fcn32s/fcn16s/fcn8s/psp/deeplabv3/danet/denseaspp'],
                     help='model name (default: fcn32s)')
-parser.add_argument('--backbone', type=str, default='vgg16', choices=['vgg16/resnet50/resnet101/resnet152'],
+parser.add_argument('--backbone', type=str, default='densenet121',
+                    choices=['vgg16/resnet50/resnet101/resnet152/densenet121/161/169/201'],
                     help='backbone name (default: resnet50)')
-parser.add_argument('--dataset', type=str, default='citys', choices=['pascal_voc/pascal_aug/ade20k/citys'],
+parser.add_argument('--dataset', type=str, default='citys',
+                    choices=['pascal_voc/pascal_aug/ade20k/citys'],
                     help='dataset name (default: pascal_voc)')
 parser.add_argument('--base-size', type=int, default=520,
                     help='base image size')
