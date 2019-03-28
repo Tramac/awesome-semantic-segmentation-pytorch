@@ -2,6 +2,7 @@
 from .fcn import *
 from .pspnet import *
 from .deeplabv3 import *
+from .danet import *
 
 __all__ = ['get_model', 'get_model_list', 'get_segmentation_model']
 
@@ -21,6 +22,9 @@ _models = {
     'deeplabv3_resnet50_ade': get_deeplabv3_resnet50_ade,
     'deeplabv3_resnet101_ade': get_deeplabv3_resnet101_ade,
     'deeplabv3_resnet152_ade': get_deeplabv3_resnet152_ade,
+    'danet_resnet50_ciyts': get_danet_resnet50_citys,
+    'danet_resnet101_citys': get_danet_resnet101_citys,
+    'danet_resnet152_citys': get_danet_resnet152_citys,
 }
 
 
@@ -45,5 +49,6 @@ def get_segmentation_model(model, **kwargs):
         'fcn8s': get_fcn8s,
         'psp': get_psp,
         'deeplabv3': get_deeplabv3,
+        'danet': get_danet,
     }
     return models[model](**kwargs)
