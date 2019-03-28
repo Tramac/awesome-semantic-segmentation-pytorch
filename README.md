@@ -1,9 +1,9 @@
 # Awesome Semantic Segmentation on PyTorch
+This project aims at providing a concise, easy-to-use, modular reference implementation for semantic segmentation models using PyTorch.
 
-<p align="center"><img width="70%" src="datasets/ADE_demo_img.png" /></p>
+<p align="center"><img width="100%" src="datasets/weimar_000091_000019_gtFine_color.png" /></p>
 
 --------------------------------------------------------------------------------
-This project aims at providing a concise, easy-to-use, modular reference implementation for semantic segmentation models using PyTorch.
 
 ## Update
 - Move ```./weights``` to ```～/.torch/models```
@@ -47,16 +47,18 @@ python ade20k.py --download-dir ./datasets/ade
 
 ## Result
 #### PASCAL VOC 2012
-|Methods|Backbone|TrainSet|EvalSet|Mean IoU|pixAcc|
-|:-:|:-:|:-:|:-:|:-:|:-:|
-|FCN32s|vgg16|train|val|47.50%|85.39%|
-|FCN16s|vgg16|train|val|49.16%|85.98%|
-|FCN8s|vgg16|train|val|48.87%|85.02%|
-|PSPNet|resnet50|train|val|63.44%|89.78%|
-|DeepLabv3|resnet50|train|val|60.15%|88.36%|
+|Methods|Backbone|TrainSet|EvalSet|crops_size|epochs|Mean IoU|pixAcc|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|FCN32s|vgg16|train|val|480|60|47.50%|85.39%|
+|FCN16s|vgg16|train|val|480|60|49.16%|85.98%|
+|FCN8s|vgg16|train|val|480|60|48.87%|85.02%|
+|PSPNet|resnet50|train|val|480|60|63.44%|89.78%|
+|DeepLabv3|resnet50|train|val|480|60|60.15%|88.36%|
 
 ## To Do
 - [ ] Add more semantic segmentation models (in process)
 - [ ] Train process
 - [ ] Find difference between ```cuda``` and ```only cpu```
 - [ ] ~~Why is the performance so terrible?~~
+- [ ] Add DataParallelModel and DataParallelCriterion
+- [ ] Add Synchronized BN
