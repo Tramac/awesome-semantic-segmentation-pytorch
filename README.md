@@ -47,13 +47,13 @@ python ade20k.py --download-dir ./datasets/ade
 
 ## Result
 #### PASCAL VOC 2012
-|Methods|Backbone|TrainSet|EvalSet|Mean IoU|pixAcc|
-|:-:|:-:|:-:|:-:|:-:|:-:|
-|FCN32s|vgg16|train|val|47.50%|85.39%|
-|FCN16s|vgg16|train|val|49.16%|85.98%|
-|FCN8s|vgg16|train|val|48.87%|85.02%|
-|PSPNet|resnet50|train|val|63.44%|89.78%|
-|DeepLabv3|resnet50|train|val|60.15%|88.36%|
+|Methods|Backbone|TrainSet|EvalSet|crops_size|Mean IoU|pixAcc|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|FCN32s|vgg16|train|val|480|47.50%|85.39%|
+|FCN16s|vgg16|train|val|480|49.16%|85.98%|
+|FCN8s|vgg16|train|val|480|48.87%|85.02%|
+|PSPNet|resnet50|train|val|480|63.44%|89.78%|
+|DeepLabv3|resnet50|train|val|480|60.15%|88.36%|
 
 Note: epochs=60
 
