@@ -6,9 +6,8 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 --------------------------------------------------------------------------------
 
 ## Update
-- Move ```./weights``` to ```～/.torch/models```
-- Add DeepLabv3
-- Change Pascal VOC label 255 to -1
+- Add DANet
+- Update MultiLoss
 
 ## Requisites
 - [PyTorch 1.0](https://pytorch.org/get-started/locally/)
@@ -32,6 +31,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 - [FCN](https://arxiv.org/abs/1411.4038)
 - [PSPNet](https://arxiv.org/pdf/1612.01105)
 - [DeepLabv3](https://arxiv.org/abs/1706.05587)
+- [DANet](https://arxiv.org/pdf/1809.02983)
 
 #### Supported Dataset
 You can run script to download dataset, such as:
@@ -39,11 +39,11 @@ You can run script to download dataset, such as:
 cd ./datasets
 python ade20k.py --download-dir ./datasets/ade
 ```
-- VOC2012, [download](http://host.robots.ox.ac.uk/pascal/VOC/voc2012/VOCtrainval_11-May-2012.tar)
-- VOCAug, [download](http://www.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/semantic_contours/benchmark.tgz)
-- ADK20K, [download](http://groups.csail.mit.edu/vision/datasets/ADE20K/)
-- Cityscapes, [download](https://www.cityscapes-dataset.com/downloads/)
-- COCO
+- [VOC2012](http://host.robots.ox.ac.uk/pascal/VOC/voc2012/VOCtrainval_11-May-2012.tar)
+- [VOCAug](http://www.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/semantic_contours/benchmark.tgz)
+- [ADK20K](http://groups.csail.mit.edu/vision/datasets/ADE20K/)
+- [Cityscapes](https://www.cityscapes-dataset.com/downloads/)
+- [COCO](http://cocodataset.org/#download)
 
 ## Result
 #### PASCAL VOC 2012
@@ -57,8 +57,7 @@ python ade20k.py --download-dir ./datasets/ade
 
 ## To Do
 - [ ] Add more semantic segmentation models (in process)
-- [ ] Train process
+- [ ] Train and evaluate
 - [ ] Find difference between ```cuda``` and ```only cpu```
-- [ ] ~~Why is the performance so terrible?~~
 - [ ] Add DataParallelModel and DataParallelCriterion
 - [ ] Add Synchronized BN
