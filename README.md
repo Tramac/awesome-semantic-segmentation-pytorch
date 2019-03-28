@@ -61,3 +61,4 @@ python ade20k.py --download-dir ./datasets/ade
 - [ ] Find difference between ```cuda``` and ```only cpu```
 - [ ] ~~Why is the performance so terrible?~~
 - [ ] Add DataParallelModel and DataParallelCriterion
+- [ ] Add Synchronized BN
