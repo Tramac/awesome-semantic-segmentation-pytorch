@@ -62,7 +62,6 @@ python ade20k.py --download-dir ./datasets/ade
 ## To Do
 - [ ] Add more semantic segmentation models (in process)
 - [ ] Train and evaluate
-- [ ] Find difference between ```cuda``` and ```only cpu```
 - [x] Add DataParallelModel and DataParallelCriterion
 - [ ] Add Synchronized BN
 
