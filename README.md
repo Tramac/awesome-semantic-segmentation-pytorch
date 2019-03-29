@@ -6,8 +6,11 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 --------------------------------------------------------------------------------
 
 ## Update
+- Add parallel training
 - Add DANet
 - Update MultiLoss
+
+Note: I have not tested whether parallel training is available.
 
 ## Requisites
 - [PyTorch 1.0](https://pytorch.org/get-started/locally/)
@@ -60,5 +63,8 @@ python ade20k.py --download-dir ./datasets/ade
 - [ ] Add more semantic segmentation models (in process)
 - [ ] Train and evaluate
 - [ ] Find difference between ```cuda``` and ```only cpu```
-- [ ] Add DataParallelModel and DataParallelCriterion
+- [x] Add DataParallelModel and DataParallelCriterion
 - [ ] Add Synchronized BN
+
+## References
+- [PyTorch-Encoding](https://github.com/zhanghang1989/PyTorch-Encoding)
