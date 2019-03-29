@@ -119,3 +119,6 @@ voc/
 ade/
 .eval/
 eval/
+
+# overfitting test
+model_test.py

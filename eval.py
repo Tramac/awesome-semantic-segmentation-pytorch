@@ -14,11 +14,11 @@ from utils.visualize import get_color_pallete
 
 parser = argparse.ArgumentParser(
     description='Semantic Segmentation Evaluation')
-parser.add_argument('--model', type=str, default='fcn32',
-                    help='model name (default: fcn32)')
-parser.add_argument('--backbone', type=str, default='resnet50',
-                    help='backbone name (default: resnet50)')
-parser.add_argument('--dataset', type=str, default='citys',
+parser.add_argument('--model', type=str, default='fcn32s',
+                    help='model name (default: fcn32s)')
+parser.add_argument('--backbone', type=str, default='vgg16',
+                    help='backbone name (default: vgg16)')
+parser.add_argument('--dataset', type=str, default='pascal_voc',
                     help='dataset name (default: pascal_voc, pascal_aug. choice=[pascal_voc, ade20k, citys]')
 parser.add_argument('--base-size', type=int, default=520,
                     help='base image size')
