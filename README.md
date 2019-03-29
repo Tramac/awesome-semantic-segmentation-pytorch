@@ -32,6 +32,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 - [PSPNet](https://arxiv.org/pdf/1612.01105)
 - [DeepLabv3](https://arxiv.org/abs/1706.05587)
 - [DANet](https://arxiv.org/pdf/1809.02983)
+- [DenseASPP](http://openaccess.thecvf.com/content_cvpr_2018/papers/Yang_DenseASPP_for_Semantic_CVPR_2018_paper.pdf)
 
 #### Supported Dataset
 You can run script to download dataset, such as:
