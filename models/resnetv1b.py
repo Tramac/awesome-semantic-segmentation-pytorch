@@ -16,15 +16,16 @@ model_urls = {
 class BasicBlockV1b(nn.Module):
     expansion = 1
 
-    def __init__(self, inplanes, planes, stride=1, dilation=1, downsample=None, previous_dilation=1):
+    def __init__(self, inplanes, planes, stride=1, dilation=1, downsample=None,
+                 previous_dilation=1, norm_layer=nn.BatchNorm2d):
         super(BasicBlockV1b, self).__init__()
         self.conv1 = nn.Conv2d(inplanes, planes, 3, stride,
                                dilation, dilation, bias=False)
-        self.bn1 = nn.BatchNorm2d(planes)
+        self.bn1 = norm_layer(planes)
         self.relu = nn.ReLU(True)
         self.conv2 = nn.Conv2d(planes, planes, 3, 1, previous_dilation,
                                dilation=previous_dilation, bias=False)
-        self.bn2 = nn.BatchNorm2d(planes)
+        self.bn2 = norm_layer(planes)
         self.downsample = downsample
         self.stride = stride
 
@@ -50,15 +51,16 @@ class BasicBlockV1b(nn.Module):
 class BottleneckV1b(nn.Module):
     expansion = 4
 
-    def __init__(self, inplanes, planes, stride=1, dilation=1, downsample=None, previous_dilation=1):
+    def __init__(self, inplanes, planes, stride=1, dilation=1, downsample=None,
+                 previous_dilation=1, norm_layer=nn.BatchNorm2d):
         super(BottleneckV1b, self).__init__()
         self.conv1 = nn.Conv2d(inplanes, planes, 1, bias=False)
-        self.bn1 = nn.BatchNorm2d(planes)
+        self.bn1 = norm_layer(planes)
         self.conv2 = nn.Conv2d(planes, planes, 3, stride,
                                dilation, dilation, bias=False)
-        self.bn2 = nn.BatchNorm2d(planes)
+        self.bn2 = norm_layer(planes)
         self.conv3 = nn.Conv2d(planes, planes * self.expansion, 1, bias=False)
-        self.bn3 = nn.BatchNorm2d(planes * self.expansion)
+        self.bn3 = norm_layer(planes * self.expansion)
         self.relu = nn.ReLU(True)
         self.downsample = downsample
         self.stride = stride
@@ -88,21 +90,22 @@ class BottleneckV1b(nn.Module):
 
 class ResNetV1b(nn.Module):
 
-    def __init__(self, block, layers, num_classes=1000, dilated=True, zero_init_residual=False):
+    def __init__(self, block, layers, num_classes=1000, dilated=True,
+                 zero_init_residual=False, norm_layer=nn.BatchNorm2d):
         super(ResNetV1b, self).__init__()
         self.inplanes = 64
         self.conv1 = nn.Conv2d(3, 64, 7, 2, 3, bias=False)
-        self.bn1 = nn.BatchNorm2d(64)
+        self.bn1 = norm_layer(64)
         self.relu = nn.ReLU(True)
         self.maxpool = nn.MaxPool2d(3, 2, 1)
-        self.layer1 = self._make_layer(block, 64, layers[0])
-        self.layer2 = self._make_layer(block, 128, layers[1], stride=2)
+        self.layer1 = self._make_layer(block, 64, layers[0], norm_layer=norm_layer)
+        self.layer2 = self._make_layer(block, 128, layers[1], stride=2, norm_layer=norm_layer)
         if dilated:
-            self.layer3 = self._make_layer(block, 256, layers[2], stride=1, dilation=2)
-            self.layer4 = self._make_layer(block, 512, layers[3], stride=1, dilation=4)
+            self.layer3 = self._make_layer(block, 256, layers[2], stride=1, dilation=2, norm_layer=norm_layer)
+            self.layer4 = self._make_layer(block, 512, layers[3], stride=1, dilation=4, norm_layer=norm_layer)
         else:
-            self.layer3 = self._make_layer(block, 256, layers[2], stride=2)
-            self.layer4 = self._make_layer(block, 512, layers[3], stride=2)
+            self.layer3 = self._make_layer(block, 256, layers[2], stride=2, norm_layer=norm_layer)
+            self.layer4 = self._make_layer(block, 512, layers[3], stride=2, norm_layer=norm_layer)
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
         self.fc = nn.Linear(512 * block.expansion, num_classes)
 
@@ -120,12 +123,12 @@ class ResNetV1b(nn.Module):
                 elif isinstance(m, BasicBlockV1b):
                     nn.init.constant_(m.bn2.weight, 0)
 
-    def _make_layer(self, block, planes, blocks, stride=1, dilation=1):
+    def _make_layer(self, block, planes, blocks, stride=1, dilation=1, norm_layer=nn.BatchNorm2d):
         downsample = None
         if stride != 1 or self.inplanes != planes * block.expansion:
             downsample = nn.Sequential(
                 nn.Conv2d(self.inplanes, planes * block.expansion, 1, stride, bias=False),
-                nn.BatchNorm2d(planes * block.expansion),
+                norm_layer(planes * block.expansion),
             )
 
         layers = []

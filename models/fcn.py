@@ -15,16 +15,16 @@ class FCN32s(nn.Module):
     """There are some difference from original fcn"""
 
     def __init__(self, nclass, backbone='vgg16', aux=False, pretrained_base=True,
-                 base_size=520, crop_size=480, **kwargs):
+                 norm_layer=nn.BatchNorm2d, **kwargs):
         super(FCN32s, self).__init__()
         self.aux = aux
         if backbone == 'vgg16':
             self.features = vgg16(pretrained=pretrained_base).features
         else:
             raise RuntimeError('unknown backbone: {}'.format(backbone))
-        self.head = _FCNHead(512, nclass)
+        self.head = _FCNHead(512, nclass, norm_layer)
         if aux:
-            self.auxlayer = _FCNHead(512, nclass)
+            self.auxlayer = _FCNHead(512, nclass, norm_layer)
 
     def forward(self, x):
         pool5 = self.features(x)
@@ -46,7 +46,7 @@ class FCN32s(nn.Module):
 
 
 class FCN16s(nn.Module):
-    def __init__(self, nclass, backbone='vgg16', aux=False, pretrained_base=True, base_size=520, crop_size=480, **kwargs):
+    def __init__(self, nclass, backbone='vgg16', aux=False, pretrained_base=True, norm_layer=nn.BatchNorm2d, **kwargs):
         super(FCN16s, self).__init__()
         self.aux = aux
         if backbone == 'vgg16':
@@ -55,10 +55,10 @@ class FCN16s(nn.Module):
             raise RuntimeError('unknown backbone: {}'.format(backbone))
         self.pool4 = nn.Sequential(*self.features[:24])
         self.pool5 = nn.Sequential(*self.features[24:])
-        self.head = _FCNHead(512, nclass)
+        self.head = _FCNHead(512, nclass, norm_layer)
         self.score_pool4 = nn.Conv2d(512, nclass, 1)
         if aux:
-            self.auxlayer = _FCNHead(512, nclass)
+            self.auxlayer = _FCNHead(512, nclass, norm_layer)
 
     def forward(self, x):
         pool4 = self.pool4(x)
@@ -88,7 +88,7 @@ class FCN16s(nn.Module):
 
 
 class FCN8s(nn.Module):
-    def __init__(self, nclass, backbone='vgg16', aux=False, pretrained_base=True, base_size=520, crop_size=480, **kwargs):
+    def __init__(self, nclass, backbone='vgg16', aux=False, pretrained_base=True, norm_layer=nn.BatchNorm2d, **kwargs):
         super(FCN8s, self).__init__()
         self.aux = aux
         if backbone == 'vgg16':
@@ -98,11 +98,11 @@ class FCN8s(nn.Module):
         self.pool3 = nn.Sequential(*self.features[:17])
         self.pool4 = nn.Sequential(*self.features[17:24])
         self.pool5 = nn.Sequential(*self.features[24:])
-        self.head = _FCNHead(512, nclass)
+        self.head = _FCNHead(512, nclass, norm_layer)
         self.score_pool3 = nn.Conv2d(256, nclass, 1)
         self.score_pool4 = nn.Conv2d(512, nclass, 1)
         if aux:
-            self.auxlayer = _FCNHead(512, nclass)
+            self.auxlayer = _FCNHead(512, nclass, norm_layer)
 
     def forward(self, x):
         pool3 = self.pool3(x)
@@ -138,12 +138,12 @@ class FCN8s(nn.Module):
 
 
 class _FCNHead(nn.Module):
-    def __init__(self, in_channels, channels, **kwargs):
+    def __init__(self, in_channels, channels, norm_layer, **kwargs):
         super(_FCNHead, self).__init__()
         inter_channels = in_channels // 4
         self.block = nn.Sequential(
             nn.Conv2d(in_channels, inter_channels, 3, padding=1, bias=False),
-            nn.BatchNorm2d(inter_channels),
+            norm_layer(inter_channels),
             nn.ReLU(inplace=True),
             nn.Dropout(0.1),
             nn.Conv2d(inter_channels, channels, 1)

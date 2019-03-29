@@ -5,6 +5,7 @@ import torch.nn.functional as F
 
 from models.model_store import get_model_file
 from models.segbase import SegBaseModel
+from models.fcn import _FCNHead
 
 __all__ = ['PSPNet', 'get_psp', 'get_psp_resnet50_voc', 'get_psp_resnet50_ade', 'get_psp_resnet101_voc',
            'get_psp_resnet101_ade', 'get_psp_resnet101_citys', 'get_psp_resnet101_coco']
@@ -38,13 +39,7 @@ class PSPNet(SegBaseModel):
         self.head = _PSPHead(nclass, height=self._up_kwargs['height'] // 8, width=self._up_kwargs['width'] // 8,
                              **kwargs)
         if self.aux:
-            self.auxlayer = nn.Sequential(
-                nn.Conv2d(1024, 256, 3, padding=1, bias=False),
-                nn.BatchNorm2d(256),
-                nn.ReLU(True),
-                nn.Dropout(0.1),
-                nn.Conv2d(256, nclass, 1)
-            )
+            self.auxlayer = _FCNHead(1024, nclass, **kwargs)
 
     def forward(self, x):
         c3, c4 = self.base_forward(x)
