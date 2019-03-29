@@ -9,6 +9,7 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 - Add parallel training
 - Add DANet
 - Update MultiLoss
+
 Note: I have not tested whether parallel training is available.
 
 ## Requisites
