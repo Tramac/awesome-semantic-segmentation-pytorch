@@ -50,6 +50,7 @@ python ade20k.py --download-dir ./datasets/ade
 - [COCO](http://cocodataset.org/#download)
 
 ## Result
+Note: The parameter settings of each method are different, including crop_size, learning rata, epochs, etc. For specific parameters, please see paper.
 #### PASCAL VOC 2012
 |Methods|Backbone|TrainSet|EvalSet|crops_size|epochs|Mean IoU|pixAcc|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
