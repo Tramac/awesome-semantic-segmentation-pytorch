@@ -4,6 +4,7 @@ from .pspnet import *
 from .deeplabv3 import *
 from .danet import *
 from .denseaspp import *
+from .bisenet import *
 
 __all__ = ['get_model', 'get_model_list', 'get_segmentation_model']
 
@@ -30,6 +31,7 @@ _models = {
     'denseaspp_densenet161_citys': get_denseaspp_densenet161_citys,
     'denseaspp_densenet169_citys': get_denseaspp_densenet169_citys,
     'denseaspp_densenet201_citys': get_denseaspp_densenet201_citys,
+    'bisenet_resnet18_citys': get_bisenet_resnet18_citys,
 }
 
 
@@ -56,5 +58,6 @@ def get_segmentation_model(model, **kwargs):
         'deeplabv3': get_deeplabv3,
         'danet': get_danet,
         'denseaspp': get_denseaspp,
+        'bisenet': get_bisenet,
     }
     return models[model](**kwargs)
