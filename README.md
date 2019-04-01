@@ -6,8 +6,8 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 --------------------------------------------------------------------------------
 
 ## Update
+- Add BiSeNet
 - Add parallel training
-- Add DANet
 - Update MultiLoss
 
 Note: I have not tested whether parallel training is available.
@@ -36,6 +36,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 - [DeepLabv3](https://arxiv.org/abs/1706.05587)
 - [DANet](https://arxiv.org/pdf/1809.02983)
 - [DenseASPP](http://openaccess.thecvf.com/content_cvpr_2018/papers/Yang_DenseASPP_for_Semantic_CVPR_2018_paper.pdf)
+- [BiSeNet](https://arxiv.org/abs/1808.00897)
 
 #### Supported Dataset
 You can run script to download dataset, such as:
