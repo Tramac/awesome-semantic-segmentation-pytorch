@@ -6,6 +6,7 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 --------------------------------------------------------------------------------
 
 ## Update
+- Move backbones to base_models
 - Add BiSeNet
 - Add parallel training
 - Update MultiLoss
