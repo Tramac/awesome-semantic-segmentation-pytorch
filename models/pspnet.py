@@ -3,7 +3,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from models.model_store import get_model_file
 from models.segbase import SegBaseModel
 from models.fcn import _FCNHead
 
@@ -138,6 +137,7 @@ def get_psp(dataset='pascal_voc', backbone='resnet50', pretrained=False, root='~
     from data_loader import datasets
     model = PSPNet(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
     if pretrained:
+        from models.model_store import get_model_file
         model.load_state_dict(torch.load(get_model_file('psp_%s_%s' % (backbone, acronyms[dataset]), root=root)))
     return model
 

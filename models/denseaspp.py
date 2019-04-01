@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from models.densenet import *
+from models.base_models.densenet import *
 from models.fcn import _FCNHead
 
 __all__ = ['DenseASPP', 'get_denseaspp', 'get_denseaspp_densenet121_citys',
