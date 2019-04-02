@@ -4,7 +4,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from models.base_models.vgg import vgg16
-from models.utils import weights_init
 
 __all__ = ['get_fcn32s', 'get_fcn16s', 'get_fcn8s',
            'get_fcn32s_vgg16_voc', 'get_fcn16s_vgg16_voc', 'get_fcn8s_vgg16_voc']
@@ -39,9 +38,6 @@ class FCN32s(nn.Module):
             outputs.append(auxout)
 
         return tuple(outputs)
-
-    def _initialize_weights(self):
-        self.head.apply(weights_init)
 
 
 class FCN16s(nn.Module):
@@ -80,10 +76,6 @@ class FCN16s(nn.Module):
             outputs.append(auxout)
 
         return tuple(outputs)
-
-    def _initialize_weights(self):
-        self.head.apply(weights_init)
-        self.score_pool4.apply(weights_init)
 
 
 class FCN8s(nn.Module):
@@ -129,11 +121,6 @@ class FCN8s(nn.Module):
             outputs.append(auxout)
 
         return tuple(outputs)
-
-    def _initialize_weights(self):
-        self.head.apply(weights_init)
-        self.score_pool4.apply(weights_init)
-        self.score_pool3.apply(weights_init)
 
 
 class _FCNHead(nn.Module):
