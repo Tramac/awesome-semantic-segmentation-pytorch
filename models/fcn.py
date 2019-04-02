@@ -124,7 +124,7 @@ class FCN8s(nn.Module):
 
 
 class _FCNHead(nn.Module):
-    def __init__(self, in_channels, channels, norm_layer, **kwargs):
+    def __init__(self, in_channels, channels, norm_layer=nn.BatchNorm2d, **kwargs):
         super(_FCNHead, self).__init__()
         inter_channels = in_channels // 4
         self.block = nn.Sequential(
