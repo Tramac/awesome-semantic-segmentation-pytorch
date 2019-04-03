@@ -1,6 +1,6 @@
 """Base Model for Semantic Segmentation"""
 import torch.nn as nn
-from .base_models.resnetv1b import resnet50_v1b, resnet101_v1b, resnet152_v1b
+from .base_models.resnetv1b import resnet50_v1s, resnet101_v1s, resnet152_v1s
 
 __all__ = ['SegBaseModel']
 
@@ -21,11 +21,11 @@ class SegBaseModel(nn.Module):
         self.aux = aux
         self.nclass = nclass
         if backbone == 'resnet50':
-            pretrained = resnet50_v1b(pretrained=pretrained_base, **kwargs)
+            pretrained = resnet50_v1s(pretrained=pretrained_base, **kwargs)
         elif backbone == 'resnet101':
-            pretrained = resnet101_v1b(pretrained=pretrained_base, **kwargs)
+            pretrained = resnet101_v1s(pretrained=pretrained_base, **kwargs)
         elif backbone == 'resnet152':
-            pretrained = resnet152_v1b(pretrained=pretrained_base, **kwargs)
+            pretrained = resnet152_v1s(pretrained=pretrained_base, **kwargs)
         else:
             raise RuntimeError('unknown backbone: {}'.format(backbone))
         self.conv1 = pretrained.conv1
@@ -48,11 +48,11 @@ class SegBaseModel(nn.Module):
         x = self.bn1(x)
         x = self.relu(x)
         x = self.maxpool(x)
-        x = self.layer1(x)
-        x = self.layer2(x)
-        c3 = self.layer3(x)
+        c1 = self.layer1(x)
+        c2 = self.layer2(c1)
+        c3 = self.layer3(c2)
         c4 = self.layer4(c3)
-        return c3, c4
+        return c1, c2, c3, c4
 
     def evaluate(self, x):
         """evaluating network with inputs and targets"""

@@ -1,8 +1,9 @@
+import torch
 import torch.nn as nn
 import torch.utils.model_zoo as model_zoo
 
 __all__ = ['ResNetV1b', 'resnet18_v1b', 'resnet34_v1b', 'resnet50_v1b',
-           'resnet101_v1b', 'resnet152_v1b']
+           'resnet101_v1b', 'resnet152_v1b', 'resnet152_v1s', 'resnet101_v1s', 'resnet50_v1s']
 
 model_urls = {
     'resnet18': 'https://download.pytorch.org/models/resnet18-5c106cde.pth',
@@ -90,12 +91,23 @@ class BottleneckV1b(nn.Module):
 
 class ResNetV1b(nn.Module):
 
-    def __init__(self, block, layers, num_classes=1000, dilated=True,
+    def __init__(self, block, layers, num_classes=1000, dilated=True, deep_stem=False,
                  zero_init_residual=False, norm_layer=nn.BatchNorm2d):
+        self.inplanes = 128 if deep_stem else 64
         super(ResNetV1b, self).__init__()
-        self.inplanes = 64
-        self.conv1 = nn.Conv2d(3, 64, 7, 2, 3, bias=False)
-        self.bn1 = norm_layer(64)
+        if deep_stem:
+            self.conv1 = nn.Sequential(
+                nn.Conv2d(3, 64, 3, 2, 1, bias=False),
+                norm_layer(64),
+                nn.ReLU(True),
+                nn.Conv2d(64, 64, 3, 1, 1, bias=False),
+                norm_layer(64),
+                nn.ReLU(True),
+                nn.Conv2d(64, 128, 3, 1, 1, bias=False)
+            )
+        else:
+            self.conv1 = nn.Conv2d(3, 64, 7, 2, 3, bias=False)
+        self.bn1 = norm_layer(self.inplanes)
         self.relu = nn.ReLU(True)
         self.maxpool = nn.MaxPool2d(3, 2, 1)
         self.layer1 = self._make_layer(block, 64, layers[0], norm_layer=norm_layer)
@@ -216,6 +228,30 @@ def resnet152_v1b(pretrained=False, **kwargs):
         old_dict = {k: v for k, v in old_dict.items() if (k in model_dict)}
         model_dict.update(old_dict)
         model.load_state_dict(model_dict)
+    return model
+
+
+def resnet50_v1s(pretrained=False, root='~/.torch/models', **kwargs):
+    model = ResNetV1b(BottleneckV1b, [3, 4, 6, 3], deep_stem=True, **kwargs)
+    if pretrained:
+        from models.model_store import get_model_file
+        model.load_state_dict(torch.load(get_model_file('resnet50', root=root)), strict=False)
+    return model
+
+
+def resnet101_v1s(pretrained=False, root='~/.torch/models', **kwargs):
+    model = ResNetV1b(BottleneckV1b, [3, 4, 23, 3], deep_stem=True, **kwargs)
+    if pretrained:
+        from models.model_store import get_model_file
+        model.load_state_dict(torch.load(get_model_file('resnet101', root=root)), strict=False)
+    return model
+
+
+def resnet152_v1s(pretrained=False, root='~/.torch/models', **kwargs):
+    model = ResNetV1b(BottleneckV1b, [3, 8, 36, 3], deep_stem=True, **kwargs)
+    if pretrained:
+        from models.model_store import get_model_file
+        model.load_state_dict(torch.load(get_model_file('resnet152', root=root)), strict=False)
     return model
 
 

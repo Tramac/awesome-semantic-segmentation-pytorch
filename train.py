@@ -3,6 +3,7 @@ import time
 import os
 
 import torch
+import torch.nn as nn
 import torch.utils.data as data
 import torch.backends.cudnn as cudnn
 
@@ -18,10 +19,10 @@ from utils.loss import MixSoftmaxCrossEntropyLoss
 def parse_args():
     parser = argparse.ArgumentParser(description='Semantic Segmentation Training With Pytorch')
     # model and dataset
-    parser.add_argument('--model', type=str, default='fcn32s',
-                        choices=['fcn32s/fcn16s/fcn8s/psp/deeplabv3/danet/denseaspp/bisenet'],
+    parser.add_argument('--model', type=str, default='fcn',
+                        choices=['fcn32s/fcn16s/fcn8s/fcn/psp/deeplabv3/danet/denseaspp/bisenet'],
                         help='model name (default: fcn32s)')
-    parser.add_argument('--backbone', type=str, default='vgg16',
+    parser.add_argument('--backbone', type=str, default='resnet50',
                         choices=['vgg16/resnet18/resnet50/resnet101/resnet152/densenet121/161/169/201'],
                         help='backbone name (default: vgg16)')
     parser.add_argument('--dataset', type=str, default='pascal_voc',
@@ -29,7 +30,7 @@ def parse_args():
                         help='dataset name (default: pascal_voc)')
     parser.add_argument('--base-size', type=int, default=520,
                         help='base image size')
-    parser.add_argument('--crop-size', type=int, default=480,
+    parser.add_argument('--crop-size', type=int, default=112,
                         help='crop image size')
     parser.add_argument('--train-split', type=str, default='train',
                         help='dataset train split (default: train)')
@@ -38,13 +39,13 @@ def parse_args():
                         help='Auxiliary loss')
     parser.add_argument('--aux-weight', type=float, default=0.5,
                         help='auxiliary loss weight')
-    parser.add_argument('--epochs', type=int, default=60, metavar='N',
+    parser.add_argument('--epochs', type=int, default=None, metavar='N',
                         help='number of epochs to train (default: 60)')
     parser.add_argument('--start_epoch', type=int, default=0,
                         metavar='N', help='start epochs (default:0)')
-    parser.add_argument('--batch-size', type=int, default=4, metavar='N',
+    parser.add_argument('--batch-size', type=int, default=2, metavar='N',
                         help='input batch size for training (default: 4)')
-    parser.add_argument('--lr', type=float, default=1e-2, metavar='LR',
+    parser.add_argument('--lr', type=float, default=None, metavar='LR',
                         help='learning rate (default: 1e-4)')
     parser.add_argument('--momentum', type=float, default=0.9, metavar='M',
                         help='momentum (default: 0.9)')
@@ -107,15 +108,18 @@ class Trainer(object):
 
         self.train_loader = data.DataLoader(dataset=train_dataset,
                                             batch_size=args.batch_size,
+                                            drop_last=True,
                                             shuffle=True)
 
         self.val_loader = data.DataLoader(dataset=val_dataset,
                                           batch_size=1,
+                                          drop_last=False,
                                           shuffle=False)
 
         # create network
-        self.model = get_segmentation_model(model=args.model, dataset=args.dataset, backbone=args.backbone,
-                                            aux=args.aux, crop_size=args.crop_size)
+        self.model = get_segmentation_model(model=args.model, dataset=args.dataset,
+                                            backbone=args.backbone, aux=args.aux, norm_layer=nn.BatchNorm2d,
+                                            base_size=args.base_size, crop_size=args.crop_size)
 
         # create criterion
         self.criterion = MixSoftmaxCrossEntropyLoss(args.aux, args.aux_weight, ignore_label=-1)

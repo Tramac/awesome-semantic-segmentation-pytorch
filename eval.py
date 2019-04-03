@@ -1,7 +1,6 @@
 from __future__ import print_function
 
 import os
-import argparse
 
 import torch
 import torch.utils.data as data
@@ -12,31 +11,15 @@ from models.model_zoo import get_segmentation_model
 from utils.score import SegmentationMetric
 from utils.visualize import get_color_pallete
 
-parser = argparse.ArgumentParser(
-    description='Semantic Segmentation Evaluation')
-parser.add_argument('--model', type=str, default='fcn32s',
-                    help='model name (default: fcn32s)')
-parser.add_argument('--backbone', type=str, default='vgg16',
-                    help='backbone name (default: vgg16)')
-parser.add_argument('--dataset', type=str, default='pascal_voc',
-                    help='dataset name (default: pascal_voc, pascal_aug. choice=[pascal_voc, ade20k, citys]')
-parser.add_argument('--base-size', type=int, default=520,
-                    help='base image size')
-parser.add_argument('--crop-size', type=int, default=480,
-                    help='crop image size')
-parser.add_argument('--save-result', default=True,
-                    help='save the predict')
-parser.add_argument('--outdir', default='./eval', type=str,
-                    help='path to save the predict result')
-args = parser.parse_args()
+from train import parse_args
 
 
-def eval(config):
+def eval(args):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     # output folder
-    if config.save_result:
-        if not os.path.exists(config.outdir):
-            os.makedirs(config.outdir)
+    outdir = 'test_result'
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
     # image transform
     input_transform = transforms.Compose([
         transforms.ToTensor(),
@@ -53,7 +36,8 @@ def eval(config):
 
     # create network
     model = get_segmentation_model(model=args.model, dataset=args.dataset, backbone=args.backbone,
-                                   pretrained=True, pretrained_base=False, crop_size=args.crop_size).to(device)
+                                   aux=args.aux, pretrained=True, pretrained_base=False,
+                                   base_size=args.base_size, crop_size=args.crop_size).to(device)
     print('Finished loading model!')
 
     metric = SegmentationMetric(test_dataset.num_class)
@@ -62,22 +46,26 @@ def eval(config):
     for i, (image, label) in enumerate(test_loader):
         image = image.to(device)
 
-        outputs = model(image)
+        with torch.no_grad():
+            outputs = model(image)
 
-        pred = torch.argmax(outputs[0], 1)
-        pred = pred.cpu().data.numpy()
-        label = label.numpy()
+            pred = torch.argmax(outputs[0], 1)
+            pred = pred.cpu().data.numpy()
+            label = label.numpy()
 
-        metric.update(pred, label)
-        pixAcc, mIoU = metric.get()
-        print('Sample %d, validation pixAcc: %.3f%%, mIoU: %.3f%%' % (i + 1, pixAcc * 100, mIoU * 100))
+            metric.update(pred, label)
+            pixAcc, mIoU = metric.get()
+            print('Sample %d, validation pixAcc: %.3f%%, mIoU: %.3f%%' % (i + 1, pixAcc * 100, mIoU * 100))
 
-        if config.save_result:
-            predict = pred.squeeze(0)
-            mask = get_color_pallete(predict, config.dataset)
-            mask.save(os.path.join(config.outdir, 'seg_{}.png'.format(i)))
+            if args.save_result:
+                predict = pred.squeeze(0)
+                mask = get_color_pallete(predict, args.dataset)
+                mask.save(os.path.join(outdir, 'seg_{}.png'.format(i)))
 
 
 if __name__ == '__main__':
+    args = parse_args()
+    save_result = False
+    args.save_result = save_result
     print('Testing model: ', args.model)
     eval(args)

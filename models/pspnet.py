@@ -41,7 +41,7 @@ class PSPNet(SegBaseModel):
             self.auxlayer = _FCNHead(1024, nclass, **kwargs)
 
     def forward(self, x):
-        c3, c4 = self.base_forward(x)
+        _, _, c3, c4 = self.base_forward(x)
         outputs = []
         x = self.head(c4)
         x = F.interpolate(x, (self._up_kwargs['height'], self._up_kwargs['width']), mode='bilinear', align_corners=True)
