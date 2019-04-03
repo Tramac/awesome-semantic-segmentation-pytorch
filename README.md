@@ -64,6 +64,7 @@ Note: The parameter settings of each method are different, including crop_size, 
 
 ## To Do
 - [ ] Test fcn_resnet101_voc
+- [ ] Test DataParallel
 - [ ] Why is the result worse than caffe or tensorflow?
 - [ ] Add more semantic segmentation models (in process)
 - [ ] Train and evaluate
