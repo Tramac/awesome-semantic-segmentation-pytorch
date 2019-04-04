@@ -63,8 +63,8 @@ Note: The parameter settings of each method are different, including crop_size, 
 |DeepLabv3|resnet50|train|val|480|60|60.15%|88.36%|
 
 ## To Do
-- [ ] Test fcn_resnet101_voc
-- [ ] Test DataParallel
+- [x] Test fcn_resnet101_voc
+- [x] Test DataParallel
 - [ ] Why is the result worse than caffe or tensorflow?
 - [ ] Add more semantic segmentation models (in process)
 - [ ] Train and evaluate
