@@ -119,15 +119,15 @@ class Trainer(object):
         # create network
         self.model = get_segmentation_model(model=args.model, dataset=args.dataset,
                                             backbone=args.backbone, aux=args.aux, norm_layer=nn.BatchNorm2d,
-                                            base_size=args.base_size, crop_size=args.crop_size)
+                                            base_size=args.base_size, crop_size=args.crop_size).to(args.device)
 
         # create criterion
-        self.criterion = MixSoftmaxCrossEntropyLoss(args.aux, args.aux_weight, ignore_label=-1)
+        self.criterion = MixSoftmaxCrossEntropyLoss(args.aux, args.aux_weight, ignore_label=-1).to(args.device)
 
         # for multi-GPU
-        if torch.cuda.is_available():
-            self.model = DataParallelModel(self.model).cuda()
-            self.criterion = DataParallelCriterion(self.criterion).cuda()
+        # if torch.cuda.is_available():
+        #     self.model = DataParallelModel(self.model).cuda()
+        #     self.criterion = DataParallelCriterion(self.criterion).cuda()
 
         # resume checkpoint if needed
         if args.resume:
