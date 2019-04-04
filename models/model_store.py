@@ -6,7 +6,7 @@ import zipfile
 
 from utils.download import download, check_sha1
 
-__all__ = ['get_model_file']
+__all__ = ['get_model_file', 'get_resnet_file']
 
 _model_sha1 = {name: checksum for checksum, name in [
     ('25c4b50959ef024fcc050213a06b614899f94b3d', 'resnet50'),
@@ -24,7 +24,7 @@ def short_hash(name):
     return _model_sha1[name][:8]
 
 
-def get_model_file(name, root='~/.torch/models'):
+def get_resnet_file(name, root='~/.torch/models'):
     file_name = '{name}-{short_hash}'.format(name=name, short_hash=short_hash(name))
     root = os.path.expanduser(root)
 
@@ -57,3 +57,12 @@ def get_model_file(name, root='~/.torch/models'):
         return file_path
     else:
         raise ValueError('Downloaded file has different hash. Please try again.')
+
+
+def get_model_file(name, root='~/.torch/models'):
+    root = os.path.expanduser(root)
+    file_path = os.path.join(root, name + '.pth')
+    if os.path.exists(file_path):
+        return file_path
+    else:
+        raise ValueError('Model file is not found. Downloading or trainning.')

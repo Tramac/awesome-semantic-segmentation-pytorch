@@ -234,24 +234,24 @@ def resnet152_v1b(pretrained=False, **kwargs):
 def resnet50_v1s(pretrained=False, root='~/.torch/models', **kwargs):
     model = ResNetV1b(BottleneckV1b, [3, 4, 6, 3], deep_stem=True, **kwargs)
     if pretrained:
-        from models.model_store import get_model_file
-        model.load_state_dict(torch.load(get_model_file('resnet50', root=root)), strict=False)
+        from models.model_store import get_resnet_file
+        model.load_state_dict(torch.load(get_resnet_file('resnet50', root=root)), strict=False)
     return model
 
 
 def resnet101_v1s(pretrained=False, root='~/.torch/models', **kwargs):
     model = ResNetV1b(BottleneckV1b, [3, 4, 23, 3], deep_stem=True, **kwargs)
     if pretrained:
-        from models.model_store import get_model_file
-        model.load_state_dict(torch.load(get_model_file('resnet101', root=root)), strict=False)
+        from models.model_store import get_resnet_file
+        model.load_state_dict(torch.load(get_resnet_file('resnet101', root=root)), strict=False)
     return model
 
 
 def resnet152_v1s(pretrained=False, root='~/.torch/models', **kwargs):
     model = ResNetV1b(BottleneckV1b, [3, 8, 36, 3], deep_stem=True, **kwargs)
     if pretrained:
-        from models.model_store import get_model_file
-        model.load_state_dict(torch.load(get_model_file('resnet152', root=root)), strict=False)
+        from models.model_store import get_resnet_file
+        model.load_state_dict(torch.load(get_resnet_file('resnet152', root=root)), strict=False)
     return model
 
 
