@@ -68,7 +68,7 @@ Note: The parameter settings of each method are different, including crop_size, 
 - [ ] Add more semantic segmentation models (in process)
 - [ ] Train and evaluate
 - [x] Add DataParallelModel and DataParallelCriterion
-- [ ] Add Synchronized BN ([Why SyncBN?](http://localhost:4000/2019/04/08/SyncBN/))
+- [ ] Add Synchronized BN ([Why SyncBN?](https://tramac.github.io/2019/04/08/SyncBN/))
 
 ## References
 - [PyTorch-Encoding](https://github.com/zhanghang1989/PyTorch-Encoding)
