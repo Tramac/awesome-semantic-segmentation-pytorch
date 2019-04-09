@@ -11,8 +11,6 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 - Add parallel training
 - Update MultiLoss
 
-Note: I have not tested whether parallel training is available.
-
 ## Requisites
 - [PyTorch 1.0](https://pytorch.org/get-started/locally/)
 - Python 3.x
