@@ -11,8 +11,6 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 - Add parallel training
 - Update MultiLoss
 
-Note: I have not tested whether parallel training is available.
-
 ## Requisites
 - [PyTorch 1.0](https://pytorch.org/get-started/locally/)
 - Python 3.x
@@ -63,13 +61,12 @@ Note: The parameter settings of each method are different, including crop_size, 
 |DeepLabv3|resnet50|train|val|480|60|60.15%|88.36%|
 
 ## To Do
-- [ ] Test fcn_resnet101_voc
-- [ ] Test DataParallel
-- [ ] Why is the result worse than caffe or tensorflow?
+- [x] Test fcn_resnet101_voc
+- [x] Test DataParallel
 - [ ] Add more semantic segmentation models (in process)
 - [ ] Train and evaluate
 - [x] Add DataParallelModel and DataParallelCriterion
-- [ ] Add Synchronized BN
+- [ ] Add Synchronized BN ([Why SyncBN?](https://tramac.github.io/2019/04/08/SyncBN/))
 
 ## References
 - [PyTorch-Encoding](https://github.com/zhanghang1989/PyTorch-Encoding)
