@@ -138,9 +138,12 @@ class Trainer(object):
                 self.model.load_state_dict(torch.load(args.resume, map_location=lambda storage, loc: storage))
 
         # optimizer
-        self.optimizer = torch.optim.SGD(self.model.parameters(),
+        # self.optimizer = torch.optim.SGD(self.model.parameters(),
+        #                                  lr=args.lr,
+        #                                  momentum=args.momentum,
+        #                                  weight_decay=args.weight_decay)
+        self.optimizer = torch.optim.Adam(self.model.parameters(),
                                          lr=args.lr,
-                                         momentum=args.momentum,
                                          weight_decay=args.weight_decay)
 
         # lr scheduling
