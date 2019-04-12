@@ -6,10 +6,9 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 --------------------------------------------------------------------------------
 
 ## Update
-- Move backbones to `./base_models`
-- Change resnetv1_b to resnetv1_s
+- Add SBU-shadow dataset
+- Change `resnetv1_b` to `resnetv1_s`
 - Add parallel training
-- Update MultiLoss
 
 ## Requisites
 - [PyTorch 1.0](https://pytorch.org/get-started/locally/)
@@ -48,6 +47,7 @@ python ade20k.py --download-dir ./datasets/ade
 - [ADK20K](http://groups.csail.mit.edu/vision/datasets/ADE20K/)
 - [Cityscapes](https://www.cityscapes-dataset.com/downloads/)
 - [COCO](http://cocodataset.org/#download)
+- [SBU-shadow](http://www3.cs.stonybrook.edu/~cvl/content/datasets/shadow_db/SBU-shadow.zip)
 
 ## Result
 Note: The parameter settings of each method are different, including crop_size, learning rata, epochs, etc. For specific parameters, please see paper.
@@ -61,11 +61,10 @@ Note: The parameter settings of each method are different, including crop_size, 
 |DeepLabv3|resnet50|train|val|480|60|60.15%|88.36%|
 
 ## To Do
-- [x] Test fcn_resnet101_voc
+- [ ] Add SBU downloader
 - [x] Test DataParallel
 - [ ] Add more semantic segmentation models (in process)
 - [ ] Train and evaluate
-- [x] Add DataParallelModel and DataParallelCriterion
 - [ ] Add Synchronized BN ([Why SyncBN?](https://tramac.github.io/2019/04/08/SyncBN/))
 
 ## References
