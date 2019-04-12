@@ -115,6 +115,7 @@ class Encoding(nn.Module):
         self.D, self.K = D, K
         self.codewords = nn.Parameter(torch.Tensor(K, D), requires_grad=True)
         self.scale = nn.Parameter(torch.Tensor(K), requires_grad=True)
+        self.reset_params()
 
     def reset_params(self):
         std1 = 1. / ((self.K * self.D) ** (1 / 2))

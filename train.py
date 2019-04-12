@@ -20,7 +20,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Semantic Segmentation Training With Pytorch')
     # model and dataset
     parser.add_argument('--model', type=str, default='fcn32s',
-                        choices=['fcn32s/fcn16s/fcn8s/fcn/psp/deeplabv3/danet/denseaspp/bisenet'],
+                        choices=['fcn32s/fcn16s/fcn8s/fcn/psp/deeplabv3/danet/denseaspp/bisenet/encnet'],
                         help='model name (default: fcn32s)')
     parser.add_argument('--backbone', type=str, default='vgg16',
                         choices=['vgg16/resnet18/resnet50/resnet101/resnet152/densenet121/161/169/201'],
@@ -145,8 +145,8 @@ class Trainer(object):
         #                                  momentum=args.momentum,
         #                                  weight_decay=args.weight_decay)
         self.optimizer = torch.optim.Adam(self.model.parameters(),
-                                         lr=args.lr,
-                                         weight_decay=args.weight_decay)
+                                          lr=args.lr,
+                                          weight_decay=args.weight_decay)
 
         # lr scheduling
         self.lr_scheduler = LRScheduler(mode='poly', base_lr=args.lr, nepochs=args.epochs,
