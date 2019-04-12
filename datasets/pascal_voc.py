@@ -1,8 +1,14 @@
 """Prepare PASCAL VOC datasets"""
 import os
+import sys
 import shutil
 import argparse
 import tarfile
+
+cur_path = os.path.abspath(os.path.dirname(__file__))
+root_path = os.path.split(cur_path)[0]
+sys.path.append(root_path)
+
 from utils import download, makedirs
 
 _TARGET_DIR = os.path.expanduser('~/PycharmProjects/Data_zoo/voc')

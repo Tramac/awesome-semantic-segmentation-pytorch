@@ -1,7 +1,13 @@
 """Prepare Cityscapes dataset"""
 import os
+import sys
 import argparse
 import zipfile
+
+cur_path = os.path.abspath(os.path.dirname(__file__))
+root_path = os.path.split(cur_path)[0]
+sys.path.append(root_path)
+
 from utils import download, makedirs, check_sha1
 
 _TARGET_DIR = os.path.expanduser('~/PycharmProjects/Data_zoo/citys')

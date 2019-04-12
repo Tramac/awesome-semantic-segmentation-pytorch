@@ -1,7 +1,13 @@
 """Prepare MS COCO datasets"""
 import os
+import sys
 import argparse
 import zipfile
+
+cur_path = os.path.abspath(os.path.dirname(__file__))
+root_path = os.path.split(cur_path)[0]
+sys.path.append(root_path)
+
 from utils import download, makedirs, try_import_pycocotools
 
 _TARGET_DIR = os.path.expanduser('~/PycharmProjects/Data_zoo/coco')
