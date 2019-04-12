@@ -10,7 +10,7 @@ sys.path.append(root_path)
 
 from utils import download, makedirs
 
-_TARGET_DIR = os.path.expanduser('~/PycharmProjects/Data_zoo/sbu')
+_TARGET_DIR = os.path.expanduser('~/.torch/datasets/sbu')
 
 
 def parse_args():
