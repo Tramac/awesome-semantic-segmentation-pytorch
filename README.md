@@ -61,10 +61,10 @@ Note: The parameter settings of each method are different, including crop_size, 
 |DeepLabv3|resnet50|train|val|480|60|60.15%|88.36%|
 
 ## To Do
+- [ ] Add SBU downloader
 - [x] Test DataParallel
 - [ ] Add more semantic segmentation models (in process)
 - [ ] Train and evaluate
-- [x] Add DataParallelModel and DataParallelCriterion
 - [ ] Add Synchronized BN ([Why SyncBN?](https://tramac.github.io/2019/04/08/SyncBN/))
 
 ## References
