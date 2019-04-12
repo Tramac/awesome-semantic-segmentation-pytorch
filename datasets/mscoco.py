@@ -10,7 +10,7 @@ sys.path.append(root_path)
 
 from utils import download, makedirs, try_import_pycocotools
 
-_TARGET_DIR = os.path.expanduser('~/PycharmProjects/Data_zoo/coco')
+_TARGET_DIR = os.path.expanduser('~/.torch/datasets/coco')
 
 
 def parse_args():
@@ -61,7 +61,7 @@ if __name__ == '__main__':
             download_coco(path, overwrite=args.overwrite)
 
     # make symlink
-    makedirs(os.path.expanduser('~/.mxnet/datasets'))
+    makedirs(os.path.expanduser('~/.torch/datasets'))
     if os.path.isdir(_TARGET_DIR):
         os.remove(_TARGET_DIR)
     os.symlink(path, _TARGET_DIR)

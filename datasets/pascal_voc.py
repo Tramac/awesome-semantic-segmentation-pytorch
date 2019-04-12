@@ -11,7 +11,7 @@ sys.path.append(root_path)
 
 from utils import download, makedirs
 
-_TARGET_DIR = os.path.expanduser('~/PycharmProjects/Data_zoo/voc')
+_TARGET_DIR = os.path.expanduser('~/.torch/datasets/voc')
 
 
 def parse_args():
@@ -93,7 +93,7 @@ if __name__ == '__main__':
             download_aug(path, overwrite=args.overwrite)
 
     # make symlink
-    makedirs(os.path.expanduser('~/PycharmProjects/Data_zoo'))
+    makedirs(os.path.expanduser('~/.torch/datasets'))
     if os.path.isdir(_TARGET_DIR):
         os.remove(_TARGET_DIR)
     os.symlink(path, _TARGET_DIR)

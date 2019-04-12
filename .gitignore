@@ -113,15 +113,12 @@ weights/
 *.pth
 
 # dataset
-.VOCdevket/
-VOCdevket
+VOCdevket/
 voc/
-/voc
 ade/
-/ade
-.eval/
-eval/
+citys/
 SBU-shadow/
+eval/
 
 # overfitting test
 model_test.py

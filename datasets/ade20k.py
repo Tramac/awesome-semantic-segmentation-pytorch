@@ -10,7 +10,7 @@ sys.path.append(root_path)
 
 from utils import download, makedirs
 
-_TARGET_DIR = os.path.expanduser('~/PycharmProjects/Data_zoo/ade')
+_TARGET_DIR = os.path.expanduser('~/.torch/datasets/ade')
 
 
 def parse_args():
@@ -41,7 +41,7 @@ def download_ade(path, overwrite=False):
 
 if __name__ == '__main__':
     args = parse_args()
-    makedirs(os.path.expanduser('~/PycharmProjects/Data_zoo'))
+    makedirs(os.path.expanduser('~/.torch/datasets'))
     if args.download_dir is not None:
         if os.path.isdir(_TARGET_DIR):
             os.remove(_TARGET_DIR)
