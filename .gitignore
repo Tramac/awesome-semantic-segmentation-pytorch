@@ -116,7 +116,9 @@ weights/
 .VOCdevket/
 VOCdevket
 voc/
+/voc
 ade/
+/ade
 .eval/
 eval/
 SBU-shadow/
