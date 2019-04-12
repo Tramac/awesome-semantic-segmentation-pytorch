@@ -119,6 +119,7 @@ voc/
 ade/
 .eval/
 eval/
+SBU-shadow/
 
 # overfitting test
 model_test.py

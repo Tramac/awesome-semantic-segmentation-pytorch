@@ -26,7 +26,7 @@ def parse_args():
                         choices=['vgg16/resnet18/resnet50/resnet101/resnet152/densenet121/161/169/201'],
                         help='backbone name (default: vgg16)')
     parser.add_argument('--dataset', type=str, default='pascal_voc',
-                        choices=['pascal_voc/pascal_aug/ade20k/citys'],
+                        choices=['pascal_voc/pascal_aug/ade20k/citys/sbu'],
                         help='dataset name (default: pascal_voc)')
     parser.add_argument('--base-size', type=int, default=520,
                         help='base image size')
@@ -72,6 +72,7 @@ def parse_args():
             'pcontext': 80,
             'ade20k': 180,
             'citys': 240,
+            'sbu': 160,
         }
         args.epochs = epoches[args.dataset.lower()]
     if args.lr is None:
@@ -82,6 +83,7 @@ def parse_args():
             'pcontext': 0.001,
             'ade20k': 0.004,
             'citys': 0.004,
+            'sbu': 0.001,
         }
         args.lr = lrs[args.dataset.lower()] / 16 * args.batch_size
 
