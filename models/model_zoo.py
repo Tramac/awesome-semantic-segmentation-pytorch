@@ -7,6 +7,7 @@ from .danet import *
 from .denseaspp import *
 from .bisenet import *
 from .encnet import *
+from .dunet import *
 
 __all__ = ['get_model', 'get_model_list', 'get_segmentation_model']
 
@@ -40,6 +41,9 @@ _models = {
     'encnet_resnet50_ade': get_encnet_resnet50_ade,
     'encnet_resnet101_ade': get_encnet_resnet101_ade,
     'encnet_resnet152_ade': get_encnet_resnet152_ade,
+    'dunet_resnet50_pascal_voc': get_dunet_resnet50_pascal_voc,
+    'dunet_resnet101_pascal_voc': get_dunet_resnet101_pascal_voc,
+    'dunet_resnet152_pascal_voc': get_dunet_resnet152_pascal_voc,
 }
 
 
@@ -69,5 +73,6 @@ def get_segmentation_model(model, **kwargs):
         'denseaspp': get_denseaspp,
         'bisenet': get_bisenet,
         'encnet': get_encnet,
+        'dunet': get_dunet,
     }
     return models[model](**kwargs)
