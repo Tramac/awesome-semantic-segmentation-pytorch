@@ -7,9 +7,7 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 
 ## Update
 
-- Add SBU-shadow dataset
-- Add EncNet
-- Add parallel training
+- Add DUNet
 
 ## Requisites
 - [PyTorch 1.0](https://pytorch.org/get-started/locally/)
@@ -26,6 +24,7 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 - [DenseASPP](http://openaccess.thecvf.com/content_cvpr_2018/papers/Yang_DenseASPP_for_Semantic_CVPR_2018_paper.pdf)
 - [BiSeNet](https://arxiv.org/abs/1808.00897)
 - [EncNet](https://arxiv.org/abs/1803.08904v1)
+- [DUNet(DUpsampling)](https://arxiv.org/abs/1903.02120)
 
 #### Supported Dataset
 
