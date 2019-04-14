@@ -45,15 +45,15 @@ python ade20k.py --download-dir ./datasets/ade
 
 ## Usage
 #### Train
-```python
+```
 python train.py --model fcn32s --backbone vgg16 --dataset pascal_voc
 ```
 #### Evaluation
-```python
+```
 python eval.py --model fcn32s --backbone vgg16 --dataset pascal_voc
 ```
 #### Run Demo
-```python
+```
 python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 ```
 ## Result
