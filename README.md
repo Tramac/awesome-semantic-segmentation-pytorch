@@ -71,7 +71,6 @@ Note: The parameter settings of each method are different, including crop_size, 
 ## To Do
 
 - [x] Add EncNet loss
-
 - [x] Add SBU downloader
 - [x] Test DataParallel
 - [ ] Add more semantic segmentation models (in process)
