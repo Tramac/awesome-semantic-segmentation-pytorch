@@ -4,9 +4,10 @@ In order to ensure the correctness of models, the project provides a overfitting
 
 ### Usage
 
-<img src='./test_img.jpg' width = '100' div align=right /> <img src = './test_mask.png' width = '100' height = '100' div align = right />
+<img src='./test_img.jpg' width = '300' height = '220' /> <img src = './test_mask.png' width = '300' height = '220' />
 
-​                                           (a) img: 2007_000033.jpg                                                                                                     (b) mask: 2007_000033.png
+　　　(a) img: 2007_000033.jpg  　　　　　　　　(b) mask: 2007_000033.png
+
 
 ### Test Result
 
