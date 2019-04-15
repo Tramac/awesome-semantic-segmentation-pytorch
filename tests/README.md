@@ -11,7 +11,7 @@ In order to ensure the correctness of models, the project provides a overfitting
 
 ### Test Result
 
-| Model  | epoch | mIoU  | pixAcc |
-| :-----: | :-----: | :-----: | :------: |
-| FCN32s | 300   | 94.0% | 98.2%  |
+| Model  | backbone | epoch | mIoU  | pixAcc |
+| :-----: | :----: | :-----: | :-----: | :------: |
+| FCN32s | vgg16 | 300 | 94.0% | 98.2%  |
 
