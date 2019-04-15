@@ -68,7 +68,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 Note: The parameter settings of each method are different, including crop_size, learning rata, epochs, etc. For specific parameters, please see paper.
 
 ## To Do
-
+- [ ] Save the best model
 - [x] Add EncNet loss
 - [x] Add SBU downloader
 - [x] Test DataParallel
