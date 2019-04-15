@@ -6,7 +6,7 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 
 
 ## Update
-
+- Add overfitting test script
 - Add DUNet
 
 ## Requisites
@@ -67,8 +67,11 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 
 Note: The parameter settings of each method are different, including crop_size, learning rata, epochs, etc. For specific parameters, please see paper.
 
+## Overfitting Test
+See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/master/tests) for details.
+
 ## To Do
-- [ ] Save the best model
+- [x] Save the best model
 - [x] Add EncNet loss
 - [x] Add SBU downloader
 - [x] Test DataParallel
