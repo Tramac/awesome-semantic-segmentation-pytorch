@@ -63,7 +63,7 @@ def eval(args):
 
 if __name__ == '__main__':
     args = parse_args()
-    save_result = False
+    save_result = True
     args.save_result = save_result
     print('Testing model: ', args.model)
     eval(args)

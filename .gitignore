@@ -121,4 +121,4 @@ sbu/
 eval/
 
 # overfitting test
-model_test.py
+tests/runs/
