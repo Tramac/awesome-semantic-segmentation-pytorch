@@ -23,7 +23,7 @@ Observing the convergence process of different models is so interesting:joy:
 
 ### Visualization
 <img src='./runs/fcn32_epoch_300.png' width = '100' height = '73' /> <img src = './runs/fcn16s_epoch_200.png' width = '100' height = '73' />
-<img src = './runs/fcn8s_epoch_200.png' width = '100' height = '73' /> <img src = './runs/danet_epoch_100.png' width = '100' height = '73' /> 
+<img src = './runs/fcn8s_epoch_１00.png' width = '100' height = '73' /> <img src = './runs/danet_epoch_100.png' width = '100' height = '73' /> 
 <img src = './runs/encnet_epoch_100.png' width = '100' height = '73' /> <img src = './runs/dunet_epoch_100.png' width = '100' height = '73' /> 
 <img src = './runs/psp_epoch_100.png' width = '100' height = '73' /> <img src = './runs/bisenet_epoch_100.png' width = '100' height = '73' /> 
 
