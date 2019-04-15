@@ -20,7 +20,7 @@ from PIL import Image
 def parse_args():
     parser = argparse.ArgumentParser(description='Semantic Segmentation Overfitting Test')
     # model
-    parser.add_argument('--model', type=str, default='fcn32s',
+    parser.add_argument('--model', type=str, default='fcn8s',
                         choices=['fcn32s/fcn16s/fcn8s/fcn/psp/deeplabv3/danet/denseaspp/bisenet/encnet/dunet'],
                         help='model name (default: fcn32s)')
     parser.add_argument('--backbone', type=str, default='vgg16',
@@ -29,7 +29,7 @@ def parse_args():
     parser.add_argument('--dataset', type=str, default='pascal_voc',
                         choices=['pascal_voc/pascal_aug/ade20k/citys/sbu'],
                         help='dataset name (default: pascal_voc)')
-    parser.add_argument('--epochs', type=int, default=300, metavar='N',
+    parser.add_argument('--epochs', type=int, default=100, metavar='N',
                         help='number of epochs to train (default: 60)')
     parser.add_argument('--lr', type=float, default=1e-3, metavar='LR',
                         help='learning rate (default: 1e-4)')
