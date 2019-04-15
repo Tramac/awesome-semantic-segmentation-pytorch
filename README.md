@@ -1,7 +1,7 @@
 # Semantic Segmentation on PyTorch
 [![python-image]][python-url]
 [![pytorch-image]][pytorch-url]
-[![lic-image]][lic-url]
+[![GitHub license](http://dmlc.github.io/img/apache2.svg)](./LICENSE)
 
 This project aims at providing a concise, easy-to-use, modular reference implementation for semantic segmentation models using PyTorch.
 
@@ -92,9 +92,8 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 [![lic-image]][lic-url]
 -->
 
-[python-image]: https://img.shields.io/pypi/pyversions/:packageName.svg?style=flat-square
+[python-image]: https://img.shields.io/badge/Python-2.x|3.x-ff69b4.svg
 [python-url]: https://www.python.org/
-[pytorch-image]: https://img.shields.io/badge/PyTorch-1.0-2BAF2B.svg?style=flat-square
+[pytorch-image]: https://img.shields.io/badge/PyTorch-1.0-2BAF2B.svg
 [pytorch-url]: https://pytorch.org/
-[lic-image]: https://img.shields.io/hexpm/l/:packageName.svg?style=flat-square
-[lic-url]: https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/blob/master/LICENSE
+[lic-image]: https://img.shields.io/hexpm/l/:packageName.svg
