@@ -10,7 +10,7 @@ import numpy as np
 
 from torchvision import transforms
 from models.model_zoo import get_segmentation_model
-from utils.loss import MixSoftmaxCrossEntropyLoss
+from utils.loss import MixSoftmaxCrossEntropyLoss, EncNetLoss
 from utils.lr_scheduler import LRScheduler
 from utils.score import hist_info, compute_score
 from utils.visualize import get_color_pallete
@@ -20,10 +20,10 @@ from PIL import Image
 def parse_args():
     parser = argparse.ArgumentParser(description='Semantic Segmentation Overfitting Test')
     # model
-    parser.add_argument('--model', type=str, default='danet',
+    parser.add_argument('--model', type=str, default='bisenet',
                         choices=['fcn32s/fcn16s/fcn8s/fcn/psp/deeplabv3/danet/denseaspp/bisenet/encnet/dunet'],
                         help='model name (default: fcn32s)')
-    parser.add_argument('--backbone', type=str, default='resnet50',
+    parser.add_argument('--backbone', type=str, default='resnet18',
                         choices=['vgg16/resnet18/resnet50/resnet101/resnet152/densenet121/161/169/201'],
                         help='backbone name (default: vgg16)')
     parser.add_argument('--dataset', type=str, default='pascal_voc',
@@ -51,6 +51,10 @@ class VOCSegmentation(object):
         self.img = Image.open('test_img.jpg').convert('RGB')
         self.mask = Image.open('test_mask.png')
 
+        # For dunet test
+        # self.img = self.img.resize((504, 368), Image.BILINEAR)
+        # self.mask = self.mask.resize((504, 368), Image.NEAREST)
+
     def get(self):
         img, mask = self._img_transform(self.img), self._mask_transform(self.mask)
         return img, mask
@@ -61,6 +65,8 @@ class VOCSegmentation(object):
             transforms.Normalize([.485, .456, .406], [.229, .224, .225])])
         img = input_transform(img)
         img = img.unsqueeze(0)
+
+        # img = torch.cat([img, img], dim=0)
         return img
 
     def _mask_transform(self, mask):
@@ -68,6 +74,8 @@ class VOCSegmentation(object):
         target[target == 255] = -1
         target = torch.from_numpy(target).long()
         target = target.unsqueeze(0)
+
+        # target = torch.cat([target, target], dim=0)
         return target
 
 
@@ -81,6 +89,9 @@ class Trainer(object):
                                             aux=False, norm_layer=nn.BatchNorm2d).to(args.device)
 
         self.criterion = MixSoftmaxCrossEntropyLoss(False, 0., ignore_label=-1).to(args.device)
+
+        # for EncNet
+        # self.criterion = EncNetLoss(nclass=21, ignore_label=-1).to(args.device)
 
         self.optimizer = torch.optim.Adam(self.model.parameters(),
                                           lr=args.lr,

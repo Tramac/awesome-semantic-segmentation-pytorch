@@ -67,7 +67,6 @@ class _PyramidPooling(nn.Module):
     def __init__(self, in_channels, height=60, width=60, **kwargs):
         super(_PyramidPooling, self).__init__()
         out_channels = int(in_channels / 4)
-        self._up_kwargs = {'height': height, 'width': width}
         self.avgpool1 = nn.AdaptiveAvgPool2d(1)
         self.avgpool2 = nn.AdaptiveAvgPool2d(2)
         self.avgpool3 = nn.AdaptiveAvgPool2d(3)
@@ -78,14 +77,11 @@ class _PyramidPooling(nn.Module):
         self.conv4 = _PSP1x1Conv(in_channels, out_channels, **kwargs)
 
     def forward(self, x):
-        feat1 = F.interpolate(self.conv1(self.avgpool1(x)), (self._up_kwargs['height'], self._up_kwargs['width']),
-                              mode='bilinear', align_corners=True)
-        feat2 = F.interpolate(self.conv2(self.avgpool2(x)), (self._up_kwargs['height'], self._up_kwargs['width']),
-                              mode='bilinear', align_corners=True)
-        feat3 = F.interpolate(self.conv3(self.avgpool3(x)), (self._up_kwargs['height'], self._up_kwargs['width']),
-                              mode='bilinear', align_corners=True)
-        feat4 = F.interpolate(self.conv4(self.avgpool4(x)), (self._up_kwargs['height'], self._up_kwargs['width']),
-                              mode='bilinear', align_corners=True)
+        size = x.size()[2:]
+        feat1 = F.interpolate(self.conv1(self.avgpool1(x)), size, mode='bilinear', align_corners=True)
+        feat2 = F.interpolate(self.conv2(self.avgpool2(x)), size, mode='bilinear', align_corners=True)
+        feat3 = F.interpolate(self.conv3(self.avgpool3(x)), size, mode='bilinear', align_corners=True)
+        feat4 = F.interpolate(self.conv4(self.avgpool4(x)), size, mode='bilinear', align_corners=True)
         return torch.cat([x, feat1, feat2, feat3, feat4], dim=1)
 
 
