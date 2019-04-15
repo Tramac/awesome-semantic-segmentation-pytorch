@@ -1,14 +1,15 @@
 # Semantic Segmentation on PyTorch
-
 [![python-image]][python-url]
 [![pytorch-image]][pytorch-url]
+<<<<<<< HEAD
 [![lic-image]][lic-url]
+=======
+[![GitHub license](http://dmlc.github.io/img/apache2.svg)](./LICENSE)
+>>>>>>> 8475c3e45ebf8d491ee96912021bce2988bbf712
 
 This project aims at providing a concise, easy-to-use, modular reference implementation for semantic segmentation models using PyTorch.
 
 <p align="center"><img width="100%" src="datasets/weimar_000091_000019_gtFine_color.png" /></p>
-
-
 
 ## Update
 - Add overfitting test script
@@ -18,9 +19,9 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 - [PyTorch 1.0](https://pytorch.org/get-started/locally/)
 - Python 3.x
 
-## Model Zoo & Datasets
+## Support
 
-#### Supported Model
+#### Model
 
 - [FCN](https://arxiv.org/abs/1411.4038)
 - [PSPNet](https://arxiv.org/pdf/1612.01105)
@@ -31,7 +32,7 @@ This project aims at providing a concise, easy-to-use, modular reference impleme
 - [EncNet](https://arxiv.org/abs/1803.08904v1)
 - [DUNet(DUpsampling)](https://arxiv.org/abs/1903.02120)
 
-#### Supported Dataset
+#### Dataset
 
 You can run script to download dataset, such as:
 
@@ -48,20 +49,22 @@ python ade20k.py --download-dir ./datasets/ade
 - [SBU-shadow](http://www3.cs.stonybrook.edu/~cvl/content/datasets/shadow_db/SBU-shadow.zip)
 
 ## Usage
-#### Train
+- **Train**
 ```
 python train.py --model fcn32s --backbone vgg16 --dataset pascal_voc
 ```
-#### Evaluation
+- **Evaluation**
 ```
 python eval.py --model fcn32s --backbone vgg16 --dataset pascal_voc
 ```
-#### Run Demo
+- **Run Demo**
 ```
 python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 ```
+
 ## Result
-#### PASCAL VOC 2012
+- **PASCAL VOC 2012**
+
 |Methods|Backbone|TrainSet|EvalSet|crops_size|epochs|Mean IoU|pixAcc|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
 |FCN32s|vgg16|train|val|480|60|47.50%|85.39%|
@@ -88,10 +91,16 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 - [PyTorch-Encoding](https://github.com/zhanghang1989/PyTorch-Encoding)
 
 <!--
+<<<<<<< HEAD
 [![python-image]][python3-url]
+=======
+[![python-image]][python-url]
+>>>>>>> 8475c3e45ebf8d491ee96912021bce2988bbf712
 [![pytorch-image]][pytorch-url]
 [![lic-image]][lic-url]
+-->
 
+<<<<<<< HEAD
 [python-image]: https://img.shields.io/pypi/pyversions/:packageName.svg?style=flat-square
 [python3-url]: https://www.python.org/
 [pytorch-image]: https://img.shields.io/badge/PyTorch-1.0-2BAF2B.svg?style=flat-square
@@ -99,3 +108,10 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 [lic-image]: https://img.shields.io/hexpm/l/:packageName.svg?style=flat-square
 [lic-url]: https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/blob/master/LICENSE
 -->
+=======
+[python-image]: https://img.shields.io/badge/Python-2.x|3.x-ff69b4.svg
+[python-url]: https://www.python.org/
+[pytorch-image]: https://img.shields.io/badge/PyTorch-1.0-2BAF2B.svg
+[pytorch-url]: https://pytorch.org/
+[lic-image]: https://img.shields.io/hexpm/l/:packageName.svg
+>>>>>>> 8475c3e45ebf8d491ee96912021bce2988bbf712
