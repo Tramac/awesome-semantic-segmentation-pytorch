@@ -36,18 +36,16 @@ class DANet(SegBaseModel):
         self.head = _DAHead(2048, nclass, aux, **kwargs)
 
     def forward(self, x):
+        size = x.size()[2:]
         _, _, c3, c4 = self.base_forward(x)
         outputs = []
         x = self.head(c4)
-        x0 = F.interpolate(x[0], (self._up_kwargs['height'], self._up_kwargs['width']),
-                           mode='bilinear', align_corners=True)
+        x0 = F.interpolate(x[0], size, mode='bilinear', align_corners=True)
         outputs.append(x0)
 
         if self.aux:
-            x1 = F.interpolate(x[1], (self._up_kwargs['height'], self._up_kwargs['width']),
-                               mode='bilinear', align_corners=True)
-            x2 = F.interpolate(x[2], (self._up_kwargs['height'], self._up_kwargs['width']),
-                               mode='bilinear', align_corners=True)
+            x1 = F.interpolate(x[1], size, mode='bilinear', align_corners=True)
+            x2 = F.interpolate(x[2], size, mode='bilinear', align_corners=True)
             outputs.append(x1)
             outputs.append(x2)
         return outputs

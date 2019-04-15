@@ -38,17 +38,18 @@ class DenseASPP(nn.Module):
             self.auxlayer = _FCNHead(in_channels, nclass, **kwargs)
 
     def forward(self, x):
+        size = x.size()[2:]
         features = self.features(x)
         if self.dilate_scale > 8:
             features = F.interpolate(features, scale_factor=2, mode='bilinear', align_corners=True)
         outputs = []
         x = self.head(features)
-        x = F.interpolate(x, (self.crop_size, self.crop_size), mode='bilinear', align_corners=True)
+        x = F.interpolate(x, size, mode='bilinear', align_corners=True)
         outputs.append(x)
 
         if self.aux:
             auxout = self.auxlayer(features)
-            auxout = F.interpolate(auxout, (self.crop_size, self.crop_size), mode='bilinear', align_corners=True)
+            auxout = F.interpolate(auxout, size, mode='bilinear', align_corners=True)
             outputs.append(auxout)
         return tuple(outputs)
 

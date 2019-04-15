@@ -27,8 +27,7 @@ def eval(args):
     ])
 
     # dataset and dataloader
-    data_kwargs = {'transform': input_transform, 'base_size': args.base_size, 'crop_size': args.crop_size}
-    test_dataset = get_segmentation_dataset(args.dataset, split='val', mode='val', **data_kwargs)
+    test_dataset = get_segmentation_dataset(args.dataset, split='val', mode='val', transform=input_transform)
 
     test_loader = data.DataLoader(dataset=test_dataset,
                                   batch_size=1,
@@ -36,8 +35,7 @@ def eval(args):
 
     # create network
     model = get_segmentation_model(model=args.model, dataset=args.dataset, backbone=args.backbone,
-                                   aux=args.aux, pretrained=True, pretrained_base=False,
-                                   base_size=args.base_size, crop_size=args.crop_size).to(device)
+                                   aux=args.aux, pretrained=True, pretrained_base=False).to(device)
     print('Finished loading model!')
 
     metric = SegmentationMetric(test_dataset.num_class)

@@ -25,16 +25,17 @@ class FCN32s(nn.Module):
             self.auxlayer = _FCNHead(512, nclass, norm_layer)
 
     def forward(self, x):
+        size = x.size()[2:]
         pool5 = self.features(x)
 
         outputs = []
         out = self.head(pool5)
-        out = F.interpolate(out, x.size()[2:], mode='bilinear', align_corners=True)
+        out = F.interpolate(out, size, mode='bilinear', align_corners=True)
         outputs.append(out)
 
         if self.aux:
             auxout = self.auxlayer(pool5)
-            auxout = F.interpolate(auxout, x.size()[2:], mode='bilinear', align_corners=True)
+            auxout = F.interpolate(auxout, size, mode='bilinear', align_corners=True)
             outputs.append(auxout)
 
         return tuple(outputs)
