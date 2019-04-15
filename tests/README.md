@@ -15,5 +15,3 @@ In order to ensure the correctness of models, the project provides a overfitting
 | FCN16s | 200   | 99.2% | 99.8%  |
 | FCN8s  | 100   | 99.8% | 99.9%  |
 | DANet  | 100   | 99.5% | 99.9%  |
-=======
->>>>>>
