@@ -20,10 +20,10 @@ from PIL import Image
 def parse_args():
     parser = argparse.ArgumentParser(description='Semantic Segmentation Overfitting Test')
     # model
-    parser.add_argument('--model', type=str, default='fcn8s',
+    parser.add_argument('--model', type=str, default='danet',
                         choices=['fcn32s/fcn16s/fcn8s/fcn/psp/deeplabv3/danet/denseaspp/bisenet/encnet/dunet'],
                         help='model name (default: fcn32s)')
-    parser.add_argument('--backbone', type=str, default='vgg16',
+    parser.add_argument('--backbone', type=str, default='resnet50',
                         choices=['vgg16/resnet18/resnet50/resnet101/resnet152/densenet121/161/169/201'],
                         help='backbone name (default: vgg16)')
     parser.add_argument('--dataset', type=str, default='pascal_voc',
@@ -120,7 +120,7 @@ def save_pred(args, epoch, mask):
     directory = "runs/%s/" % (args.model)
     if not os.path.exists(directory):
         os.makedirs(directory)
-    filename = directory + 'epoch_{}.png'.format(epoch)
+    filename = directory + '{}_epoch_{}.png'.format(args.model, epoch + 1)
     mask.save(filename)
 
 

@@ -8,17 +8,10 @@ In order to ensure the correctness of models, the project provides a overfitting
 
 　　　(a) img: 2007_000033.jpg  　　　　　　　(b) mask: 2007_000033.png
 
-
-<<<<<<< HEAD
+### Test Result
 | Model  | epoch | mIoU  | pixAcc |
 | :----- | ----- | ----- | ------ |
 | FCN32s | 200   | 94.0% | 98.2%  |
 | FCN16s | 200   | 99.2% | 99.8%  |
 | FCN8s  | 100   | 99.8% | 99.9%  |
-=======
-### Test Result
->>>>>>> 22c16a47ae6f732c322754916d24f9ce942de9bf
-
-| Model  | backbone | epoch | mIoU  | pixAcc |
-| :-----: | :----: | :-----: | :-----: | :------: |
-| FCN32s | vgg16 | 200 | 94.0% | 98.2%  |
+| DANet  | 100   | 99.5% | 99.9%  |
