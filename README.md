@@ -2,7 +2,6 @@
 [![python-image]][python-url]
 [![pytorch-image]][pytorch-url]
 [![lic-image]][lic-url]
-[![GitHub license]][./LICENSE]
 
 This project aims at providing a concise, easy-to-use, modular reference implementation for semantic segmentation models using PyTorch.
 
