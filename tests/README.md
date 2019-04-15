@@ -13,5 +13,4 @@ In order to ensure the correctness of models, the project provides a overfitting
 
 | Model  | backbone | epoch | mIoU  | pixAcc |
 | :-----: | :----: | :-----: | :-----: | :------: |
-| FCN32s | vgg16 | 300 | 94.0% | 98.2%  |
-
+| FCN32s | vgg16 | 200 | 94.0% | 98.2%  |
