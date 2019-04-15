@@ -1,5 +1,4 @@
 # Semantic Segmentation on PyTorch
-
 [![python-image]][python-url]
 [![pytorch-image]][pytorch-url]
 [![lic-image]][lic-url]
