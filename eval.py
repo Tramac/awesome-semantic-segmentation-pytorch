@@ -27,7 +27,7 @@ def eval(args):
     ])
 
     # dataset and dataloader
-    test_dataset = get_segmentation_dataset(args.dataset, split='val', mode='val', transform=input_transform)
+    test_dataset = get_segmentation_dataset(args.dataset, split='val', mode='testval', transform=input_transform)
 
     test_loader = data.DataLoader(dataset=test_dataset,
                                   batch_size=1,
