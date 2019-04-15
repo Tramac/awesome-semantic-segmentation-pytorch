@@ -97,3 +97,4 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 [pytorch-image]: https://img.shields.io/badge/PyTorch-1.0-2BAF2B.svg
 [pytorch-url]: https://pytorch.org/
 [lic-image]: http://dmlc.github.io/img/apache2.svg
+[lic-url]: https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/blob/master/LICENSE
