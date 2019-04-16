@@ -9,12 +9,12 @@ import torch.utils.data as data
 import torch.backends.cudnn as cudnn
 
 from torchvision import transforms
-from data_loader import get_segmentation_dataset
-from models.model_zoo import get_segmentation_model
-from utils.parallel import DataParallelModel, DataParallelCriterion
-from utils.lr_scheduler import LRScheduler
-from utils.score import SegmentationMetric
-from utils.loss import MixSoftmaxCrossEntropyLoss
+from core.data.dataloader import get_segmentation_dataset
+from core.models.model_zoo import get_segmentation_model
+from core.utils.parallel import DataParallelModel, DataParallelCriterion
+from core.utils.lr_scheduler import LRScheduler
+from core.utils.score import SegmentationMetric
+from core.utils.loss import MixSoftmaxCrossEntropyLoss
 
 
 def parse_args():

@@ -37,7 +37,7 @@ class VOCSegmentation(SegmentationDataset):
     BASE_DIR = 'VOC2012'
     NUM_CLASS = 21
 
-    def __init__(self, root='./datasets/voc', split='train', mode=None, transform=None, **kwargs):
+    def __init__(self, root='../datasets/voc', split='train', mode=None, transform=None, **kwargs):
         super(VOCSegmentation, self).__init__(root, split, mode, transform, **kwargs)
         _voc_root = os.path.join(root, self.BASE_DIR)
         _mask_dir = os.path.join(_voc_root, 'SegmentationClass')

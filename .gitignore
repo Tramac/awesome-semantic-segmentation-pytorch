@@ -113,6 +113,7 @@ weights/
 *.pth
 
 # dataset
+datasets/
 VOCdevket/
 voc/
 ade/

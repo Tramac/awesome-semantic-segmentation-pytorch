@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from models.segbase import SegBaseModel
+from .segbase import SegBaseModel
 
 __all__ = ['FCN', 'get_fcn', 'get_fcn_resnet50_voc',
            'get_fcn_resnet101_voc', 'get_fcn_resnet152_voc']
@@ -60,10 +60,10 @@ def get_fcn(dataset='pascal_voc', backbone='resnet50', pretrained=False, root='~
         'coco': 'coco',
         'citys': 'citys',
     }
-    from data_loader import datasets
+    from ..data.dataloader import datasets
     model = FCN(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
     if pretrained:
-        from models.model_store import get_model_file
+        from .model_store import get_model_file
         model.load_state_dict(torch.load(get_model_file('fcnv2_%s_%s' % (backbone, acronyms[dataset]), root=root)))
     return model
 

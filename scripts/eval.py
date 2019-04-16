@@ -6,10 +6,10 @@ import torch
 import torch.utils.data as data
 
 from torchvision import transforms
-from data_loader import get_segmentation_dataset
-from models.model_zoo import get_segmentation_model
-from utils.score import SegmentationMetric
-from utils.visualize import get_color_pallete
+from core.data.dataloader import get_segmentation_dataset
+from core.models.model_zoo import get_segmentation_model
+from core.utils.score import SegmentationMetric
+from core.utils.visualize import get_color_pallete
 
 from train import parse_args
 

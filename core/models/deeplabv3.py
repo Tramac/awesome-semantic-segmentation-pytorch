@@ -3,8 +3,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from models.segbase import SegBaseModel
-from models.fcn import _FCNHead
+from .segbase import SegBaseModel
+from .fcn import _FCNHead
 
 __all__ = ['DeepLabV3', 'get_deeplabv3', 'get_deeplabv3_resnet50_voc', 'get_deeplabv3_resnet101_voc',
            'get_deeplabv3_resnet152_voc', 'get_deeplabv3_resnet50_ade', 'get_deeplabv3_resnet101_ade',
@@ -148,10 +148,10 @@ def get_deeplabv3(dataset='pascal_voc', backbone='resnet50', pretrained=False, r
         'coco': 'coco',
         'citys': 'citys',
     }
-    from data_loader import datasets
+    from ..data.dataloader import datasets
     model = DeepLabV3(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
     if pretrained:
-        from models.model_store import get_model_file
+        from .model_store import get_model_file
         model.load_state_dict(torch.load(get_model_file('deeplabv3_%s_%s' % (backbone, acronyms[dataset]), root=root)))
     return model
 

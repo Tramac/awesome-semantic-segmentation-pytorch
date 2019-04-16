@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from models.base_models.vgg import vgg16
+from .base_models.vgg import vgg16
 
 __all__ = ['get_fcn32s', 'get_fcn16s', 'get_fcn8s',
            'get_fcn32s_vgg16_voc', 'get_fcn16s_vgg16_voc', 'get_fcn8s_vgg16_voc']
@@ -149,10 +149,10 @@ def get_fcn32s(dataset='pascal_voc', backbone='vgg16', pretrained=False, root='~
         'coco': 'coco',
         'citys': 'citys',
     }
-    from data_loader import datasets
+    from ..data.dataloader import datasets
     model = FCN32s(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
     if pretrained:
-        from models.model_store import get_model_file
+        from .model_store import get_model_file
         model.load_state_dict(torch.load(get_model_file('fcn32s_%s_%s' % (backbone, acronyms[dataset]), root=root)))
     return model
 
@@ -166,10 +166,10 @@ def get_fcn16s(dataset='pascal_voc', backbone='vgg16', pretrained=False, root='~
         'coco': 'coco',
         'citys': 'citys',
     }
-    from data_loader import datasets
+    from ..data.dataloader import datasets
     model = FCN16s(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
     if pretrained:
-        from models.model_store import get_model_file
+        from .model_store import get_model_file
         model.load_state_dict(torch.load(get_model_file('fcn16s_%s_%s' % (backbone, acronyms[dataset]), root=root)))
     return model
 
@@ -183,10 +183,10 @@ def get_fcn8s(dataset='pascal_voc', backbone='vgg16', pretrained=False, root='~/
         'coco': 'coco',
         'citys': 'citys',
     }
-    from data_loader import datasets
+    from ..data.dataloader import datasets
     model = FCN8s(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
     if pretrained:
-        from models.model_store import get_model_file
+        from .model_store import get_model_file
         model.load_state_dict(torch.load(get_model_file('fcn8s_%s_%s' % (backbone, acronyms[dataset]), root=root)))
     return model
 

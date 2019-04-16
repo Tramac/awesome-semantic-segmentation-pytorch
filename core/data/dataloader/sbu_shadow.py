@@ -4,7 +4,7 @@ import torch
 import numpy as np
 
 from PIL import Image
-from data_loader.segbase import SegmentationDataset
+from .segbase import SegmentationDataset
 
 
 class SBUSegmentation(SegmentationDataset):
@@ -12,7 +12,7 @@ class SBUSegmentation(SegmentationDataset):
     """
     NUM_CLASS = 2
 
-    def __init__(self, root='./datasets/sbu', split='train', mode=None, transform=None, **kwargs):
+    def __init__(self, root='../datasets/sbu', split='train', mode=None, transform=None, **kwargs):
         super(SBUSegmentation, self).__init__(root, split, mode, transform, **kwargs)
         assert os.path.exists(self.root)
         self.images, self.masks = _get_sbu_pairs(self.root, self.split)

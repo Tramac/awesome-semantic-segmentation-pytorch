@@ -4,8 +4,8 @@ import torch
 
 from torchvision import transforms
 from PIL import Image
-from utils.visualize import get_color_pallete
-from models import get_model
+from core.utils.visualize import get_color_pallete
+from core.models import get_model
 
 parser = argparse.ArgumentParser(
     description='Predict segmentation result from a given image')
@@ -15,7 +15,7 @@ parser.add_argument('--dataset', type=str, default='pascal_aug', choices=['pasca
                     help='dataset name (default: pascal_voc)')
 parser.add_argument('--save-folder', default='~/.torch/models',
                     help='Directory for saving checkpoint models')
-parser.add_argument('--input-pic', type=str, default='./datasets/VOCdevkit/VOC2012/JPEGImages/2007_000032.jpg',
+parser.add_argument('--input-pic', type=str, default='../datasets/VOCdevkit/VOC2012/JPEGImages/2007_000032.jpg',
                     help='path to the input picture')
 parser.add_argument('--outdir', default='./eval', type=str,
                     help='path to save the predict result')

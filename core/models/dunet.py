@@ -3,8 +3,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from models.segbase import SegBaseModel
-from models.fcn import _FCNHead
+from .segbase import SegBaseModel
+from .fcn import _FCNHead
 
 __all__ = ['DUNet', 'get_dunet', 'get_dunet_resnet50_pascal_voc',
            'get_dunet_resnet101_pascal_voc', 'get_dunet_resnet152_pascal_voc']
@@ -126,10 +126,10 @@ def get_dunet(dataset='pascal_voc', backbone='resnet50', pretrained=False,
         'coco': 'coco',
         'citys': 'citys',
     }
-    from data_loader import datasets
+    from ..data.dataloader import datasets
     model = DUNet(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
     if pretrained:
-        from models.model_store import get_model_file
+        from .model_store import get_model_file
         model.load_state_dict(torch.load(get_model_file('dunet_%s_%s' % (backbone, acronyms[dataset]), root=root)))
     return model
 

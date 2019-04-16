@@ -4,7 +4,7 @@ from __future__ import print_function
 import os
 import zipfile
 
-from utils.download import download, check_sha1
+from ..utils.download import download, check_sha1
 
 __all__ = ['get_model_file', 'get_resnet_file']
 

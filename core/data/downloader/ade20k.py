@@ -8,7 +8,7 @@ cur_path = os.path.abspath(os.path.dirname(__file__))
 root_path = os.path.split(cur_path)[0]
 sys.path.append(root_path)
 
-from utils import download, makedirs
+from core.utils import download, makedirs
 
 _TARGET_DIR = os.path.expanduser('~/.torch/datasets/ade')
 

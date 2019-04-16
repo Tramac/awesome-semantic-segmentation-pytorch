@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from models.base_models.densenet import *
-from models.fcn import _FCNHead
+from .base_models.densenet import *
+from .fcn import _FCNHead
 
 __all__ = ['DenseASPP', 'get_denseaspp', 'get_denseaspp_densenet121_citys',
            'get_denseaspp_densenet161_citys', 'get_denseaspp_densenet169_citys', 'get_denseaspp_densenet201_citys']
@@ -148,10 +148,10 @@ def get_denseaspp(dataset='citys', backbone='densenet121', pretrained=False,
         'coco': 'coco',
         'citys': 'citys',
     }
-    from data_loader import datasets
+    from ..data.dataloader import datasets
     model = DenseASPP(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
     if pretrained:
-        from models.model_store import get_model_file
+        from .model_store import get_model_file
         model.load_state_dict(torch.load(get_model_file('denseaspp_%s_%s' % (backbone, acronyms[dataset]), root=root)))
     return model
 

@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from models.segbase import SegBaseModel
+from .segbase import SegBaseModel
 
 __all__ = ['DANet', 'get_danet', 'get_danet_resnet50_citys',
            'get_danet_resnet101_citys', 'get_danet_resnet152_citys']
@@ -187,10 +187,10 @@ def get_danet(dataset='citys', backbone='resnet50', pretrained=False,
         'coco': 'coco',
         'citys': 'citys',
     }
-    from data_loader import datasets
+    from ..data.dataloader import datasets
     model = DANet(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
     if pretrained:
-        from models.model_store import get_model_file
+        from .model_store import get_model_file
         model.load_state_dict(torch.load(get_model_file('danet_%s_%s' % (backbone, acronyms[dataset]), root=root)))
     return model
 

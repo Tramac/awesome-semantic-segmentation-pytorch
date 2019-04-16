@@ -3,13 +3,13 @@
 [![pytorch-image]][pytorch-url]
 [![lic-image]][lic-url]
 
-This project aims at providing a concise, easy-to-use, modular reference implementation for semantic segmentation models using PyTorch.
+This project aims at providing a concise, easy-to-use, modifiable reference implementation for semantic segmentation models using PyTorch.
 
-<p align="center"><img width="100%" src="datasets/weimar_000091_000019_gtFine_color.png" /></p>
+<p align="center"><img width="100%" src="docs/weimar_000091_000019_gtFine_color.png" /></p>
 
 ## Update
+- There is a major update of the project's directory, which makes the code more readable. I am sorry for the inconvenience caused by this update.
 - Add overfitting test script
-- Add DUNet
 
 ## Requisites
 - [PyTorch 1.0](https://pytorch.org/get-started/locally/)

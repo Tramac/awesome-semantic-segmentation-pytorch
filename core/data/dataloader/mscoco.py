@@ -40,7 +40,7 @@ class COCOSegmentation(SegmentationDataset):
                 1, 64, 20, 63, 7, 72]
     NUM_CLASS = 21
 
-    def __init__(self, root='./datasets/coco', split='train', mode=None, transform=None, **kwargs):
+    def __init__(self, root='../datasets/coco', split='train', mode=None, transform=None, **kwargs):
         super(COCOSegmentation, self).__init__(root, split, mode, transform, **kwargs)
         # lazy import pycocotools
         from pycocotools.coco import COCO

@@ -38,7 +38,7 @@ class VOCAugSegmentation(SegmentationDataset):
     BASE_DIR = 'VOCaug/dataset/'
     NUM_CLASS = 21
 
-    def __init__(self, root='./datasets/voc', split='train', mode=None, transform=None, **kwargs):
+    def __init__(self, root='../datasets/voc', split='train', mode=None, transform=None, **kwargs):
         super(VOCAugSegmentation, self).__init__(root, split, mode, transform, **kwargs)
         # train/val/test splits are pre-cut
         _voc_root = os.path.join(root, self.BASE_DIR)
