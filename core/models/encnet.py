@@ -12,9 +12,8 @@ __all__ = ['EncNet', 'EncModule', 'get_encnet', 'get_encnet_resnet50_ade',
 
 class EncNet(SegBaseModel):
     def __init__(self, nclass, backbone='resnet50', aux=True, se_loss=True, lateral=False,
-                 pretrained_base=True, base_size=520, crop_size=480, **kwargs):
-        super(EncNet, self).__init__(nclass, aux, backbone, base_size=base_size, crop_size=crop_size,
-                                     pretrained_base=pretrained_base, **kwargs)
+                 pretrained_base=True, **kwargs):
+        super(EncNet, self).__init__(nclass, aux, backbone, pretrained_base=pretrained_base, **kwargs)
         self.head = _EncHead(2048, nclass, se_loss=se_loss, lateral=lateral, **kwargs)
         if aux:
             self.auxlayer = _FCNHead(1024, nclass, **kwargs)

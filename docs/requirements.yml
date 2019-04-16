@@ -1,0 +1,11 @@
+name: seg_requirements
+dependencies:
+- python3
+- numpy
+- cuda
+- pip:
+  - Image
+  - tqdm
+  - requests
+  - pytorch 1.0
+  - torchvision

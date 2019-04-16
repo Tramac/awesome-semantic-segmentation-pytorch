@@ -32,12 +32,9 @@ class DeepLabV3(SegBaseModel):
         arXiv preprint arXiv:1706.05587 (2017).
     """
 
-    def __init__(self, nclass, backbone='resnet50', aux=False, pretrained_base=True,
-                 base_size=520, crop_size=480, **kwargs):
-        super(DeepLabV3, self).__init__(nclass, aux, backbone, base_size=base_size, crop_size=crop_size,
-                                        pretrained_base=pretrained_base, **kwargs)
-        self.head = _DeepLabHead(nclass, height=self._up_kwargs['height'] // 8, width=self._up_kwargs['width'] // 8,
-                                 **kwargs)
+    def __init__(self, nclass, backbone='resnet50', aux=False, pretrained_base=True, **kwargs):
+        super(DeepLabV3, self).__init__(nclass, aux, backbone, pretrained_base=pretrained_base, **kwargs)
+        self.head = _DeepLabHead(nclass, **kwargs)
         if self.aux:
             self.auxlayer = _FCNHead(1024, nclass, **kwargs)
 
@@ -87,9 +84,8 @@ class _ASPPConv(nn.Module):
 
 
 class _AsppPooling(nn.Module):
-    def __init__(self, in_channels, out_channels, norm_layer, norm_kwargs, height=60, width=60, **kwargs):
+    def __init__(self, in_channels, out_channels, norm_layer, norm_kwargs, **kwargs):
         super(_AsppPooling, self).__init__()
-        self._up_kwargs = {'height': height, 'width': width}
         self.gap = nn.Sequential(
             nn.AdaptiveAvgPool2d(1),
             nn.Conv2d(in_channels, out_channels, 1, bias=False),
@@ -98,14 +94,14 @@ class _AsppPooling(nn.Module):
         )
 
     def forward(self, x):
+        size = x.size()[2:]
         pool = self.gap(x)
-        out = F.interpolate(pool, (self._up_kwargs['height'], self._up_kwargs['width']),
-                            mode='bilinear', align_corners=True)
+        out = F.interpolate(pool, size, mode='bilinear', align_corners=True)
         return out
 
 
 class _ASPP(nn.Module):
-    def __init__(self, in_channels, atrous_rates, norm_layer, norm_kwargs, height=60, width=60):
+    def __init__(self, in_channels, atrous_rates, norm_layer, norm_kwargs):
         super(_ASPP, self).__init__()
         out_channels = 256
         self.b0 = nn.Sequential(
@@ -118,8 +114,7 @@ class _ASPP(nn.Module):
         self.b1 = _ASPPConv(in_channels, out_channels, rate1, norm_layer, norm_kwargs)
         self.b2 = _ASPPConv(in_channels, out_channels, rate2, norm_layer, norm_kwargs)
         self.b3 = _ASPPConv(in_channels, out_channels, rate3, norm_layer, norm_kwargs)
-        self.b4 = _AsppPooling(in_channels, out_channels, norm_layer=norm_layer, norm_kwargs=norm_kwargs,
-                               height=height, width=width)
+        self.b4 = _AsppPooling(in_channels, out_channels, norm_layer=norm_layer, norm_kwargs=norm_kwargs)
 
         self.project = nn.Sequential(
             nn.Conv2d(5 * out_channels, out_channels, 1, bias=False),

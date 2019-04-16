@@ -9,8 +9,7 @@ __all__ = ['BiSeNet', 'get_bisenet', 'get_bisenet_resnet18_citys']
 
 
 class BiSeNet(nn.Module):
-    def __init__(self, nclass, backbone='resnet18', aux=False, pretrained_base=True,
-                 base_size=520, crop_size=480, **kwargs):
+    def __init__(self, nclass, backbone='resnet18', aux=False, pretrained_base=True, **kwargs):
         super(BiSeNet, self).__init__()
         self.aux = aux
         self.spatial_path = SpatialPath(3, 128, **kwargs)
@@ -20,8 +19,6 @@ class BiSeNet(nn.Module):
         if aux:
             self.auxlayer1 = _BiSeHead(128, 256, nclass, **kwargs)
             self.auxlayer2 = _BiSeHead(128, 256, nclass, **kwargs)
-        self.base_size = base_size
-        self.crop_size = crop_size
 
     def forward(self, x):
         size = x.size()[2:]

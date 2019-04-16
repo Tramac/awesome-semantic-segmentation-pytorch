@@ -15,8 +15,7 @@ class SegBaseModel(nn.Module):
         'resnet101' or 'resnet152').
     """
 
-    def __init__(self, nclass, aux, backbone='resnet50', height=None, width=None,
-                 base_size=520, crop_size=480, pretrained_base=True, **kwargs):
+    def __init__(self, nclass, aux, backbone='resnet50', pretrained_base=True, **kwargs):
         super(SegBaseModel, self).__init__()
         self.aux = aux
         self.nclass = nclass
@@ -36,11 +35,6 @@ class SegBaseModel(nn.Module):
         self.layer2 = pretrained.layer2
         self.layer3 = pretrained.layer3
         self.layer4 = pretrained.layer4
-        height = height if height is not None else crop_size
-        width = width if width is not None else crop_size
-        self._up_kwargs = {'height': height, 'width': width}
-        self.base_size = base_size
-        self.crop_size = crop_size
 
     def base_forward(self, x):
         """forwarding pre-trained network"""
@@ -59,9 +53,6 @@ class SegBaseModel(nn.Module):
         return self.forward(x)[0]
 
     def demo(self, x):
-        h, w = x.shape[2:]
-        self._up_kwargs['height'] = h
-        self._up_kwargs['width'] = w
         pred = self.forward(x)
         if self.aux:
             pred = pred[0]

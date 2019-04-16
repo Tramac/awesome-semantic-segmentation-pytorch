@@ -31,12 +31,9 @@ class PSPNet(SegBaseModel):
         "Pyramid scene parsing network." *CVPR*, 2017
     """
 
-    def __init__(self, nclass, backbone='resnet50', aux=False, pretrained_base=True,
-                 base_size=520, crop_size=480, **kwargs):
-        super(PSPNet, self).__init__(nclass, aux, backbone, base_size=base_size, crop_size=crop_size,
-                                     pretrained_base=pretrained_base, **kwargs)
-        self.head = _PSPHead(nclass, height=self._up_kwargs['height'] // 8, width=self._up_kwargs['width'] // 8,
-                             **kwargs)
+    def __init__(self, nclass, backbone='resnet50', aux=False, pretrained_base=True, **kwargs):
+        super(PSPNet, self).__init__(nclass, aux, backbone, pretrained_base=pretrained_base, **kwargs)
+        self.head = _PSPHead(nclass, **kwargs)
         if self.aux:
             self.auxlayer = _FCNHead(1024, nclass, **kwargs)
 
@@ -64,7 +61,7 @@ def _PSP1x1Conv(in_channels, out_channels, norm_layer, norm_kwargs):
 
 
 class _PyramidPooling(nn.Module):
-    def __init__(self, in_channels, height=60, width=60, **kwargs):
+    def __init__(self, in_channels, **kwargs):
         super(_PyramidPooling, self).__init__()
         out_channels = int(in_channels / 4)
         self.avgpool1 = nn.AdaptiveAvgPool2d(1)
@@ -86,10 +83,9 @@ class _PyramidPooling(nn.Module):
 
 
 class _PSPHead(nn.Module):
-    def __init__(self, nclass, norm_layer=nn.BatchNorm2d, norm_kwargs=None,
-                 height=60, width=60, **kwargs):
+    def __init__(self, nclass, norm_layer=nn.BatchNorm2d, norm_kwargs=None, **kwargs):
         super(_PSPHead, self).__init__()
-        self.psp = _PyramidPooling(2048, height=height, width=width, norm_layer=norm_layer, norm_kwargs=norm_kwargs)
+        self.psp = _PyramidPooling(2048, norm_layer=norm_layer, norm_kwargs=norm_kwargs)
         self.block = nn.Sequential(
             nn.Conv2d(4096, 512, 3, padding=1, bias=False),
             norm_layer(512, **({} if norm_kwargs is None else norm_kwargs)),

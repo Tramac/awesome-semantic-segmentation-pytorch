@@ -10,8 +10,7 @@ __all__ = ['DenseASPP', 'get_denseaspp', 'get_denseaspp_densenet121_citys',
 
 
 class DenseASPP(nn.Module):
-    def __init__(self, nclass, backbone='densenet121', aux=False, pretrained_base=True,
-                 base_size=520, crop_size=480, dilate_scale=8, **kwargs):
+    def __init__(self, nclass, backbone='densenet121', aux=False, pretrained_base=True, dilate_scale=8, **kwargs):
         super(DenseASPP, self).__init__()
         self.nclass = nclass
         self.aux = aux
@@ -28,9 +27,6 @@ class DenseASPP(nn.Module):
             raise RuntimeError('unknown backbone: {}'.format(backbone))
         self.features = pretrained.features
         in_channels = pretrained.num_features
-        self._up_kwargs = {'height': crop_size, 'width': crop_size}
-        self.base_size = base_size
-        self.crop_size = crop_size
 
         self.head = _DenseASPPHead(in_channels, nclass)
 

@@ -21,10 +21,13 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Semantic Segmentation Training With Pytorch')
     # model and dataset
     parser.add_argument('--model', type=str, default='fcn32s',
-                        choices=['fcn32s/fcn16s/fcn8s/fcn/psp/deeplabv3/danet/denseaspp/bisenet/encnet/dunet'],
+                        choices=['fcn32s', 'fcn16s', 'fcn8s', 'psp', 'deeplabv3',
+                                 'danet', 'denseaspp', 'bisenet', 'encnet', 'dunet'],
                         help='model name (default: fcn32s)')
-    parser.add_argument('--backbone', type=str, default='vgg16',
-                        choices=['vgg16/resnet18/resnet50/resnet101/resnet152/densenet121/161/169/201'],
+    parser.add_argument('--backbone', type=str, default='resnet50',
+                        choices=['vgg16', 'resnet18', 'resnet50', 'resnet101',
+                                 'resnet152', 'densenet121', 'densenet161',
+                                 'densenet169', 'densenet201'],
                         help='backbone name (default: vgg16)')
     parser.add_argument('--dataset', type=str, default='pascal_voc',
                         choices=['pascal_voc/pascal_aug/ade20k/citys/sbu'],
@@ -105,8 +108,7 @@ class Trainer(object):
             transforms.Normalize([.485, .456, .406], [.229, .224, .225]),
         ])
         # dataset and dataloader
-        # data_kwargs = {'transform': input_transform, 'base_size': args.base_size, 'crop_size': args.crop_size}
-        data_kwargs = {'transform': input_transform}
+        data_kwargs = {'transform': input_transform, 'base_size': args.base_size, 'crop_size': args.crop_size}
         train_dataset = get_segmentation_dataset(args.dataset, split=args.train_split, mode='train', **data_kwargs)
         val_dataset = get_segmentation_dataset(args.dataset, split='val', mode='val', **data_kwargs)
 
@@ -121,9 +123,8 @@ class Trainer(object):
                                           shuffle=False)
 
         # create network
-        self.model = get_segmentation_model(model=args.model, dataset=args.dataset,
-                                            backbone=args.backbone, aux=args.aux, norm_layer=nn.BatchNorm2d,
-                                            base_size=args.base_size, crop_size=args.crop_size).to(args.device)
+        self.model = get_segmentation_model(model=args.model, dataset=args.dataset, backbone=args.backbone,
+                                            aux=args.aux, norm_layer=nn.BatchNorm2d).to(args.device)
 
         # create criterion
         self.criterion = MixSoftmaxCrossEntropyLoss(args.aux, args.aux_weight, ignore_label=-1).to(args.device)
@@ -142,13 +143,10 @@ class Trainer(object):
                 self.model.load_state_dict(torch.load(args.resume, map_location=lambda storage, loc: storage))
 
         # optimizer
-        # self.optimizer = torch.optim.SGD(self.model.parameters(),
-        #                                  lr=args.lr,
-        #                                  momentum=args.momentum,
-        #                                  weight_decay=args.weight_decay)
-        self.optimizer = torch.optim.Adam(self.model.parameters(),
-                                          lr=args.lr,
-                                          weight_decay=args.weight_decay)
+        self.optimizer = torch.optim.SGD(self.model.parameters(),
+                                         lr=args.lr,
+                                         momentum=args.momentum,
+                                         weight_decay=args.weight_decay)
 
         # lr scheduling
         self.lr_scheduler = LRScheduler(mode='poly', base_lr=args.lr, nepochs=args.epochs,
