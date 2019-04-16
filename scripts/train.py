@@ -11,10 +11,11 @@ import torch.backends.cudnn as cudnn
 from torchvision import transforms
 from core.data.dataloader import get_segmentation_dataset
 from core.models.model_zoo import get_segmentation_model
+from core.nn import SyncBatchNorm
 from core.utils.parallel import DataParallelModel, DataParallelCriterion
 from core.utils.lr_scheduler import LRScheduler
 from core.utils.score import SegmentationMetric
-from core.utils.loss import MixSoftmaxCrossEntropyLoss
+from core.nn.loss import MixSoftmaxCrossEntropyLoss
 
 
 def parse_args():
@@ -24,7 +25,7 @@ def parse_args():
                         choices=['fcn32s', 'fcn16s', 'fcn8s', 'psp', 'deeplabv3',
                                  'danet', 'denseaspp', 'bisenet', 'encnet', 'dunet'],
                         help='model name (default: fcn32s)')
-    parser.add_argument('--backbone', type=str, default='resnet50',
+    parser.add_argument('--backbone', type=str, default='vgg16',
                         choices=['vgg16', 'resnet18', 'resnet50', 'resnet101',
                                  'resnet152', 'densenet121', 'densenet161',
                                  'densenet169', 'densenet201'],
