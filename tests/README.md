@@ -30,10 +30,14 @@ Observing the convergence process of different models is so interesting:joy:
 <img src = './runs/bisenet_epoch_100.png' width = '90' height = '65.7' />
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 　 FCN32s　　FCN16s　　 FCN8s　　 DANet　　  EncNet　　 　DUNet　　 PSPNet　　 BiSeNet　　 DenseASPP
 =======
 　 FCN32s　　 FCN16s　　 FCN8s　　 DANet　　 EncNet　　 　DUNet　　 　PSPNet　　 BiSeNet　　 DenseASPP
 >>>>>>> 31f53ecc287d73adc24623c84ba4fe8d553e64e9
+=======
+　 FCN32s　　FCN16s　　 FCN8s　　 DANet　　  EncNet　　 　DUNet　　 PSPNet　　 BiSeNet　　 DenseASPP
+>>>>>>> 83ad38d8a7ebd6651da841006d569f3523362fec
 
 ### Conclusion
 - The result of FCN32s is the worst.
