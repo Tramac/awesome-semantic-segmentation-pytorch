@@ -15,6 +15,31 @@ This project aims at providing a concise, easy-to-use, modifiable reference impl
 - [PyTorch 1.0](https://pytorch.org/get-started/locally/)
 - Python 3.x
 
+## Usage
+- **Train**
+```
+cd ./scripts
+python train.py --model fcn32s --backbone vgg16 --dataset pascal_voc
+```
+- **Evaluation**
+```
+cd ./scripts
+python eval.py --model fcn32s --backbone vgg16 --dataset pascal_voc
+```
+- **Run Demo**
+```
+cd ./scripts
+python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
+```
+
+```
+.{SEG_ROOT}
+├── scripts
+│   ├── demo.py
+│   ├── eval.py
+│   └── train.py
+```
+
 ## Support
 
 #### Model
@@ -28,13 +53,28 @@ This project aims at providing a concise, easy-to-use, modifiable reference impl
 - [EncNet](https://arxiv.org/abs/1803.08904v1)
 - [DUNet(DUpsampling)](https://arxiv.org/abs/1903.02120)
 
+```
+.{SEG_ROOT}
+├── core
+│   ├── models
+│   │   ├── bisenet.py
+│   │   ├── danet.py
+│   │   ├── deeplabv3.py
+│   │   ├── denseaspp.py
+│   │   ├── dunet.py
+│   │   ├── encnet.py
+│   │   ├── fcn.py
+│   │   ├── pspnet.py
+│   │   ├── ......
+```
+
 #### Dataset
 
 You can run script to download dataset, such as:
 
 ```
-cd ./datasets
-python ade20k.py --download-dir ./datasets/ade
+cd ./core/data/downloader
+python ade20k.py --download-dir ../datasets/ade
 ```
 
 - [VOC2012](http://host.robots.ox.ac.uk/pascal/VOC/voc2012/VOCtrainval_11-May-2012.tar)
@@ -44,18 +84,23 @@ python ade20k.py --download-dir ./datasets/ade
 - [COCO](http://cocodataset.org/#download)
 - [SBU-shadow](http://www3.cs.stonybrook.edu/~cvl/content/datasets/shadow_db/SBU-shadow.zip)
 
-## Usage
-- **Train**
 ```
-python train.py --model fcn32s --backbone vgg16 --dataset pascal_voc
-```
-- **Evaluation**
-```
-python eval.py --model fcn32s --backbone vgg16 --dataset pascal_voc
-```
-- **Run Demo**
-```
-python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
+.{SEG_ROOT}
+├── core
+│   ├── data
+│   │   ├── dataloader
+│   │   │   ├── ade.py
+│   │   │   ├── cityscapes.py
+│   │   │   ├── mscoco.py
+│   │   │   ├── pascal_aug.py
+│   │   │   ├── pascal_voc.py
+│   │   │   ├── sbu_shadow.py
+│   │   └── downloader
+│   │       ├── ade20k.py
+│   │       ├── cityscapes.py
+│   │       ├── mscoco.py
+│   │       ├── pascal_voc.py
+│   │       └── sbu_shadow.py
 ```
 
 ## Result
@@ -73,6 +118,12 @@ Note: The parameter settings of each method are different, including crop_size, 
 
 ## Overfitting Test
 See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/master/tests) for details.
+
+```
+.{SEG_ROOT}
+├── tests
+│   └── test_model.py
+```
 
 ## To Do
 - [x] Save the best model
