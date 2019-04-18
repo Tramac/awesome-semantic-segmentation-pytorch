@@ -159,10 +159,11 @@ class Trainer(object):
         self.best_pred = 0.0
 
     def train(self):
-        self.model.train()
         cur_iters = 0
         start_time = time.time()
         for epoch in range(self.args.start_epoch, self.args.epochs):
+            self.model.eval()
+
             for i, (images, targets) in enumerate(self.train_loader):
                 cur_lr = self.lr_scheduler(cur_iters)
                 for param_group in self.optimizer.param_groups:
