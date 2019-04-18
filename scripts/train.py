@@ -162,7 +162,7 @@ class Trainer(object):
         cur_iters = 0
         start_time = time.time()
         for epoch in range(self.args.start_epoch, self.args.epochs):
-            self.model.eval()
+            self.model.train()
 
             for i, (images, targets) in enumerate(self.train_loader):
                 cur_lr = self.lr_scheduler(cur_iters)
