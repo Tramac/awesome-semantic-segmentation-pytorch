@@ -9,21 +9,21 @@ import torch.backends.cudnn as cudnn
 import numpy as np
 
 from torchvision import transforms
-from models.model_zoo import get_segmentation_model
-from utils.loss import MixSoftmaxCrossEntropyLoss, EncNetLoss
-from utils.lr_scheduler import LRScheduler
-from utils.score import hist_info, compute_score
-from utils.visualize import get_color_pallete
+from core.models.model_zoo import get_segmentation_model
+from core.nn.loss import MixSoftmaxCrossEntropyLoss, EncNetLoss, ICNetLoss
+from core.utils.lr_scheduler import LRScheduler
+from core.utils.score import hist_info, compute_score
+from core.utils.visualize import get_color_pallete
 from PIL import Image
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Semantic Segmentation Overfitting Test')
     # model
-    parser.add_argument('--model', type=str, default='denseaspp',
-                        choices=['fcn32s/fcn16s/fcn8s/fcn/psp/deeplabv3/danet/denseaspp/bisenet/encnet/dunet'],
+    parser.add_argument('--model', type=str, default='fcn32s',
+                        choices=['fcn32s/fcn16s/fcn8s/fcn/psp/deeplabv3/danet/denseaspp/bisenet/encnet/dunet/icnet'],
                         help='model name (default: fcn32s)')
-    parser.add_argument('--backbone', type=str, default='densenet121',
+    parser.add_argument('--backbone', type=str, default='vgg16',
                         choices=['vgg16/resnet18/resnet50/resnet101/resnet152/densenet121/161/169/201'],
                         help='backbone name (default: vgg16)')
     parser.add_argument('--dataset', type=str, default='pascal_voc',
@@ -32,7 +32,7 @@ def parse_args():
     parser.add_argument('--epochs', type=int, default=100, metavar='N',
                         help='number of epochs to train (default: 60)')
     parser.add_argument('--lr', type=float, default=1e-3, metavar='LR',
-                        help='learning rate (default: 1e-4)')
+                        help='learning rate (default: 1e-3)')
     parser.add_argument('--momentum', type=float, default=0.9, metavar='M',
                         help='momentum (default: 0.9)')
     parser.add_argument('--weight-decay', type=float, default=1e-4, metavar='M',
@@ -51,7 +51,7 @@ class VOCSegmentation(object):
         self.img = Image.open('test_img.jpg').convert('RGB')
         self.mask = Image.open('test_mask.png')
 
-        # For dunet test
+        # For dunet, icnet test
         # self.img = self.img.resize((504, 368), Image.BILINEAR)
         # self.mask = self.mask.resize((504, 368), Image.NEAREST)
 
@@ -66,6 +66,7 @@ class VOCSegmentation(object):
         img = input_transform(img)
         img = img.unsqueeze(0)
 
+        # For adaptive pooling
         # img = torch.cat([img, img], dim=0)
         return img
 
@@ -75,6 +76,7 @@ class VOCSegmentation(object):
         target = torch.from_numpy(target).long()
         target = target.unsqueeze(0)
 
+        # For adaptive pooling
         # target = torch.cat([target, target], dim=0)
         return target
 
@@ -92,6 +94,8 @@ class Trainer(object):
 
         # for EncNet
         # self.criterion = EncNetLoss(nclass=21, ignore_label=-1).to(args.device)
+        # for ICNet
+        # self.criterion = ICNetLoss(nclass=21, ignore_index=-1).to(args.device)
 
         self.optimizer = torch.optim.Adam(self.model.parameters(),
                                           lr=args.lr,

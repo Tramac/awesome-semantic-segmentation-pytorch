@@ -23,7 +23,8 @@ def parse_args():
     # model and dataset
     parser.add_argument('--model', type=str, default='fcn32s',
                         choices=['fcn32s', 'fcn16s', 'fcn8s', 'psp', 'deeplabv3',
-                                 'danet', 'denseaspp', 'bisenet', 'encnet', 'dunet'],
+                                 'danet', 'denseaspp', 'bisenet', 'encnet', 'dunet',
+                                 'icnet'],
                         help='model name (default: fcn32s)')
     parser.add_argument('--backbone', type=str, default='vgg16',
                         choices=['vgg16', 'resnet18', 'resnet50', 'resnet101',

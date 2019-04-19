@@ -52,6 +52,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 - [BiSeNet](https://arxiv.org/abs/1808.00897)
 - [EncNet](https://arxiv.org/abs/1803.08904v1)
 - [DUNet(DUpsampling)](https://arxiv.org/abs/1903.02120)
+- [ICNet](https://arxiv.org/pdf/1704.08545)
 
 ```
 .{SEG_ROOT}
@@ -65,6 +66,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 │   │   ├── encnet.py
 │   │   ├── fcn.py
 │   │   ├── pspnet.py
+│   │   ├── icnet.py
 │   │   ├── ......
 ```
 
