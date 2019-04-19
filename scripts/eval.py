@@ -1,6 +1,11 @@
 from __future__ import print_function
 
 import os
+import sys
+
+cur_path = os.path.abspath(os.path.dirname(__file__))
+root_path = os.path.split(cur_path)[0]
+sys.path.append(root_path)
 
 import torch
 import torch.utils.data as data
