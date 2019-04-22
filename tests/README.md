@@ -34,6 +34,7 @@ Observing the convergence process of different models is so interesting:joy:
 　 FCN32s　　FCN16s　　 FCN8s　　 DANet　　  EncNet　　 　DUNet　　 PSPNet　　 BiSeNet　　 DenseASPP
 
 <img src = './runs/icnet_epoch_100.png' width = '90' height = '65.7' /> <img src = './runs/enet_epoch_100.png' width = '90' height = '65.7' />
+
 　 ICNet　　ENet
 
 ### Conclusion
