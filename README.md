@@ -8,8 +8,7 @@ This project aims at providing a concise, easy-to-use, modifiable reference impl
 <p align="center"><img width="100%" src="docs/weimar_000091_000019_gtFine_color.png" /></p>
 
 ## Update
-- There is a major update of the project's directory, which makes the code more readable. I am sorry for the inconvenience caused by this update.
-- Add overfitting test script
+- Add ENet
 
 ## Requisites
 - [PyTorch 1.0](https://pytorch.org/get-started/locally/)
@@ -53,6 +52,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 - [EncNet](https://arxiv.org/abs/1803.08904v1)
 - [DUNet(DUpsampling)](https://arxiv.org/abs/1903.02120)
 - [ICNet](https://arxiv.org/pdf/1704.08545)
+- [ENet](https://arxiv.org/pdf/1606.02147)
 
 [DETAILS](https://github.com/Tramac/awesome-semantic-segmentation-pytorch/blob/master/docs/DETAILS.md) for model & backbone.
 ```
@@ -68,6 +68,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 │   │   ├── fcn.py
 │   │   ├── pspnet.py
 │   │   ├── icnet.py
+│   │   ├── enet.py
 │   │   ├── ......
 ```
 
