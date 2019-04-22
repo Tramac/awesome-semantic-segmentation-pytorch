@@ -22,6 +22,7 @@ Observing the convergence process of different models is so interesting:joy:
 | BiSeNet | resnet18 | 100 | 99.6% | 99.9% |
 | DenseASPP | densenet121 | 40 | 100% | 100% |
 | ICNet | resnet50 | 100 | 98.8% | 99.6% |
+| ENet | scratch | 100 | 99.9% | 100% |
 
 ### Visualization
 <img src='./runs/fcn32s_epoch_300.png' width = '90' height = '65.7' /> <img src = './runs/fcn16s_epoch_200.png' width = '90' height = '65.7' />
@@ -32,11 +33,12 @@ Observing the convergence process of different models is so interesting:joy:
 
 　 FCN32s　　FCN16s　　 FCN8s　　 DANet　　  EncNet　　 　DUNet　　 PSPNet　　 BiSeNet　　 DenseASPP
 
-<img src = './runs/icnet_epoch_100.png' width = '90' height = '65.7' />
-　 ICNet
+<img src = './runs/icnet_epoch_100.png' width = '90' height = '65.7' /> <img src = './runs/enet_epoch_100.png' width = '90' height = '65.7' />
+　 ICNet　　ENet
 
 ### Conclusion
 - The result of FCN32s is the worst.
 - There are gridding artifacts in DUNet results.
 - The result of BiSeNet is bad when the `lr=1e-3`, the lr needs to be set to `1e-2`.
 - DenseASPP has the fastest convergence process, and reached 100%.
+- The lr of ENet need to be set to `1e-2`, the edge of result is not smooth.

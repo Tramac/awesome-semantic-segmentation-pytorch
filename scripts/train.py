@@ -2,6 +2,11 @@ import argparse
 import time
 import os
 import shutil
+import sys
+
+cur_path = os.path.abspath(os.path.dirname(__file__))
+root_path = os.path.split(cur_path)[0]
+sys.path.append(root_path)
 
 import torch
 import torch.nn as nn
@@ -24,7 +29,7 @@ def parse_args():
     parser.add_argument('--model', type=str, default='fcn32s',
                         choices=['fcn32s', 'fcn16s', 'fcn8s', 'psp', 'deeplabv3',
                                  'danet', 'denseaspp', 'bisenet', 'encnet', 'dunet',
-                                 'icnet'],
+                                 'icnet', 'enet'],
                         help='model name (default: fcn32s)')
     parser.add_argument('--backbone', type=str, default='vgg16',
                         choices=['vgg16', 'resnet18', 'resnet50', 'resnet101',
@@ -32,8 +37,8 @@ def parse_args():
                                  'densenet169', 'densenet201'],
                         help='backbone name (default: vgg16)')
     parser.add_argument('--dataset', type=str, default='pascal_voc',
-                        choices=['pascal_voc', 'pascal_aug', 'ade20k'
-                                 'citys','sbu'],
+                        choices=['pascal_voc', 'pascal_aug', 'ade20k',
+                                 'citys', 'sbu'],
                         help='dataset name (default: pascal_voc)')
     parser.add_argument('--base-size', type=int, default=520,
                         help='base image size')
@@ -187,10 +192,10 @@ class Trainer(object):
                         epoch, self.args.epochs, i + 1, len(self.train_loader),
                         time.time() - start_time, cur_lr, loss.item()))
 
-            # save every epoch
-            save_checkpoint(self.model, self.args, is_best=False)
-
-            if not self.args.no_val:
+            if self.args.no_val:
+                # save every epoch
+                save_checkpoint(self.model, self.args, is_best=False)
+            else:
                 self.validation(epoch)
 
         save_checkpoint(self.model, self.args, is_best=False)

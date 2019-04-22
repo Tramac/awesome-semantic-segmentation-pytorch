@@ -31,7 +31,7 @@ def parse_args():
                         help='dataset name (default: pascal_voc)')
     parser.add_argument('--epochs', type=int, default=100, metavar='N',
                         help='number of epochs to train (default: 60)')
-    parser.add_argument('--lr', type=float, default=1e-3, metavar='LR',
+    parser.add_argument('--lr', type=float, default=1e-2, metavar='LR',
                         help='learning rate (default: 1e-3)')
     parser.add_argument('--momentum', type=float, default=0.9, metavar='M',
                         help='momentum (default: 0.9)')
@@ -51,9 +51,8 @@ class VOCSegmentation(object):
         self.img = Image.open('test_img.jpg').convert('RGB')
         self.mask = Image.open('test_mask.png')
 
-        # For dunet, icnet test
-        # self.img = self.img.resize((504, 368), Image.BILINEAR)
-        # self.mask = self.mask.resize((504, 368), Image.NEAREST)
+        self.img = self.img.resize((504, 368), Image.BILINEAR)
+        self.mask = self.mask.resize((504, 368), Image.NEAREST)
 
     def get(self):
         img, mask = self._img_transform(self.img), self._mask_transform(self.mask)
