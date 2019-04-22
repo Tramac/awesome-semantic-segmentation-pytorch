@@ -54,6 +54,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 - [DUNet(DUpsampling)](https://arxiv.org/abs/1903.02120)
 - [ICNet](https://arxiv.org/pdf/1704.08545)
 
+[DETAILS](https://github.com/Tramac/awesome-semantic-segmentation-pytorch/blob/master/docs/DETAILS.md) for model & backbone.
 ```
 .{SEG_ROOT}
 ├── core
