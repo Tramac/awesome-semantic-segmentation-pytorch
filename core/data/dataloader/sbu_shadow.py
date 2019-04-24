@@ -38,7 +38,7 @@ class SBUSegmentation(SegmentationDataset):
         # general resize, normalize and toTensor
         if self.transform is not None:
             img = self.transform(img)
-        return img, mask
+        return img, mask, os.path.basename(self.images[index])
 
     def _mask_transform(self, mask):
         target = np.array(mask).astype('int32')

@@ -88,7 +88,7 @@ class VOCSegmentation(SegmentationDataset):
         if self.transform is not None:
             img = self.transform(img)
 
-        return img, mask
+        return img, mask, os.path.basename(self.images[index])
 
     def __len__(self):
         return len(self.images)

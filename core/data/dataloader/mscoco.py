@@ -85,7 +85,7 @@ class COCOSegmentation(SegmentationDataset):
         # general resize, normalize and toTensor
         if self.transform is not None:
             img = self.transform(img)
-        return img, mask
+        return img, mask, os.path.basename(self.ids[index])
 
     def _mask_transform(self, mask):
         return torch.LongTensor(np.array(mask).astype('int32'))

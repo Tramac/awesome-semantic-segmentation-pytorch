@@ -171,7 +171,7 @@ class Trainer(object):
         for epoch in range(self.args.start_epoch, self.args.epochs):
             self.model.train()
 
-            for i, (images, targets) in enumerate(self.train_loader):
+            for i, (images, targets, filename) in enumerate(self.train_loader):
                 cur_lr = self.lr_scheduler(cur_iters)
                 for param_group in self.optimizer.param_groups:
                     param_group['lr'] = cur_lr
@@ -205,7 +205,7 @@ class Trainer(object):
         is_best = False
         self.metric.reset()
         self.model.eval()
-        for i, (image, target) in enumerate(self.val_loader):
+        for i, (image, target, filename) in enumerate(self.val_loader):
             image = image.to(self.args.device)
 
             outputs = self.model(image)

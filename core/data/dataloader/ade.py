@@ -65,7 +65,7 @@ class ADE20KSegmentation(SegmentationDataset):
         # general resize, normalize and to Tensor
         if self.transform is not None:
             img = self.transform(img)
-        return img, mask
+        return img, mask, os.path.basename(self.images[index])
 
     def _mask_transform(self, mask):
         return torch.LongTensor(np.array(mask).astype('int32') - 1)

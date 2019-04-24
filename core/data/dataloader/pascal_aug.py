@@ -77,7 +77,7 @@ class VOCAugSegmentation(SegmentationDataset):
         # general resize, normalize and toTensor
         if self.transform is not None:
             img = self.transform(img)
-        return img, target
+        return img, target, os.path.basename(self.images[index])
 
     def _mask_transform(self, mask):
         return torch.LongTensor(np.array(mask).astype('int32'))

@@ -46,7 +46,7 @@ def eval(args):
     metric = SegmentationMetric(test_dataset.num_class)
 
     model.eval()
-    for i, (image, label) in enumerate(test_loader):
+    for i, (image, label, filename) in enumerate(test_loader):
         image = image.to(device)
 
         with torch.no_grad():
@@ -63,7 +63,7 @@ def eval(args):
             if args.save_result:
                 predict = pred.squeeze(0)
                 mask = get_color_pallete(predict, args.dataset)
-                mask.save(os.path.join(outdir, 'seg_{}.png'.format(i)))
+                mask.save(os.path.join(outdir, '%s.png' % (filename)))
 
 
 if __name__ == '__main__':
