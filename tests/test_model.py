@@ -20,10 +20,10 @@ from PIL import Image
 def parse_args():
     parser = argparse.ArgumentParser(description='Semantic Segmentation Overfitting Test')
     # model
-    parser.add_argument('--model', type=str, default='fcn32s',
-                        choices=['fcn32s/fcn16s/fcn8s/fcn/psp/deeplabv3/danet/denseaspp/bisenet/encnet/dunet/icnet'],
+    parser.add_argument('--model', type=str, default='ocnet',
+                        choices=['fcn32s/fcn16s/fcn8s/fcn/psp/deeplabv3/danet/denseaspp/bisenet/encnet/dunet/icnet/enet/ocnet'],
                         help='model name (default: fcn32s)')
-    parser.add_argument('--backbone', type=str, default='vgg16',
+    parser.add_argument('--backbone', type=str, default='resnet50',
                         choices=['vgg16/resnet18/resnet50/resnet101/resnet152/densenet121/161/169/201'],
                         help='backbone name (default: vgg16)')
     parser.add_argument('--dataset', type=str, default='pascal_voc',
@@ -31,7 +31,7 @@ def parse_args():
                         help='dataset name (default: pascal_voc)')
     parser.add_argument('--epochs', type=int, default=100, metavar='N',
                         help='number of epochs to train (default: 60)')
-    parser.add_argument('--lr', type=float, default=1e-2, metavar='LR',
+    parser.add_argument('--lr', type=float, default=1e-3, metavar='LR',
                         help='learning rate (default: 1e-3)')
     parser.add_argument('--momentum', type=float, default=0.9, metavar='M',
                         help='momentum (default: 0.9)')

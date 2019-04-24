@@ -29,7 +29,7 @@ def parse_args():
     parser.add_argument('--model', type=str, default='fcn32s',
                         choices=['fcn32s', 'fcn16s', 'fcn8s', 'psp', 'deeplabv3',
                                  'danet', 'denseaspp', 'bisenet', 'encnet', 'dunet',
-                                 'icnet', 'enet'],
+                                 'icnet', 'enet', 'ocnet'],
                         help='model name (default: fcn32s)')
     parser.add_argument('--backbone', type=str, default='vgg16',
                         choices=['vgg16', 'resnet18', 'resnet50', 'resnet101',
@@ -55,9 +55,9 @@ def parse_args():
                         help='number of epochs to train (default: 60)')
     parser.add_argument('--start_epoch', type=int, default=0,
                         metavar='N', help='start epochs (default:0)')
-    parser.add_argument('--batch-size', type=int, default=4, metavar='N',
+    parser.add_argument('--batch-size', type=int, default=8, metavar='N',
                         help='input batch size for training (default: 4)')
-    parser.add_argument('--lr', type=float, default=1e-3, metavar='LR',
+    parser.add_argument('--lr', type=float, default=1e-4, metavar='LR',
                         help='learning rate (default: 1e-4)')
     parser.add_argument('--momentum', type=float, default=0.9, metavar='M',
                         help='momentum (default: 0.9)')

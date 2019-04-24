@@ -23,6 +23,7 @@ Observing the convergence process of different models is so interesting:joy:
 | DenseASPP | densenet121 | 40 | 100% | 100% |
 | ICNet | resnet50 | 100 | 98.8% | 99.6% |
 | ENet | scratch | 100 | 99.9% | 100% |
+| OCNet | resnet50 | 100 | 99.8% | 100% |
 
 ### Visualization
 <img src='./runs/fcn32s_epoch_300.png' width = '90' height = '65.7' /> <img src = './runs/fcn16s_epoch_200.png' width = '90' height = '65.7' />
@@ -34,8 +35,9 @@ Observing the convergence process of different models is so interesting:joy:
 　 FCN32s　　FCN16s　　 FCN8s　　 DANet　　  EncNet　　 　DUNet　　 PSPNet　　 BiSeNet　　 DenseASPP
 
 <img src = './runs/icnet_epoch_100.png' width = '90' height = '65.7' /> <img src = './runs/enet_epoch_100.png' width = '90' height = '65.7' />
+<img src = './runs/ocnet_epoch_100.png' width = '90' height = '65.7' />
 
-　 ICNet　　ENet
+　 ICNet　　　ENet　　 OCNet
 
 ### Conclusion
 - The result of FCN32s is the worst.

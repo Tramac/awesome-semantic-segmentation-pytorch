@@ -8,6 +8,7 @@ This project aims at providing a concise, easy-to-use, modifiable reference impl
 <p align="center"><img width="100%" src="docs/weimar_000091_000019_gtFine_color.png" /></p>
 
 ## Update
+- Add OCNet
 - Add ENet
 
 ## Requisites
@@ -44,15 +45,16 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 #### Model
 
 - [FCN](https://arxiv.org/abs/1411.4038)
-- [PSPNet](https://arxiv.org/pdf/1612.01105)
-- [DeepLabv3](https://arxiv.org/abs/1706.05587)
-- [DANet](https://arxiv.org/pdf/1809.02983)
-- [DenseASPP](http://openaccess.thecvf.com/content_cvpr_2018/papers/Yang_DenseASPP_for_Semantic_CVPR_2018_paper.pdf)
-- [BiSeNet](https://arxiv.org/abs/1808.00897)
-- [EncNet](https://arxiv.org/abs/1803.08904v1)
-- [DUNet(DUpsampling)](https://arxiv.org/abs/1903.02120)
-- [ICNet](https://arxiv.org/pdf/1704.08545)
 - [ENet](https://arxiv.org/pdf/1606.02147)
+- [PSPNet](https://arxiv.org/pdf/1612.01105)
+- [ICNet](https://arxiv.org/pdf/1704.08545)
+- [DeepLabv3](https://arxiv.org/abs/1706.05587)
+- [DenseASPP](http://openaccess.thecvf.com/content_cvpr_2018/papers/Yang_DenseASPP_for_Semantic_CVPR_2018_paper.pdf)
+- [EncNet](https://arxiv.org/abs/1803.08904v1)
+- [BiSeNet](https://arxiv.org/abs/1808.00897)
+- [DANet](https://arxiv.org/pdf/1809.02983)
+- [OCNet](https://arxiv.org/pdf/1809.00916)
+- [DUNet(DUpsampling)](https://arxiv.org/abs/1903.02120)
 
 [DETAILS](https://github.com/Tramac/awesome-semantic-segmentation-pytorch/blob/master/docs/DETAILS.md) for model & backbone.
 ```
@@ -69,6 +71,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 │   │   ├── pspnet.py
 │   │   ├── icnet.py
 │   │   ├── enet.py
+│   │   ├── ocnet.py
 │   │   ├── ......
 ```
 
@@ -130,9 +133,9 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 ```
 
 ## To Do
+- [ ] Add distributed training
+- [ ] Add LIP dataset
 - [x] Save the best model
-- [x] Add EncNet loss
-- [x] Add SBU downloader
 - [x] Test DataParallel
 - [ ] Add more semantic segmentation models (in process)
 - [ ] Train and evaluate
