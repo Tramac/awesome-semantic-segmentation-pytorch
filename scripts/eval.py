@@ -63,7 +63,7 @@ def eval(args):
             if args.save_result:
                 predict = pred.squeeze(0)
                 mask = get_color_pallete(predict, args.dataset)
-                mask.save(os.path.join(outdir, '%s.png' % (filename)))
+                mask.save(os.path.join(outdir, os.path.splitext(filename)[0] + '.png'))
 
 
 if __name__ == '__main__':
