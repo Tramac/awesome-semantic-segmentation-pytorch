@@ -28,6 +28,9 @@ class DUNet(SegBaseModel):
             self.auxlayer = _FCNHead(1024, 256, **kwargs)
             self.aux_dupsample = DUpsampling(256, nclass, scale_factor=8, **kwargs)
 
+        self.__setattr__('exclusive',
+                         ['dupsample', 'head', 'auxlayer', 'aux_dupsample'] if aux else ['dupsample', 'head'])
+
     def forward(self, x):
         c1, c2, c3, c4 = self.base_forward(x)
         outputs = []

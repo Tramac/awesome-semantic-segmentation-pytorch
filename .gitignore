@@ -102,9 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+debug.py
 
 # pycharm
-.idea/
 
 # premodel
 weights/
@@ -114,10 +114,8 @@ weights/
 # dataset
 datasets/
 VOCdevket/
-voc/
-ade/
-citys/
-sbu/
 eval/
 
 # overfitting test
+
+# run result

@@ -22,6 +22,8 @@ class ICNet(SegBaseModel):
 
         self.head = _ICHead(nclass, **kwargs)
 
+        self.__setattr__('exclusive', ['conv_sub1', 'head'])
+
     def forward(self, x):
         # sub 1
         x_sub1 = self.conv_sub1(x)

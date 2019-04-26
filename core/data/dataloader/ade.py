@@ -37,7 +37,7 @@ class ADE20KSegmentation(SegmentationDataset):
     BASE_DIR = 'ADEChallengeData2016'
     NUM_CLASS = 150
 
-    def __init__(self, root='../datasets/ade', split='train', mode=None, transform=None, **kwargs):
+    def __init__(self, root='../datasets/ade', split='test', mode=None, transform=None, **kwargs):
         super(ADE20KSegmentation, self).__init__(root, split, mode, transform, **kwargs)
         root = os.path.join(root, self.BASE_DIR)
         assert os.path.exists(root), "Please setup the dataset using ../datasets/ade20k.py"
@@ -45,6 +45,7 @@ class ADE20KSegmentation(SegmentationDataset):
         assert (len(self.images) == len(self.masks))
         if len(self.images) == 0:
             raise RuntimeError("Found 0 images in subfolders of:" + root + "\n")
+        print('Found {} images in the folder {}'.format(len(self.images), root))
 
     def __getitem__(self, index):
         img = Image.open(self.images[index]).convert('RGB')
@@ -169,4 +170,3 @@ def _get_ade20k_pairs(folder, mode='train'):
 
 if __name__ == '__main__':
     train_dataset = ADE20KSegmentation()
-    img, mask = train_dataset[0]

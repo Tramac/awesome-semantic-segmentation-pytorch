@@ -36,6 +36,8 @@ class OCNet(SegBaseModel):
         if self.aux:
             self.auxlayer = _FCNHead(1024, nclass, **kwargs)
 
+        self.__setattr__('exclusive', ['head', 'auxlayer'] if aux else ['head'])
+
     def forward(self, x):
         size = x.size()[2:]
         _, _, c3, c4 = self.base_forward(x)

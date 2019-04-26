@@ -131,3 +131,7 @@ def _get_city_pairs(folder, split='train'):
         img_paths = train_img_paths + val_img_paths
         mask_paths = train_mask_paths + val_mask_paths
     return img_paths, mask_paths
+
+
+if __name__ == '__main__':
+    dataset = CitySegmentation()

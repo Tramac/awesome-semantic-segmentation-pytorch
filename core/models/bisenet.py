@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from .base_models.resnet import resnet18
+from core.models.base_models.resnet import resnet18
 
 __all__ = ['BiSeNet', 'get_bisenet', 'get_bisenet_resnet18_citys']
 
@@ -19,6 +19,10 @@ class BiSeNet(nn.Module):
         if aux:
             self.auxlayer1 = _BiSeHead(128, 256, nclass, **kwargs)
             self.auxlayer2 = _BiSeHead(128, 256, nclass, **kwargs)
+
+        self.__setattr__('exclusive',
+                         ['spatial_path', 'context_path', 'ffm', 'head', 'auxlayer1', 'auxlayer2'] if aux else [
+                             'spatial_path', 'context_path', 'ffm', 'head'])
 
     def forward(self, x):
         size = x.size()[2:]
@@ -225,4 +229,4 @@ def get_bisenet_resnet18_citys(**kwargs):
 if __name__ == '__main__':
     img = torch.randn(2, 3, 224, 224)
     model = BiSeNet(19, backbone='resnet18')
-    outputs = model(img)
+    print(model.exclusive)

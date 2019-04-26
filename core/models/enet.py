@@ -46,6 +46,14 @@ class ENet(nn.Module):
 
         self.fullconv = nn.ConvTranspose2d(16, nclass, 2, 2, bias=False)
 
+        self.__setattr__('exclusive', ['bottleneck1_0', 'bottleneck1_1', 'bottleneck1_2', 'bottleneck1_3',
+                                       'bottleneck1_4', 'bottleneck2_0', 'bottleneck2_1', 'bottleneck2_2',
+                                       'bottleneck2_3', 'bottleneck2_4', 'bottleneck2_5', 'bottleneck2_6',
+                                       'bottleneck2_7', 'bottleneck2_8', 'bottleneck3_1', 'bottleneck3_2',
+                                       'bottleneck3_3', 'bottleneck3_4', 'bottleneck3_5', 'bottleneck3_6',
+                                       'bottleneck3_7', 'bottleneck3_8', 'bottleneck4_0', 'bottleneck4_1',
+                                       'bottleneck4_2', 'bottleneck5_0', 'bottleneck5_1', 'fullconv'])
+
     def forward(self, x):
         # init
         x = self.initial(x)

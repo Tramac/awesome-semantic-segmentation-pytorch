@@ -16,26 +16,27 @@ class DenseASPP(nn.Module):
         self.aux = aux
         self.dilate_scale = dilate_scale
         if backbone == 'densenet121':
-            pretrained = dilated_densenet121(dilate_scale, pretrained=pretrained_base, **kwargs)
+            self.pretrained = dilated_densenet121(dilate_scale, pretrained=pretrained_base, **kwargs)
         elif backbone == 'densenet161':
-            pretrained = dilated_densenet161(dilate_scale, pretrained=pretrained_base, **kwargs)
+            self.pretrained = dilated_densenet161(dilate_scale, pretrained=pretrained_base, **kwargs)
         elif backbone == 'densenet169':
-            pretrained = dilated_densenet169(dilate_scale, pretrained=pretrained_base, **kwargs)
+            self.pretrained = dilated_densenet169(dilate_scale, pretrained=pretrained_base, **kwargs)
         elif backbone == 'densenet201':
-            pretrained = dilated_densenet201(dilate_scale, pretrained=pretrained_base, **kwargs)
+            self.pretrained = dilated_densenet201(dilate_scale, pretrained=pretrained_base, **kwargs)
         else:
             raise RuntimeError('unknown backbone: {}'.format(backbone))
-        self.features = pretrained.features
-        in_channels = pretrained.num_features
+        in_channels = self.pretrained.num_features
 
         self.head = _DenseASPPHead(in_channels, nclass)
 
         if aux:
             self.auxlayer = _FCNHead(in_channels, nclass, **kwargs)
 
+        self.__setattr__('exclusive', ['head', 'auxlayer'] if aux else ['head'])
+
     def forward(self, x):
         size = x.size()[2:]
-        features = self.features(x)
+        features = self.pretrained.features(x)
         if self.dilate_scale > 8:
             features = F.interpolate(features, scale_factor=2, mode='bilinear', align_corners=True)
         outputs = []

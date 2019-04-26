@@ -33,6 +33,8 @@ class DANet(SegBaseModel):
         super(DANet, self).__init__(nclass, aux, backbone, pretrained_base=pretrained_base, **kwargs)
         self.head = _DAHead(2048, nclass, aux, **kwargs)
 
+        self.__setattr__('exclusive', ['head'])
+
     def forward(self, x):
         size = x.size()[2:]
         _, _, c3, c4 = self.base_forward(x)

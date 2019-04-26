@@ -8,25 +8,53 @@ This project aims at providing a concise, easy-to-use, modifiable reference impl
 <p align="center"><img width="100%" src="docs/weimar_000091_000019_gtFine_color.png" /></p>
 
 ## Update
-- Add OCNet
-- Add ENet
+- add distributed training (Note: I have no enough device to test distributed, If you are interested in it, welcome to complete testing and fix bugs.)
+- add OCNet
 
 ## Requisites
-- [PyTorch 1.0](https://pytorch.org/get-started/locally/)
 - Python 3.x
+- [PyTorch 1.0](https://pytorch.org/get-started/locally/)
+```
+conda install pytorch torchvision -c pytorch
+```
+- Ninja
+```
+wget https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-linux.zip
+sudo unzip ninja-linux.zip -d /usr/local/bin/
+sudo update-alternatives --install /usr/bin/ninja ninja /usr/local/bin/ninja 1 --force 
+```
 
 ## Usage
 - **Train**
+-----------------
+**Single GPU training**
 ```
-cd ./scripts
-python train.py --model fcn32s --backbone vgg16 --dataset pascal_voc
+# for example, train fcn32_vgg16_pascal_voc:
+python train.py --model fcn32s --backbone vgg16 --dataset pascal_voc --lr 0.0001 --epochs 50
 ```
+**Multi-GPU training**
+
+```
+# for example, train fcn32_vgg16_pascal_voc with 4 GPUs:
+export NGPUS=4
+python -m torch.distributed.launch --nproc_per_node=$NGPUS train.py --model fcn32s --backbone vgg16 --dataset pascal_voc --lr 0.0001 --epochs 50
+```
+Note: The loss functions of EncNet and ICNet are special, `MixSoftmaxCrossEntropyLoss` need to be replaced by `EncNetLoss` and `ICNetLoss` in `train.py`, respectively.
+
 - **Evaluation**
+-----------------
+**Single GPU training**
 ```
-cd ./scripts
+# for example, evaluate fcn32_vgg16_pascal_voc
 python eval.py --model fcn32s --backbone vgg16 --dataset pascal_voc
 ```
-- **Run Demo**
+**Multi-GPU training**
+```
+# for example, evaluate fcn32_vgg16_pascal_voc with 4 GPUs:
+export NGPUS=4
+python -m torch.distributed.launch --nproc_per_node=$NGPUS --model fcn32s --backbone vgg16 --dataset pascal_voc
+```
+- **Demo**
 ```
 cd ./scripts
 python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
@@ -84,12 +112,15 @@ cd ./core/data/downloader
 python ade20k.py --download-dir ../datasets/ade
 ```
 
-- [VOC2012](http://host.robots.ox.ac.uk/pascal/VOC/voc2012/VOCtrainval_11-May-2012.tar)
-- [VOCAug](http://www.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/semantic_contours/benchmark.tgz)
-- [ADK20K](http://groups.csail.mit.edu/vision/datasets/ADE20K/)
-- [Cityscapes](https://www.cityscapes-dataset.com/downloads/)
-- [COCO](http://cocodataset.org/#download)
-- [SBU-shadow](http://www3.cs.stonybrook.edu/~cvl/content/datasets/shadow_db/SBU-shadow.zip)
+|                           Dataset                            | training set | validation set | testing set |
+| :----------------------------------------------------------: | :----------: | :------------: | :---------: |
+| [VOC2012](http://host.robots.ox.ac.uk/pascal/VOC/voc2012/VOCtrainval_11-May-2012.tar) |     1464     |      1449      |      ✘      |
+| [VOCAug](http://www.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/semantic_contours/benchmark.tgz) |    11355     |      2857      |      ✘      |
+| [ADK20K](http://groups.csail.mit.edu/vision/datasets/ADE20K/) |    20210     |      2000      |      ✘      |
+| [Cityscapes](https://www.cityscapes-dataset.com/downloads/)  |     2975     |      500       |      ✘      |
+|           [COCO](http://cocodataset.org/#download)           |              |                |             |
+| [SBU-shadow](http://www3.cs.stonybrook.edu/~cvl/content/datasets/shadow_db/SBU-shadow.zip) |     4085     |      638       |      ✘      |
+|      [LIP(Look into Person)](http://sysu-hcp.net/lip/)       |    30462     |     10000      |    10000    |
 
 ```
 .{SEG_ROOT}
@@ -133,16 +164,20 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 ```
 
 ## To Do
-- [ ] Add distributed training
-- [ ] Add LIP dataset
-- [x] Save the best model
-- [x] Test DataParallel
-- [ ] Add more semantic segmentation models (in process)
-- [ ] Train and evaluate
-- [x] Add Synchronized BN ([Why SyncBN?](https://tramac.github.io/2019/04/08/SyncBN/))
+- [ ] fix downloader
+- [ ] optim loss
+- [ ] test distributed training
+- [x] add distributed training ([How DIST?](https://tramac.github.io/2019/04/22/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83-PyTorch/))
+- [x] add LIP dataset
+- [ ] add more models (in process)
+- [ ] train and evaluate
+- [ ] fix SyncBN ([Why SyncBN?](https://tramac.github.io/2019/04/08/SyncBN/))
 
 ## References
 - [PyTorch-Encoding](https://github.com/zhanghang1989/PyTorch-Encoding)
+- [maskrcnn-benchmark](https://github.com/facebookresearch/maskrcnn-benchmark)
+- [gloun-cv](https://github.com/dmlc/gluon-cv)
+- [imagenet](https://github.com/pytorch/examples/tree/master/imagenet)
 
 <!--
 [![python-image]][python-url]

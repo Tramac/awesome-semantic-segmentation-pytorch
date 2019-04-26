@@ -63,6 +63,7 @@ class VOCAugSegmentation(SegmentationDataset):
                 self.masks.append(_mask)
 
         assert (len(self.images) == len(self.masks))
+        print('Found {} images in the folder {}'.format(len(self.images), _voc_root))
 
     def __getitem__(self, index):
         img = Image.open(self.images[index]).convert('RGB')
@@ -97,3 +98,7 @@ class VOCAugSegmentation(SegmentationDataset):
                 'bus', 'car', 'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse',
                 'motorcycle', 'person', 'potted-plant', 'sheep', 'sofa', 'train',
                 'tv')
+
+
+if __name__ == '__main__':
+    dataset = VOCAugSegmentation()

@@ -8,6 +8,7 @@ from torch.autograd import Variable
 __all__ = ['MixSoftmaxCrossEntropyLoss', 'EncNetLoss', 'ICNetLoss']
 
 
+# TODO: optim function
 class MixSoftmaxCrossEntropyLoss(nn.CrossEntropyLoss):
     def __init__(self, aux=True, aux_weight=0.2, ignore_label=-1, **kwargs):
         super(MixSoftmaxCrossEntropyLoss, self).__init__(ignore_index=ignore_label)
@@ -27,9 +28,9 @@ class MixSoftmaxCrossEntropyLoss(nn.CrossEntropyLoss):
         preds, target = tuple(inputs)
         inputs = tuple(list(preds) + [target])
         if self.aux:
-            return self._aux_forward(*inputs)
+            return dict(loss=self._aux_forward(*inputs))
         else:
-            return super(MixSoftmaxCrossEntropyLoss, self).forward(*inputs)
+            return dict(loss=super(MixSoftmaxCrossEntropyLoss, self).forward(*inputs))
 
 
 # reference: https://github.com/zhanghang1989/PyTorch-Encoding/blob/master/encoding/nn/loss.py
@@ -55,20 +56,20 @@ class EncNetLoss(nn.CrossEntropyLoss):
             pred1, pred2, target = tuple(inputs)
             loss1 = super(EncNetLoss, self).forward(pred1, target)
             loss2 = super(EncNetLoss, self).forward(pred2, target)
-            return loss1 + self.aux_weight * loss2
+            return dict(loss=loss1 + self.aux_weight * loss2)
         elif not self.aux:
             pred, se_pred, target = tuple(inputs)
             se_target = self._get_batch_label_vector(target, nclass=self.nclass).type_as(pred)
             loss1 = super(EncNetLoss, self).forward(pred, target)
             loss2 = self.bceloss(torch.sigmoid(se_pred), se_target)
-            return loss1 + self.se_weight * loss2
+            return dict(loss=loss1 + self.se_weight * loss2)
         else:
             pred1, se_pred, pred2, target = tuple(inputs)
             se_target = self._get_batch_label_vector(target, nclass=self.nclass).type_as(pred1)
             loss1 = super(EncNetLoss, self).forward(pred1, target)
             loss2 = super(EncNetLoss, self).forward(pred2, target)
             loss3 = self.bceloss(torch.sigmoid(se_pred), se_target)
-            return loss1 + self.aux_weight * loss2 + self.se_weight * loss3
+            return dict(loss=loss1 + self.aux_weight * loss2 + self.se_weight * loss3)
 
     @staticmethod
     def _get_batch_label_vector(target, nclass):
@@ -84,7 +85,7 @@ class EncNetLoss(nn.CrossEntropyLoss):
         return tvect
 
 
-# The function is not concise, please optimize
+# TODO: optim function
 class ICNetLoss(nn.CrossEntropyLoss):
     """Cross Entropy Loss for ICNet"""
 
@@ -102,8 +103,9 @@ class ICNetLoss(nn.CrossEntropyLoss):
         target = target.unsqueeze(1).float()
         target_sub4 = F.interpolate(target, pred_sub4.size()[2:], mode='bilinear', align_corners=True).squeeze(1).long()
         target_sub8 = F.interpolate(target, pred_sub8.size()[2:], mode='bilinear', align_corners=True).squeeze(1).long()
-        target_sub16 = F.interpolate(target, pred_sub16.size()[2:], mode='bilinear', align_corners=True).squeeze(1).long()
+        target_sub16 = F.interpolate(target, pred_sub16.size()[2:], mode='bilinear', align_corners=True).squeeze(
+            1).long()
         loss1 = super(ICNetLoss, self).forward(pred_sub4, target_sub4)
         loss2 = super(ICNetLoss, self).forward(pred_sub8, target_sub8)
         loss3 = super(ICNetLoss, self).forward(pred_sub16, target_sub16)
-        return loss1 + loss2 * self.aux_weight + loss3 * self.aux_weight
+        return dict(loss=loss1 + loss2 * self.aux_weight + loss3 * self.aux_weight)

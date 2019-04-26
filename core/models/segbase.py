@@ -20,32 +20,24 @@ class SegBaseModel(nn.Module):
         self.aux = aux
         self.nclass = nclass
         if backbone == 'resnet50':
-            pretrained = resnet50_v1s(pretrained=pretrained_base, **kwargs)
+            self.pretrained = resnet50_v1s(pretrained=pretrained_base, **kwargs)
         elif backbone == 'resnet101':
-            pretrained = resnet101_v1s(pretrained=pretrained_base, **kwargs)
+            self.pretrained = resnet101_v1s(pretrained=pretrained_base, **kwargs)
         elif backbone == 'resnet152':
-            pretrained = resnet152_v1s(pretrained=pretrained_base, **kwargs)
+            self.pretrained = resnet152_v1s(pretrained=pretrained_base, **kwargs)
         else:
             raise RuntimeError('unknown backbone: {}'.format(backbone))
-        self.conv1 = pretrained.conv1
-        self.bn1 = pretrained.bn1
-        self.relu = pretrained.relu
-        self.maxpool = pretrained.maxpool
-        self.layer1 = pretrained.layer1
-        self.layer2 = pretrained.layer2
-        self.layer3 = pretrained.layer3
-        self.layer4 = pretrained.layer4
 
     def base_forward(self, x):
         """forwarding pre-trained network"""
-        x = self.conv1(x)
-        x = self.bn1(x)
-        x = self.relu(x)
-        x = self.maxpool(x)
-        c1 = self.layer1(x)
-        c2 = self.layer2(c1)
-        c3 = self.layer3(c2)
-        c4 = self.layer4(c3)
+        x = self.pretrained.conv1(x)
+        x = self.pretrained.bn1(x)
+        x = self.pretrained.relu(x)
+        x = self.pretrained.maxpool(x)
+        c1 = self.pretrained.layer1(x)
+        c2 = self.pretrained.layer2(c1)
+        c3 = self.pretrained.layer3(c2)
+        c4 = self.pretrained.layer4(c3)
         return c1, c2, c3, c4
 
     def evaluate(self, x):
