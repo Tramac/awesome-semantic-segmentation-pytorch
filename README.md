@@ -164,6 +164,7 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 ```
 
 ## To Do
+- [ ] add ohemloss
 - [ ] optim loss
 - [ ] test distributed training
 - [x] add distributed training ([How DIST?](https://tramac.github.io/2019/04/22/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83-PyTorch/))
