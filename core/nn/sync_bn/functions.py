@@ -125,6 +125,17 @@ class syncbatchnorm_(Function):
 
         return dx, dgamma, dbeta, None, None, None, None, None, None, None, None, None
 
+    @staticmethod
+    def _parse_extra(ctx, extra):
+        ctx.is_master = extra["is_master"]
+        if ctx.is_master:
+            ctx.master_queue = extra["master_queue"]
+            ctx.worker_queues = extra["worker_queues"]
+            ctx.worker_ids = extra["worker_ids"]
+        else:
+            ctx.master_queue = extra["master_queue"]
+            ctx.worker_queue = extra["worker_queue"]
+
 
 def _act_forward(ctx, x):
     if ctx.activation.lower() == "leaky_relu":

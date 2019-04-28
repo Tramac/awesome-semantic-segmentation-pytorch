@@ -1,7 +1,8 @@
 #include <vector>
-#include <torch/extension.h>
+// #include <torch/extension.h>
+#include <torch/serialize/tensor.h>
 #include <ATen/ATen.h>
-// #include <ATen/cuda/CUDAContext.h>
+#include <ATen/cuda/CUDAContext.h>
 
 #include <cuda_runtime_api.h>
 

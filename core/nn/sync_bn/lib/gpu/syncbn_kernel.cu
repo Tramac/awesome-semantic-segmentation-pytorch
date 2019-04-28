@@ -1,5 +1,6 @@
 #include <vector>
-#include <torch/extension.h>
+// #include <torch/extension.h>
+#include <torch/serialize/tensor.h>
 #include <ATen/ATen.h>
 #include <ATen/cuda/CUDAContext.h>
 
@@ -78,7 +79,7 @@ __global__ void BatchNorm_Forward_kernel (
   DeviceTensor<DType, 1> gamma,
   DeviceTensor<DType, 1> beta) {
   int c = blockIdx.x;
-  /* main operation */ 
+  /* main operation */
   for (int b = 0; b < input.getSize(0); ++b) {
     for (int x = threadIdx.x; x < input.getSize(2); x += blockDim.x) {
       DType inp = input[b][c][x];
@@ -96,7 +97,7 @@ __global__ void BatchNorm_Forward_Inp_kernel (
   DeviceTensor<DType, 1> gamma,
   DeviceTensor<DType, 1> beta) {
   int c = blockIdx.x;
-  /* main operation */ 
+  /* main operation */
   for (int b = 0; b < input.getSize(0); ++b) {
     for (int x = threadIdx.x; x < input.getSize(2); x += blockDim.x) {
       DType inp = input[b][c][x];
@@ -117,12 +118,12 @@ __global__ void BatchNorm_Backward_Inp_kernel (
     DeviceTensor<DType, 1> std,
     DeviceTensor<DType, 1> gamma,
     DeviceTensor<DType, 1> beta,
-    DeviceTensor<DType, 1> gradEx, 
+    DeviceTensor<DType, 1> gradEx,
     DeviceTensor<DType, 1> gradExs) {
   /* declarations of the variables */
-  /* Get the index and channels */ 
-  int c = blockIdx.x; 
-  /* main operation */ 
+  /* Get the index and channels */
+  int c = blockIdx.x;
+  /* main operation */
   GradOp<DType, DType, DeviceTensor<DType, 3>> g(beta[c], output, gradoutput);
   Float2<DType, DType> res = reduce<Float2<DType, DType>,
     GradOp<DType, DType, DeviceTensor<DType, 3>>,
@@ -165,12 +166,12 @@ __global__ void BatchNorm_Backward_kernel (
     DeviceTensor<DType, 1> std,
     DeviceTensor<DType, 1> gamma,
     DeviceTensor<DType, 1> beta,
-    DeviceTensor<DType, 1> gradEx, 
+    DeviceTensor<DType, 1> gradEx,
     DeviceTensor<DType, 1> gradExs) {
   /* declarations of the variables */
-  /* Get the index and channels */ 
-  int c = blockIdx.x; 
-  /* main operation */ 
+  /* Get the index and channels */
+  int c = blockIdx.x;
+  /* main operation */
   GradOp<DType, DType, DeviceTensor<DType, 3>> g(mean[c], input, gradoutput);
   Float2<DType, DType> res = reduce<Float2<DType, DType>,
     GradOp<DType, DType, DeviceTensor<DType, 3>>,
@@ -210,7 +211,7 @@ __global__ void Expectation_Forward_kernel (
     DeviceTensor<DType, 1> exs,
     DType norm) {
   int c = blockIdx.x;
-  /* main operation */ 
+  /* main operation */
   SumOp<DType, DType> g(input);
   Float2<DType, DType> res = reduce<Float2<DType, DType>,
     SumOp<DType, DType>, DeviceTensor<DType, 3>>(g, input, c);
@@ -230,7 +231,7 @@ __global__ void Expectation_Backward_kernel (
   DeviceTensor<DType, 1> gradExs,
   DType norm) {
   int c = blockIdx.x;
-  /* main operation */ 
+  /* main operation */
   for (int batch = 0; batch < gradInput.getSize(0); ++batch) {
     for (int x = threadIdx.x; x < gradInput.getSize(2); x += blockDim.x) {
       gradInput[batch][c][x] = gradEx[c] * norm + 2 * gradExs[c] *
@@ -251,7 +252,7 @@ __global__ void Expectation_Backward_Inp_kernel (
   DeviceTensor<DType, 1> beta,
   DType norm) {
   int c = blockIdx.x;
-  /* main operation */ 
+  /* main operation */
   for (int batch = 0; batch < gradInput.getSize(0); ++batch) {
     for (int x = threadIdx.x; x < gradInput.getSize(2); x += blockDim.x) {
       gradInput[batch][c][x] += gradEx[c] * norm + 2 * gradExs[c] *
@@ -263,7 +264,7 @@ __global__ void Expectation_Backward_Inp_kernel (
 } // namespace
 
 at::Tensor BatchNorm_Forward_CUDA(
-    const at::Tensor input_, 
+    const at::Tensor input_,
     const at::Tensor ex_,
     const at::Tensor exs_,
     const at::Tensor gamma_,
@@ -291,7 +292,7 @@ at::Tensor BatchNorm_Forward_CUDA(
 }
 
 at::Tensor BatchNorm_Forward_Inp_CUDA(
-    const at::Tensor input_, 
+    const at::Tensor input_,
     const at::Tensor ex_,
     const at::Tensor exs_,
     const at::Tensor gamma_,
@@ -320,7 +321,7 @@ at::Tensor BatchNorm_Forward_Inp_CUDA(
 std::vector<at::Tensor> BatchNorm_Inp_Backward_CUDA(
     const at::Tensor gradoutput_,
     const at::Tensor output_,
-    const at::Tensor ex_, 
+    const at::Tensor ex_,
     const at::Tensor exs_,
     const at::Tensor gamma_,
     const at::Tensor beta_,
@@ -352,7 +353,7 @@ std::vector<at::Tensor> BatchNorm_Inp_Backward_CUDA(
     /* kernel function */
     BatchNorm_Backward_Inp_kernel<scalar_t>
       <<<blocks, threads, 0, stream>>>(
-      gradoutput, output, gradinput, gradgamma, gradbeta, ex, std, 
+      gradoutput, output, gradinput, gradgamma, gradbeta, ex, std,
       gamma, beta, gradEx, gradExs);
   }));
   AT_ASSERT(cudaGetLastError() == cudaSuccess);
@@ -363,7 +364,7 @@ std::vector<at::Tensor> BatchNorm_Inp_Backward_CUDA(
 std::vector<at::Tensor> BatchNorm_Backward_CUDA(
     const at::Tensor gradoutput_,
     const at::Tensor input_,
-    const at::Tensor ex_, 
+    const at::Tensor ex_,
     const at::Tensor exs_,
     const at::Tensor gamma_,
     const at::Tensor beta_,
@@ -395,7 +396,7 @@ std::vector<at::Tensor> BatchNorm_Backward_CUDA(
     /* kernel function */
     BatchNorm_Backward_kernel<scalar_t>
       <<<blocks, threads, 0, stream>>>(
-      gradoutput, input, gradinput, gradgamma, gradbeta, ex, std, 
+      gradoutput, input, gradinput, gradgamma, gradbeta, ex, std,
       gamma, beta, gradEx, gradExs);
   }));
   AT_ASSERT(cudaGetLastError() == cudaSuccess);
@@ -455,7 +456,7 @@ at::Tensor Expectation_Inp_Backward_CUDA(
     const at::Tensor output_,
     const at::Tensor gradEx_,
     const at::Tensor gradExs_,
-    const at::Tensor ex_, 
+    const at::Tensor ex_,
     const at::Tensor exs_,
     const at::Tensor gamma_,
     const at::Tensor beta_,

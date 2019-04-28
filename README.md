@@ -25,14 +25,14 @@ sudo update-alternatives --install /usr/bin/ninja ninja /usr/local/bin/ninja 1 -
 ```
 
 ## Usage
-- **Train**
+### Train
 -----------------
-**Single GPU training**
+- Single GPU training
 ```
 # for example, train fcn32_vgg16_pascal_voc:
 python train.py --model fcn32s --backbone vgg16 --dataset pascal_voc --lr 0.0001 --epochs 50
 ```
-**Multi-GPU training**
+- Multi-GPU training
 
 ```
 # for example, train fcn32_vgg16_pascal_voc with 4 GPUs:
@@ -41,20 +41,20 @@ python -m torch.distributed.launch --nproc_per_node=$NGPUS train.py --model fcn3
 ```
 Note: The loss functions of EncNet and ICNet are special, `MixSoftmaxCrossEntropyLoss` need to be replaced by `EncNetLoss` and `ICNetLoss` in `train.py`, respectively.
 
-- **Evaluation**
+### Evaluation
 -----------------
-**Single GPU training**
+- Single GPU training
 ```
 # for example, evaluate fcn32_vgg16_pascal_voc
 python eval.py --model fcn32s --backbone vgg16 --dataset pascal_voc
 ```
-**Multi-GPU training**
+- Multi-GPU training
 ```
 # for example, evaluate fcn32_vgg16_pascal_voc with 4 GPUs:
 export NGPUS=4
 python -m torch.distributed.launch --nproc_per_node=$NGPUS --model fcn32s --backbone vgg16 --dataset pascal_voc
 ```
-- **Demo**
+### Demo
 ```
 cd ./scripts
 python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
@@ -171,7 +171,7 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 - [x] add LIP dataset
 - [ ] add more models (in process)
 - [ ] train and evaluate
-- [ ] fix SyncBN ([Why SyncBN?](https://tramac.github.io/2019/04/08/SyncBN/))
+- [x] fix SyncBN ([Why SyncBN?](https://tramac.github.io/2019/04/08/SyncBN/))
 
 ## References
 - [PyTorch-Encoding](https://github.com/zhanghang1989/PyTorch-Encoding)
