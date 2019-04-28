@@ -4,8 +4,9 @@ import sys
 import argparse
 import zipfile
 
-cur_path = os.path.dirname(__file__)
-root_path = os.path.split(cur_path)[0]
+# TODO: optim code
+cur_path = os.path.abspath(os.path.dirname(__file__))
+root_path = os.path.split(os.path.split(os.path.split(cur_path)[0])[0])[0]
 sys.path.append(root_path)
 
 from core.utils import download, makedirs
