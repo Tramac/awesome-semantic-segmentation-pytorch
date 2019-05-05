@@ -22,7 +22,7 @@ class DeepLabV3(SegBaseModel):
         Pre-trained dilated backbone network type (default:'resnet50'; 'resnet50',
         'resnet101' or 'resnet152').
     norm_layer : object
-        Normalization layer used in backbone network (default: :class:`mxnet.gluon.nn.BatchNorm`;
+        Normalization layer used in backbone network (default: :class:`nn.BatchNorm`;
         for Synchronized Cross-GPU BachNormalization).
     aux : bool
         Auxiliary loss.

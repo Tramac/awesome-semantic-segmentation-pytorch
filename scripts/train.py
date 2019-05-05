@@ -29,14 +29,14 @@ from core.nn.loss import MixSoftmaxCrossEntropyLoss, EncNetLoss, ICNetLoss
 def parse_args():
     parser = argparse.ArgumentParser(description='Semantic Segmentation Training With Pytorch')
     # model and dataset
-    parser.add_argument('--model', type=str, default='psp',
+    parser.add_argument('--model', type=str, default='fcn32s',
                         choices=['fcn32s', 'fcn16s', 'fcn8s',
                                  'fcn', 'psp', 'deeplabv3',
                                  'danet', 'denseaspp', 'bisenet',
                                  'encnet', 'dunet', 'icnet',
-                                 'enet', 'ocnet'],
+                                 'enet', 'ocnet', 'ccnet'],
                         help='model name (default: fcn32s)')
-    parser.add_argument('--backbone', type=str, default='resnet50',
+    parser.add_argument('--backbone', type=str, default='vgg16',
                         choices=['vgg16', 'resnet18', 'resnet50',
                                  'resnet101', 'resnet152', 'densenet121',
                                  'densenet161', 'densenet169', 'densenet201'],
@@ -49,8 +49,6 @@ def parse_args():
                         help='base image size')
     parser.add_argument('--crop-size', type=int, default=480,
                         help='crop image size')
-    parser.add_argument('--train-split', type=str, default='train',
-                        help='dataset train split (default: train)')
     parser.add_argument('--workers', '-j', type=int, default=4,
                         metavar='N', help='dataloader threads')
     # training hyper params
@@ -89,10 +87,10 @@ def parse_args():
                         help='save model every checkpoint-epoch')
     parser.add_argument('--log-dir', default='../runs/logs/',
                         help='Directory for saving checkpoint models')
-    parser.add_argument('--log-iter', type=int, default=1,
+    parser.add_argument('--log-iter', type=int, default=10,
                         help='print log every log-iter')
     # evaluation only
-    parser.add_argument('--val-epoch', type=int, default=2,
+    parser.add_argument('--val-epoch', type=int, default=1,
                         help='run validation every val-epoch')
     parser.add_argument('--skip-val', action='store_true', default=False,
                         help='skip validation during training')
@@ -136,7 +134,7 @@ class Trainer(object):
         ])
         # dataset and dataloader
         data_kwargs = {'transform': input_transform, 'base_size': args.base_size, 'crop_size': args.crop_size}
-        train_dataset = get_segmentation_dataset(args.dataset, split=args.train_split, mode='train', **data_kwargs)
+        train_dataset = get_segmentation_dataset(args.dataset, split='train', mode='train', **data_kwargs)
         val_dataset = get_segmentation_dataset(args.dataset, split='val', mode='val', **data_kwargs)
         args.iters_per_epoch = len(train_dataset) // (args.num_gpus * args.batch_size)
         args.max_iters = args.epochs * args.iters_per_epoch
@@ -175,7 +173,7 @@ class Trainer(object):
         self.criterion = MixSoftmaxCrossEntropyLoss(args.aux, args.aux_weight, ignore_label=-1).to(self.device)
 
         # optimizer, for model just includes pretrained, head and auxlayer
-        params_list = []
+        params_list = list()
         if hasattr(self.model, 'pretrained'):
             params_list.append({'params': self.model.pretrained.parameters(), 'lr': args.lr})
         if hasattr(self.model, 'exclusive'):

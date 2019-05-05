@@ -9,7 +9,7 @@ This project aims at providing a concise, easy-to-use, modifiable reference impl
 
 ## Update
 - add distributed training (Note: I have no enough device to test distributed, If you are interested in it, welcome to complete testing and fix bugs.)
-- add OCNet
+- add CCNet
 
 ## Requisites
 - Python 3.x
@@ -82,6 +82,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 - [BiSeNet](https://arxiv.org/abs/1808.00897)
 - [DANet](https://arxiv.org/pdf/1809.02983)
 - [OCNet](https://arxiv.org/pdf/1809.00916)
+- [CCNet](https://arxiv.org/pdf/1811.11721)
 - [DUNet(DUpsampling)](https://arxiv.org/abs/1903.02120)
 
 [DETAILS](https://github.com/Tramac/awesome-semantic-segmentation-pytorch/blob/master/docs/DETAILS.md) for model & backbone.
@@ -100,6 +101,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 │   │   ├── icnet.py
 │   │   ├── enet.py
 │   │   ├── ocnet.py
+│   │   ├── ccnet.py
 │   │   ├── ......
 ```
 
@@ -118,9 +120,9 @@ python ade20k.py --download-dir ../datasets/ade
 | [VOCAug](http://www.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/semantic_contours/benchmark.tgz) |    11355     |      2857      |      ✘      |
 | [ADK20K](http://groups.csail.mit.edu/vision/datasets/ADE20K/) |    20210     |      2000      |      ✘      |
 | [Cityscapes](https://www.cityscapes-dataset.com/downloads/)  |     2975     |      500       |      ✘      |
-|           [COCO](http://cocodataset.org/#download)           |              |                |             |
+| [COCO](http://cocodataset.org/#download)           |              |                |             |
 | [SBU-shadow](http://www3.cs.stonybrook.edu/~cvl/content/datasets/shadow_db/SBU-shadow.zip) |     4085     |      638       |      ✘      |
-|      [LIP(Look into Person)](http://sysu-hcp.net/lip/)       |    30462     |     10000      |    10000    |
+| [LIP(Look into Person)](http://sysu-hcp.net/lip/)       |    30462     |     10000      |    10000    |
 
 ```
 .{SEG_ROOT}
@@ -164,6 +166,8 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 ```
 
 ## To Do
+- [ ] move SyncBN
+- [ ] test ccnet
 - [ ] add ohemloss
 - [ ] optim loss
 - [ ] test distributed training
