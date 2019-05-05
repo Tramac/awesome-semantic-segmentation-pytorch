@@ -9,7 +9,7 @@ This project aims at providing a concise, easy-to-use, modifiable reference impl
 
 ## Update
 - add distributed training (Note: I have no enough device to test distributed, If you are interested in it, welcome to complete testing and fix bugs.)
-- add CCNet
+- add CCNet, PSANet
 
 ## Requisites
 - Python 3.x
