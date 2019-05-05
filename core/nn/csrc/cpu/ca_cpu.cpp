@@ -9,9 +9,7 @@ at::Tensor ca_forward_cpu(
 std::tuple<at::Tensor, at::Tensor> ca_backward_cpu(
     const at::Tensor& dw,
     const at::Tensor& t,
-    const at::Tensor& f,
-    const at::Tensor& dt,
-    const at::Tensor& df) {
+    const at::Tensor& f) {
   AT_ERROR("Not implemented on the CPU")}
 
 at::Tensor ca_map_forward_cpu(

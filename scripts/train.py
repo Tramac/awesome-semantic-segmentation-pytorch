@@ -23,7 +23,7 @@ from core.utils.distributed import *
 from core.utils.logger import setup_logger
 from core.utils.lr_scheduler import WarmupPolyLR
 from core.utils.score import SegmentationMetric
-from core.nn.loss import MixSoftmaxCrossEntropyLoss, EncNetLoss, ICNetLoss
+from core.utils.loss import MixSoftmaxCrossEntropyLoss, EncNetLoss, ICNetLoss
 
 
 def parse_args():
@@ -34,7 +34,7 @@ def parse_args():
                                  'fcn', 'psp', 'deeplabv3',
                                  'danet', 'denseaspp', 'bisenet',
                                  'encnet', 'dunet', 'icnet',
-                                 'enet', 'ocnet', 'ccnet'],
+                                 'enet', 'ocnet', 'ccnet', 'psanet'],
                         help='model name (default: fcn32s)')
     parser.add_argument('--backbone', type=str, default='vgg16',
                         choices=['vgg16', 'resnet18', 'resnet50',

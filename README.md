@@ -80,6 +80,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 - [DenseASPP](http://openaccess.thecvf.com/content_cvpr_2018/papers/Yang_DenseASPP_for_Semantic_CVPR_2018_paper.pdf)
 - [EncNet](https://arxiv.org/abs/1803.08904v1)
 - [BiSeNet](https://arxiv.org/abs/1808.00897)
+- [PSANet](https://hszhao.github.io/papers/eccv18_psanet.pdf)
 - [DANet](https://arxiv.org/pdf/1809.02983)
 - [OCNet](https://arxiv.org/pdf/1809.00916)
 - [CCNet](https://arxiv.org/pdf/1811.11721)
@@ -102,6 +103,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 │   │   ├── enet.py
 │   │   ├── ocnet.py
 │   │   ├── ccnet.py
+│   │   ├── psanet.py
 │   │   ├── ......
 ```
 
@@ -167,7 +169,7 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 
 ## To Do
 - [ ] move SyncBN
-- [ ] test ccnet
+- [ ] test ccnet, psanet
 - [ ] add ohemloss
 - [ ] optim loss
 - [ ] test distributed training

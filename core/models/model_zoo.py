@@ -12,6 +12,7 @@ from .icnet import *
 from .enet import *
 from .ocnet import *
 from .ccnet import *
+from .psanet import *
 
 __all__ = ['get_model', 'get_model_list', 'get_segmentation_model']
 
@@ -61,6 +62,12 @@ _models = {
     'ccnet_resnet50_ade': get_ccnet_resnet50_ade,
     'ccnet_resnet101_ade': get_ccnet_resnet101_ade,
     'ccnet_resnet152_ade': get_ccnet_resnet152_ade,
+    'psanet_resnet50_voc': get_psanet_resnet50_voc,
+    'psanet_resnet101_voc': get_psanet_resnet101_voc,
+    'psanet_resnet152_voc': get_psanet_resnet152_voc,
+    'psanet_resnet50_citys': get_psanet_resnet50_citys,
+    'psanet_resnet101_citys': get_psanet_resnet101_citys,
+    'psanet_resnet152_citys': get_psanet_resnet152_citys,
 }
 
 
@@ -95,5 +102,6 @@ def get_segmentation_model(model, **kwargs):
         'enet': get_enet,
         'ocnet': get_ocnet,
         'ccnet': get_ccnet,
+        'psanet': get_psanet,
     }
     return models[model](**kwargs)
