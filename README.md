@@ -8,20 +8,24 @@ This project aims at providing a concise, easy-to-use, modifiable reference impl
 <p align="center"><img width="100%" src="docs/weimar_000091_000019_gtFine_color.png" /></p>
 
 ## Update
-- add distributed training (Note: I have no enough device to test distributed, If you are interested in it, welcome to complete testing and fix bugs.)
 - add CCNet, PSANet
+- add distributed training (Note: I have no enough device to test distributed, If you are interested in it, welcome to complete testing and fix bugs.)
 
-## Requisites
-- Python 3.x
-- [PyTorch 1.0](https://pytorch.org/get-started/locally/)
+## Installation
 ```
+# semantic-segmentation-pytorch dependencies
+pip install ninja tqdm
+
+# follow PyTorch installation in https://pytorch.org/get-started/locally/
 conda install pytorch torchvision -c pytorch
-```
-- Ninja
-```
-wget https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-linux.zip
-sudo unzip ninja-linux.zip -d /usr/local/bin/
-sudo update-alternatives --install /usr/bin/ninja ninja /usr/local/bin/ninja 1 --force 
+
+# install PyTorch Segmentation
+git clone https://github.com/Tramac/awesome-semantic-segmentation-pytorch.git
+
+# the following will install the lib with symbolic links, so that you can modify
+# the files if you want and won't need to re-build it
+cd awesome-semantic-segmentation-pytorch/core/nn
+python setup.py build develop
 ```
 
 ## Usage
@@ -169,7 +173,6 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 
 ## To Do
 - [ ] move SyncBN
-- [ ] test ccnet, psanet
 - [ ] add ohemloss
 - [ ] optim loss
 - [ ] test distributed training

@@ -5,9 +5,8 @@
 #include <THC/THCAtomics.cuh>
 #include <THC/THCDeviceUtils.cuh>
 
-
 template <typename T>
-__global__ void ca_forward_kernel(const float *t, const float *f, float *weight, int num, int chn, int height, int width) {
+__global__ void ca_forward_kernel(const T *t, const T *f, T *weight, int num, int chn, int height, int width) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     int sp = height * width;
@@ -17,18 +16,18 @@ __global__ void ca_forward_kernel(const float *t, const float *f, float *weight,
     if (x < width && y < height && z < height+width-1) {
         for (int batch = 0; batch < num; ++batch) {
             for (int plane = 0; plane < chn; ++plane) {
-                float _t = t[(batch * chn + plane) * sp + y * width + x];
+                T _t = t[(batch * chn + plane) * sp + y * width + x];
 
                 if (z < width) {
                     int i = z;
-                    float _f = f[(batch * chn + plane) * sp + y * width + i];
+                    T _f = f[(batch * chn + plane) * sp + y * width + i];
                     weight[(batch * len + i) * sp + y*width + x] += _t*_f;
                 }
                 else {
                     int i = z - width;
                     int j = i<y ? i : i+1;
 
-                    float _f = f[(batch * chn + plane) * sp + j*width + x];
+                    T _f = f[(batch * chn + plane) * sp + j*width + x];
                     weight[(batch * len + width + i) * sp + y*width + x] += _t*_f;
                 }
             }
@@ -37,7 +36,7 @@ __global__ void ca_forward_kernel(const float *t, const float *f, float *weight,
 }
 
 template <typename T>
-__global__ void ca_backward_kernel_t(const float *dw, const float *t, const float *f, float *dt,
+__global__ void ca_backward_kernel_t(const T *dw, const T *t, const T *f, T *dt,
                                      int num, int chn, int height, int width) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
@@ -48,16 +47,16 @@ __global__ void ca_backward_kernel_t(const float *dw, const float *t, const floa
     if (x < width && y < height && plane < chn) {
         for (int batch = 0; batch < num; ++batch) {
             for (int i = 0; i < width; ++i) {
-                float _dw = dw[(batch * len + i) * sp + y*width + x];
-                float _f = f[(batch * chn + plane) * sp + y*width + i];
+                T _dw = dw[(batch * len + i) * sp + y*width + x];
+                T _f = f[(batch * chn + plane) * sp + y*width + i];
                 dt[(batch * chn + plane) * sp + y*width + x] += _dw * _f;
             }
             for (int i = 0; i < height; ++i)  {
                 if (i == y) continue;
                 int j = i<y ? i : i-1;
 
-                float _dw = dw[(batch * len + width + j) * sp + y*width + x];
-                float _f = f[(batch * chn + plane) * sp + i*width + x];
+                T _dw = dw[(batch * len + width + j) * sp + y*width + x];
+                T _f = f[(batch * chn + plane) * sp + i*width + x];
                 dt[(batch * chn + plane) * sp + y*width + x] += _dw * _f;
             }
         }
@@ -65,7 +64,7 @@ __global__ void ca_backward_kernel_t(const float *dw, const float *t, const floa
 }
 
 template <typename T>
-__global__ void ca_backward_kernel_f(const float *dw, const float *t, const float *f, float *df,
+__global__ void ca_backward_kernel_f(const T *dw, const T *t, const T *f, T *df,
                                      int num, int chn, int height, int width) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
@@ -76,16 +75,16 @@ __global__ void ca_backward_kernel_f(const float *dw, const float *t, const floa
     if (x < width && y < height && plane < chn) {
         for (int batch = 0; batch < num; ++batch) {
             for (int i = 0; i < width; ++i) {
-                float _dw = dw[(batch * len + x) * sp + y*width + i];
-                float _t = t[(batch * chn + plane) * sp + y*width + i];
+                T _dw = dw[(batch * len + x) * sp + y*width + i];
+                T _t = t[(batch * chn + plane) * sp + y*width + i];
                 df[(batch * chn + plane) * sp + y*width + x] += _dw * _t;
             }
             for (int i = 0; i < height; ++i) {
                 if (i == y) continue;
                 int j = i>y ? y : y-1;
 
-                float _dw = dw[(batch * len + width + j) * sp + i*width + x];
-                float _t = t[(batch * chn + plane) * sp + i*width + x];
+                T _dw = dw[(batch * len + width + j) * sp + i*width + x];
+                T _t = t[(batch * chn + plane) * sp + i*width + x];
                 df[(batch * chn + plane) * sp + y*width + x] += _dw * _t;
             }
         }
@@ -93,7 +92,7 @@ __global__ void ca_backward_kernel_f(const float *dw, const float *t, const floa
 }
 
 template <typename T>
-__global__ void ca_map_forward_kernel(const float *weight, const float *g, float *out, int num, int chn, int height, int width) {
+__global__ void ca_map_forward_kernel(const T *weight, const T *g, T *out, int num, int chn, int height, int width) {
   int x = blockIdx.x * blockDim.x + threadIdx.x;
   int y = blockIdx.y * blockDim.y + threadIdx.y;
   int sp = height * width;
@@ -103,8 +102,8 @@ __global__ void ca_map_forward_kernel(const float *weight, const float *g, float
   if (x < width && y < height && plane < chn) {
       for (int batch = 0; batch < num; ++batch) {
           for (int i = 0; i < width; ++i) {
-              float _g = g[(batch * chn + plane) * sp + y*width + i];
-              float _w = weight[(batch * len + i) * sp + y*width + x];
+              T _g = g[(batch * chn + plane) * sp + y*width + i];
+              T _w = weight[(batch * len + i) * sp + y*width + x];
               out[(batch * chn + plane) * sp + y*width + x] += _g * _w;
           }
           for (int i = 0; i < height; ++i) {
@@ -112,8 +111,8 @@ __global__ void ca_map_forward_kernel(const float *weight, const float *g, float
 
               int j = i<y ? i : i-1;
 
-              float _g = g[(batch * chn + plane) * sp + i*width + x];
-              float _w = weight[(batch * len + width + j) * sp + y*width + x];
+              T _g = g[(batch * chn + plane) * sp + i*width + x];
+              T _w = weight[(batch * len + width + j) * sp + y*width + x];
               out[(batch * chn + plane) * sp + y*width + x] += _g * _w;
           }
       }
@@ -121,7 +120,7 @@ __global__ void ca_map_forward_kernel(const float *weight, const float *g, float
 }
 
 template <typename T>
-__global__ void ca_map_backward_kernel_w(const float *dout, const float *weight, const float *g, float *dw, int num, int chn, int height, int width) {
+__global__ void ca_map_backward_kernel_w(const T *dout, const T *weight, const T *g, T *dw, int num, int chn, int height, int width) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     int sp = height * width;
@@ -131,18 +130,18 @@ __global__ void ca_map_backward_kernel_w(const float *dout, const float *weight,
     if (x < width && y < height && z < height+width-1) {
         for (int batch = 0; batch < num; ++batch) {
             for (int plane = 0; plane < chn; ++plane) {
-                float _dout = dout[(batch * chn + plane) * sp + y*width + x];
+                T _dout = dout[(batch * chn + plane) * sp + y*width + x];
 
                 if (z < width) {
                     int i = z;
-                    float _g = g[(batch * chn + plane) * sp + y*width + i];
+                    T _g = g[(batch * chn + plane) * sp + y*width + i];
                     dw[(batch * len + i) * sp + y*width + x] += _dout * _g;
                 }
                 else {
                     int i = z - width;
                     int j = i<y ? i : i+1;
 
-                    float _g = g[(batch * chn + plane) * sp + j*width + x];
+                    T _g = g[(batch * chn + plane) * sp + j*width + x];
                     dw[(batch * len + width + i) * sp + y*width + x] += _dout * _g;
                 }
             }
@@ -151,7 +150,7 @@ __global__ void ca_map_backward_kernel_w(const float *dout, const float *weight,
 }
 
 template <typename T>
-__global__ void ca_map_backward_kernel_g(const float *dout, const float *weight, const float *g, float *dg, int num, int chn, int height, int width) {
+__global__ void ca_map_backward_kernel_g(const T *dout, const T *weight, const T *g, T *dg, int num, int chn, int height, int width) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     int sp = height * width;
@@ -161,16 +160,16 @@ __global__ void ca_map_backward_kernel_g(const float *dout, const float *weight,
     if (x < width && y < height && plane < chn) {
         for (int batch = 0; batch < num; ++batch) {
             for (int i = 0; i < width; ++i) {
-                float _dout = dout[(batch * chn + plane) * sp + y*width + i];
-                float _w = weight[(batch * len + x) * sp + y*width + i];
+                T _dout = dout[(batch * chn + plane) * sp + y*width + i];
+                T _w = weight[(batch * len + x) * sp + y*width + i];
                 dg[(batch * chn + plane) * sp + y*width + x] += _dout * _w;
             }
             for (int i = 0; i < height; ++i) {
                 if (i == y) continue;
                 int j = i>y ? y : y-1;
 
-                float _dout = dout[(batch * chn + plane) * sp + i*width + x];
-                float _w = weight[(batch * len + width + j) * sp + i*width + x];
+                T _dout = dout[(batch * chn + plane) * sp + i*width + x];
+                T _w = weight[(batch * len + width + j) * sp + i*width + x];
                 dg[(batch * chn + plane) * sp + y*width + x] += _dout * _w;
             }
         }
@@ -261,13 +260,13 @@ at::Tensor ca_map_forward_cuda(const at::Tensor& weight, const at::Tensor& g) {
     auto h = g.size(2);
     auto w = g.size(3);
 
-    at::Tensor out = at::zeros_like(g)
+    at::Tensor out = at::zeros_like(g);
     cudaStream_t stream = at::cuda::getCurrentCUDAStream();
 
     // Run kernel
     dim3 threads(32, 32);
     int d1 = (w + threads.x - 1) / threads.x;
-    int d2 = (h + hereads.y - 1) / threads.y;
+    int d2 = (h + threads.y - 1) / threads.y;
     int d3 = c;
     dim3 blocks(d1, d2, d3);
 
@@ -292,8 +291,8 @@ std::tuple<at::Tensor, at::Tensor> ca_map_backward_cuda(const at::Tensor& dout, 
     auto h = dout.size(2);
     auto w = dout.size(3);
 
-    at::Tensor dw = torch.zeros_like(weight)
-    at::Tensor dg = torch.zeros_like(g)
+    at::Tensor dw = at::zeros_like(weight);
+    at::Tensor dg = at::zeros_like(g);
     cudaStream_t stream = at::cuda::getCurrentCUDAStream();
 
     // Run kernel
@@ -321,5 +320,5 @@ std::tuple<at::Tensor, at::Tensor> ca_map_backward_cuda(const at::Tensor& dout, 
             n, c, h, w);
     });
     THCudaCheck(cudaGetLastError());
-    return std::make_tuple(dw, df);
+    return std::make_tuple(dw, dg);
 }

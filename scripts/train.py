@@ -29,14 +29,14 @@ from core.utils.loss import MixSoftmaxCrossEntropyLoss, EncNetLoss, ICNetLoss
 def parse_args():
     parser = argparse.ArgumentParser(description='Semantic Segmentation Training With Pytorch')
     # model and dataset
-    parser.add_argument('--model', type=str, default='fcn32s',
+    parser.add_argument('--model', type=str, default='fcn',
                         choices=['fcn32s', 'fcn16s', 'fcn8s',
                                  'fcn', 'psp', 'deeplabv3',
                                  'danet', 'denseaspp', 'bisenet',
                                  'encnet', 'dunet', 'icnet',
                                  'enet', 'ocnet', 'ccnet', 'psanet'],
                         help='model name (default: fcn32s)')
-    parser.add_argument('--backbone', type=str, default='vgg16',
+    parser.add_argument('--backbone', type=str, default='resnet50',
                         choices=['vgg16', 'resnet18', 'resnet50',
                                  'resnet101', 'resnet152', 'densenet121',
                                  'densenet161', 'densenet169', 'densenet201'],

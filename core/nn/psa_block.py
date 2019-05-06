@@ -4,29 +4,49 @@ import torch.nn as nn
 from torch.autograd.function import once_differentiable
 from core.nn import _C
 
-__all__ = ['CollectAttention', 'DistributeAttention', 'psa']
+__all__ = ['CollectAttention', 'DistributeAttention', 'psa_collect', 'psa_distribute']
 
 
-class _PointwiseSpatialAttention(torch.autograd.Function):
+class _PSACollect(torch.autograd.Function):
     @staticmethod
-    def forward(ctx, h, forward_type):
-        out = _C.psa_forward(h, forward_type)
+    def forward(ctx, hc):
+        out = _C.psa_forward(hc, 1)
 
-        ctx.save_for_backward(h)
+        ctx.save_for_backward(hc)
 
         return out
 
     @staticmethod
     @once_differentiable
-    def backward(ctx, dout, forward_type):
-        h = ctx.save_for_backward
+    def backward(ctx, dout):
+        hc = ctx.saved_tensors
 
-        dh = _C.psa_backward(dout, h, forward_type)
+        dhc = _C.psa_backward(dout, hc[0], 1)
 
-        return dh
+        return dhc
 
 
-psa = _PointwiseSpatialAttention.apply
+class _PSADistribute(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx, hc):
+        out = _C.psa_forward(hc, 2)
+
+        ctx.save_for_backward(hc)
+
+        return out
+
+    @staticmethod
+    @once_differentiable
+    def backward(ctx, dout):
+        hc = ctx.saved_tensors
+
+        dhc = _C.psa_backward(dout, hc[0], 2)
+
+        return dhc
+
+
+psa_collect = _PSACollect.apply
+psa_distribute = _PSADistribute.apply
 
 
 class CollectAttention(nn.Module):
@@ -36,7 +56,7 @@ class CollectAttention(nn.Module):
         super(CollectAttention, self).__init__()
 
     def forward(self, x):
-        out = psa(x, 1)
+        out = psa_collect(x)
         return out
 
 
@@ -47,5 +67,5 @@ class DistributeAttention(nn.Module):
         super(DistributeAttention, self).__init__()
 
     def forward(self, x):
-        out = psa(x, 2)
+        out = psa_distribute(x)
         return out

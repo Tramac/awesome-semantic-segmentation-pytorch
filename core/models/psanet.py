@@ -115,7 +115,7 @@ class _CollectModule(nn.Module):
             x_shrink_i = x_shrink[i].view(self.reduced_channels, -1)
             ca_i = ca[i].view(ca.shape[1], -1)
             global_feature_collect_list.append(
-                torch.mm(x_shrink_i, ca_i).view(1, self.reduced_channels, self.feat_h / 2, self.feat_w / 2))
+                torch.mm(x_shrink_i, ca_i).view(1, self.reduced_channels, self.feat_h // 2, self.feat_w // 2))
         global_feature_collect = torch.cat(global_feature_collect_list)
 
         return global_feature_collect
@@ -136,6 +136,8 @@ class _DistributeModule(nn.Module):
         self.distribute_attention = DistributeAttention()
 
         self.reduced_channels = reduced_channels
+        self.feat_w = feat_w
+        self.feat_h = feat_h
 
     def forward(self, x):
         x = self.conv_reduce(x)
@@ -147,7 +149,7 @@ class _DistributeModule(nn.Module):
             x_shrink_i = x_shrink[i].view(self.reduced_channels, -1)
             da_i = da[i].view(da.shape[1], -1)
             global_feature_distribute_list.append(
-                torch.mm(x_shrink_i, da_i).view(1, self.reduced_channels, self.feat_h / 2, self.feat_w / 2))
+                torch.mm(x_shrink_i, da_i).view(1, self.reduced_channels, self.feat_h // 2, self.feat_w // 2))
         global_feature_distribute = torch.cat(global_feature_distribute_list)
 
         return global_feature_distribute

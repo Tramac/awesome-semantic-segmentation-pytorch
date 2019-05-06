@@ -7,27 +7,27 @@
 #endif
 
 // Interface for Python
-at::Tensor psa_forward(const at::Tensor& h,
+at::Tensor psa_forward(const at::Tensor& hc,
                        const int forward_type) {
-    if (h.type().is_cuda()) {
+    if (hc.type().is_cuda()) {
   #ifdef WITH_CUDA
-      return psa_forward_cuda(h, forward_type);
+      return psa_forward_cuda(hc, forward_type);
   #else
       AT_ERROR("Not compiled with GPU support");
   #endif
   }
-    return psa_forward_cpu(h, forward_type);
+    return psa_forward_cpu(hc, forward_type);
 }
 
 at::Tensor psa_backward(const at::Tensor& dout,
-                        const at::Tensor& h,
+                        const at::Tensor& hc,
                         const int forward_type) {
-    if (h.type().is_cuda()) {
+    if (hc.type().is_cuda()) {
   #ifdef WITH_CUDA
-      return psa_backward_cuda(dout, h, forward_type);
+      return psa_backward_cuda(dout, hc, forward_type);
   #else
       AT_ERROR("Not compiled with GPU support");
   #endif
   }
-    return psa_backward_cpu(dout, h, forward_type);
+    return psa_backward_cpu(dout, hc, forward_type);
 }
