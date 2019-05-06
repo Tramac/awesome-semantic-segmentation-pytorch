@@ -1,7 +1,7 @@
 ninja_required_version = 1.3
 cxx = c++
 
-cflags = -DTORCH_EXTENSION_NAME=sync_cpu -DTORCH_API_INCLUDE_EXTENSION_H -isystem /home/tramac/.pyenv/versions/anaconda3-4.4.0/lib/python3.6/site-packages/torch/lib/include -isystem /home/tramac/.pyenv/versions/anaconda3-4.4.0/lib/python3.6/site-packages/torch/lib/include/torch/csrc/api/include -isystem /home/tramac/.pyenv/versions/anaconda3-4.4.0/lib/python3.6/site-packages/torch/lib/include/TH -isystem /home/tramac/.pyenv/versions/anaconda3-4.4.0/lib/python3.6/site-packages/torch/lib/include/THC -isystem /home/tramac/.pyenv/versions/anaconda3-4.4.0/include/python3.6m -D_GLIBCXX_USE_CXX11_ABI=0 -fPIC -std=c++11
+cflags = -DTORCH_EXTENSION_NAME=sync_cpu -DTORCH_API_INCLUDE_EXTENSION_H -isystem /home/tramac/.pyenv/versions/anaconda3-4.4.0/lib/python3.6/site-packages/torch/include -isystem /home/tramac/.pyenv/versions/anaconda3-4.4.0/lib/python3.6/site-packages/torch/include/torch/csrc/api/include -isystem /home/tramac/.pyenv/versions/anaconda3-4.4.0/lib/python3.6/site-packages/torch/include/TH -isystem /home/tramac/.pyenv/versions/anaconda3-4.4.0/lib/python3.6/site-packages/torch/include/THC -isystem /home/tramac/.pyenv/versions/anaconda3-4.4.0/include/python3.6m -D_GLIBCXX_USE_CXX11_ABI=0 -fPIC -std=c++11
 ldflags = -shared
 
 rule compile

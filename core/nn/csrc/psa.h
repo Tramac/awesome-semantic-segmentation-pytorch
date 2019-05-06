@@ -16,7 +16,7 @@ at::Tensor psa_forward(const at::Tensor& h,
       AT_ERROR("Not compiled with GPU support");
   #endif
   }
-    return psa_forward_cpu(h, forward);
+    return psa_forward_cpu(h, forward_type);
 }
 
 at::Tensor psa_backward(const at::Tensor& dout,

@@ -36,7 +36,7 @@ def get_extension():
 
     ext_modules = [
         extension(
-            "semantic_segmentation._C",
+            "._C",
             sources,
             include_dirs=include_dirs,
             define_macros=define_macros,
@@ -47,7 +47,9 @@ def get_extension():
 
 
 setup(
-    name='semantic-segmentation',
+    name="semantic_segmentation",
+    version="0.1",
+    author="tramac",
     description="semantic segmentation in pytorch",
     ext_modules=get_extension(),
     cmdclass={"build_ext": BuildExtension}
