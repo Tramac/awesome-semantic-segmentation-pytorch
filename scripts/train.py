@@ -12,18 +12,17 @@ sys.path.append(root_path)
 import torch
 import torch.nn as nn
 import torch.utils.data as data
-import torch.distributed as dist
 import torch.backends.cudnn as cudnn
 
 from torchvision import transforms
 from core.data.dataloader import get_segmentation_dataset
 from core.models.model_zoo import get_segmentation_model
-from core.nn import SyncBatchNorm
+from core.utils.loss import get_segmentation_loss
 from core.utils.distributed import *
 from core.utils.logger import setup_logger
 from core.utils.lr_scheduler import WarmupPolyLR
 from core.utils.score import SegmentationMetric
-from core.utils.loss import MixSoftmaxCrossEntropyLoss, EncNetLoss, ICNetLoss
+from core.nn import SyncBatchNorm
 
 
 def parse_args():
@@ -41,7 +40,7 @@ def parse_args():
                                  'resnet101', 'resnet152', 'densenet121',
                                  'densenet161', 'densenet169', 'densenet201'],
                         help='backbone name (default: vgg16)')
-    parser.add_argument('--dataset', type=str, default='pascal_voc',
+    parser.add_argument('--dataset', type=str, default='citys',
                         choices=['pascal_voc', 'pascal_aug', 'ade20k',
                                  'citys', 'sbu'],
                         help='dataset name (default: pascal_voc)')
@@ -52,9 +51,11 @@ def parse_args():
     parser.add_argument('--workers', '-j', type=int, default=4,
                         metavar='N', help='dataloader threads')
     # training hyper params
+    parser.add_argument('--use-ohem', type=bool, default=False,
+                        help='OHEM Loss for cityscapes dataset')
     parser.add_argument('--aux', action='store_true', default=False,
                         help='Auxiliary loss')
-    parser.add_argument('--aux-weight', type=float, default=0.5,
+    parser.add_argument('--aux-weight', type=float, default=0.4,
                         help='auxiliary loss weight')
     parser.add_argument('--batch-size', type=int, default=8, metavar='N',
                         help='input batch size for training (default: 8)')
@@ -170,7 +171,8 @@ class Trainer(object):
                 self.model.load_state_dict(torch.load(args.resume, map_location=lambda storage, loc: storage))
 
         # create criterion
-        self.criterion = MixSoftmaxCrossEntropyLoss(args.aux, args.aux_weight, ignore_label=-1).to(self.device)
+        self.criterion = get_segmentation_loss(args.model, use_ohem=args.use_ohem, aux=args.aux,
+                                               aux_weight=args.aux_weight, ignore_index=-1).to(self.device)
 
         # optimizer, for model just includes pretrained, head and auxlayer
         params_list = list()

@@ -174,13 +174,11 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 
 ## To Do
 - [ ] fix psanet
-- [ ] add ohemloss
-- [ ] optim loss
-- [ ] test distributed training
-- [ ] train and evaluate
 - [ ] add more models
+- [ ] train & evaluate
+- [ ] test distributed training
 - [x] fix SyncBN ([Why SyncBN?](https://tramac.github.io/2019/04/08/SyncBN/))
-- [x] add distributed training ([How DIST?](https://tramac.github.io/2019/04/22/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83-PyTorch/))
+- [x] add distributed ([How DIST?](https://tramac.github.io/2019/04/22/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83-PyTorch/))
 
 ## References
 - [PyTorch-Encoding](https://github.com/zhanghang1989/PyTorch-Encoding)
