@@ -121,3 +121,6 @@ eval/
 # run result
 
 # model
+
+# nn
+nn/sync_bn/

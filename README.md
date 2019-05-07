@@ -154,13 +154,14 @@ python ade20k.py --download-dir ../datasets/ade
 
 |Methods|Backbone|TrainSet|EvalSet|crops_size|epochs|Mean IoU|pixAcc|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|FCN32s|vgg16|train|val|480|60|47.50%|85.39%|
-|FCN16s|vgg16|train|val|480|60|49.16%|85.98%|
-|FCN8s|vgg16|train|val|480|60|48.87%|85.02%|
-|PSPNet|resnet50|train|val|480|60|63.44%|89.78%|
-|DeepLabv3|resnet50|train|val|480|60|60.15%|88.36%|
+|FCN32s|vgg16|train|val|480|60|47.50|85.39|
+|FCN16s|vgg16|train|val|480|60|49.16|85.98|
+|FCN8s|vgg16|train|val|480|60|48.87|85.02|
+|FCN32s|resnet50|train|val|480|50|54.60|88.57|
+|PSPNet|resnet50|train|val|480|60|63.44|89.78|
+|DeepLabv3|resnet50|train|val|480|60|60.15|88.36|
 
-Note: The parameter settings of each method are different, including crop_size, learning rata, epochs, etc. For specific parameters, please see paper.
+Note: `lr=1e-4`.
 
 ## Overfitting Test
 See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/master/tests) for details.
@@ -172,14 +173,14 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 ```
 
 ## To Do
-- [ ] move SyncBN
+- [ ] fix psanet
 - [ ] add ohemloss
 - [ ] optim loss
 - [ ] test distributed training
-- [x] add distributed training ([How DIST?](https://tramac.github.io/2019/04/22/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83-PyTorch/))
-- [ ] add more models (in process)
 - [ ] train and evaluate
+- [ ] add more models
 - [x] fix SyncBN ([Why SyncBN?](https://tramac.github.io/2019/04/08/SyncBN/))
+- [x] add distributed training ([How DIST?](https://tramac.github.io/2019/04/22/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83-PyTorch/))
 
 ## References
 - [PyTorch-Encoding](https://github.com/zhanghang1989/PyTorch-Encoding)

@@ -28,3 +28,20 @@ at::Tensor psa_backward_cpu(
     const at::Tensor& dout,
     const at::Tensor& hc,
     const int forward_type);
+
+at::Tensor batchnorm_forward_cpu(
+    const at::Tensor input_,
+    const at::Tensor mean_,
+    const at::Tensor std_,
+    const at::Tensor gamma_,
+    const at::Tensor beta_,
+    float eps);
+
+std::vector<at::Tensor> batchnorm_backward_cpu(
+    const at::Tensor gradoutput_,
+    const at::Tensor input_,
+    const at::Tensor ex_,
+    const at::Tensor exs_,
+    const at::Tensor gamma_,
+    const at::Tensor beta_,
+    float eps);

@@ -44,7 +44,7 @@ class Evaluator(object):
 
         # create network
         self.model = get_segmentation_model(model=args.model, dataset=args.dataset, backbone=args.backbone,
-                                            pretrained=True, pretrained_base=False)
+                                            aux=args.aux, pretrained=True, pretrained_base=False)
         if args.distributed:
             self.model = self.model.module
         self.model.to(self.device)
@@ -54,13 +54,17 @@ class Evaluator(object):
     def eval(self):
         self.metric.reset()
         self.model.eval()
+        if self.args.distributed:
+            model = self.model.module
+        else:
+            model = self.model
         logger.info("Start validation, Total sample: {:d}".format(len(self.val_loader)))
         for i, (image, target, filename) in enumerate(self.val_loader):
             image = image.to(self.device)
             target = target.to(self.device)
 
             with torch.no_grad():
-                outputs = self.model(image)
+                outputs = model(image)
             self.metric.update(outputs[0], target)
             pixAcc, mIoU = self.metric.get()
             logger.info("Sample: {:d}, validation pixAcc: {:.3f}, mIoU: {:.3f}".format(
