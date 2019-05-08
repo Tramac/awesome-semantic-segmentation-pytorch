@@ -109,32 +109,7 @@ at::Tensor inp_expectation_backward(const at::Tensor gradInput_,
                                     float eps) {
     if (output_.type().is_cuda()) {
   #ifdef WITH_CUDA
-      return inp_expectation_backward_cuda(gradInput_, output_, gradEx_, gradExs_, ex_, exs_, gamma_, beta_);
-  #else
-      AT_ERROR("Not compiled with GPU support");
-  #endif
-  }
-    AT_ERROR("Not implemented on the CPU");
-}
-
-void leakyrelu_forward(at::Tensor z,
-                       float slope) {
-    if (z.type().is_cuda()) {
-  #ifdef WITH_CUDA
-      return leakyrelu_forward_cuda(z, slope);
-  #else
-      AT_ERROR("Not compiled with GPU support");
-  #endif
-  }
-    AT_ERROR("Not implemented on the CPU");
-}
-
-void leakyrelu_backward(at::Tensor z,
-                        at::Tensor dz,
-                        float slope) {
-    if (z.type().is_cuda()) {
-  #ifdef WITH_CUDA
-      return leakyrelu_backward_cuda(z, slope);
+      return inp_expectation_backward_cuda(gradInput_, output_, gradEx_, gradExs_, ex_, exs_, gamma_, beta_, eps);
   #else
       AT_ERROR("Not compiled with GPU support");
   #endif

@@ -43,7 +43,6 @@ python train.py --model fcn32s --backbone vgg16 --dataset pascal_voc --lr 0.0001
 export NGPUS=4
 python -m torch.distributed.launch --nproc_per_node=$NGPUS train.py --model fcn32s --backbone vgg16 --dataset pascal_voc --lr 0.0001 --epochs 50
 ```
-Note: The loss functions of EncNet and ICNet are special, `MixSoftmaxCrossEntropyLoss` need to be replaced by `EncNetLoss` and `ICNetLoss` in `train.py`, respectively.
 
 ### Evaluation
 -----------------

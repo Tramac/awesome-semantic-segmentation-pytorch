@@ -13,20 +13,6 @@ from core.nn import _C
 __all__ = ['SyncBatchNorm', 'BatchNorm1d', 'BatchNorm2d', 'BatchNorm3d']
 
 
-def _act_forward(ctx, x):
-    if ctx.activation.lower() == "leaky_relu":
-        _C.leaky_relu_forward(x, ctx.slope)
-    else:
-        assert ctx.activation == 'none'
-
-
-def _act_backward(ctx, x, dx):
-    if ctx.activation.lower() == "leaky_relu":
-        _C.leaky_relu_backward(x, dx, ctx.slope)
-    else:
-        assert ctx.activation == 'none'
-
-
 class _SyncBatchNorm(Function):
     @classmethod
     def forward(cls, ctx, x, gamma, beta, running_mean, running_var,
@@ -135,120 +121,7 @@ class _SyncBatchNorm(Function):
             ctx.worker_queue = extra["worker_queue"]
 
 
-class _InpSyncBatchNorm(Function):
-    @classmethod
-    def forward(cls, ctx, x, gamma, beta, running_mean, running_var,
-                extra, sync=True, training=True, momentum=0.1, eps=1e-5,
-                activation='none', slope=0.01):
-        # save context
-        cls._parse_extra(ctx, extra)
-        ctx.sync = sync
-        ctx.training = training
-        ctx.momentum = momentum
-        ctx.eps = eps
-        ctx.activation = activation
-        ctx.slope = slope
-
-        # continous inputs
-        x = x.contiguous()
-        gamma = gamma.contiguous()
-        beta = beta.contiguous()
-
-        if ctx.training:
-            _ex, _exs = _C.expectation_forward(x)
-
-            if ctx.sync:
-                if ctx.is_master:
-                    _ex, _exs = [_ex.unsqueeze(0)], [_exs.unsqueeze(0)]
-                    for _ in range(ctx.master_queue.maxsize):
-                        _ex_w, _exs_w = ctx.master_queue.get()
-                        ctx.master_queue.task_done()
-                        _ex.append(_ex_w.unsqueeze(0))
-                        _exs.append(_exs_w.unsuqeeze(0))
-
-                    _ex = comm.gather(_ex).mean(0)
-                    _exs = comm.gather(_exs).mean(0)
-
-                    tensors = comm.broadcast_coalesced((_ex, _exs), [_ex.get_device()] + ctx.worker_ids)
-                    for ts, queue in zip(tensors[1:], ctx.worker_queues):
-                        queue.put(ts)
-                else:
-                    ctx.master_queue.put((_ex, _exs))
-                    _ex, _exs = ctx.worker_queue.get()
-                    ctx.worker_queue.task_done()
-
-            # Update running stats
-            _var = _exs - _ex ** 2
-            running_mean.mul_((1 - ctx.momentum)).add_(ctx.momentum * _ex)
-            running_var.mul_((1 - ctx.momentum)).add_(ctx.momentum * _var)
-
-            # Mark in-place modified tensors
-            ctx.mark_dirty(x, running_mean, running_var)
-        else:
-            _ex, _var = running_mean.contiguous(), running_var.contiguous()
-            _exs = _var + _ex ** 2
-            ctx.mark_dirty(x)
-
-        # BN forward + activation
-        _C.inp_batchnorm_forward(x, _ex, _exs, gamma, beta, ctx.eps)
-
-        _act_forward(ctx, x)
-
-        # Output
-        ctx.save_for_backward(x, _ex, _exs, gamma, beta)
-        return x
-
-    @staticmethod
-    @once_differentiable
-    def backward(ctx, dz):
-        z, _ex, _exs, gamma, beta = ctx.saved_tensors
-        dz = dz.contiguous()
-
-        # Undo activation
-        _act_backward(ctx, z, dz)
-
-        # BN backward
-        dx, _dex, _dexs, dgamma, dbeta = _C.inp_batchnorm_backward(dz, z, _ex, _exs, gamma, beta, ctx.eps)
-
-        if ctx.training:
-            if ctx.sync:
-                if ctx.is_master:
-                    _dex, _dexs = [_dex.unsqueeze(0)], [_dexs.unsqueeze(0)]
-                    for _ in range(ctx.master_queue.maxsize):
-                        _dex_w, _dexs_w = ctx.master_queue.get()
-                        ctx.master_queue.task_done()
-                        _dex.append(_dex_w.unsqueeze(0))
-                        _dexs.append(_dexs_w.unsqueeze(0))
-
-                    _dex = comm.gather(_dex).mean(0)
-                    _dexs = comm.gather(_dexs).mean(0)
-
-                    tensors = comm.broadcast_coalesced((_dex, _dexs), [_dex.get_device()] + ctx.worker_ids)
-                    for ts, queue in zip(tensors[1:], ctx.worker_queues):
-                        queue.put(ts)
-                else:
-                    ctx.master_queue.put((_dex, _dexs))
-                    _dex, _dexs = ctx.worker_queue.get()
-                    ctx.worker_queue.task_done()
-
-            _C.inp_expectation_backward(dx, z, _dex, _dexs, _ex, _exs, gamma, beta, ctx.eps)
-
-        return dx, dgamma, dbeta, None, None, None, None, None, None, None, None, None
-
-    @staticmethod
-    def _parse_extra(ctx, extra):
-        ctx.is_master = extra["is_master"]
-        if ctx.is_master:
-            ctx.master_queue = extra["master_queue"]
-            ctx.worker_queues = extra["worker_queues"]
-            ctx.worker_ids = extra["worker_ids"]
-        else:
-            ctx.master_queue = extra["master_queue"]
-            ctx.worker_queue = extra["worker_queue"]
-
-
 syncbatchnorm = _SyncBatchNorm.apply
-inp_syncbatchnorm = _InpSyncBatchNorm.apply
 
 
 class SyncBatchNorm(_BatchNorm):
@@ -280,10 +153,9 @@ class SyncBatchNorm(_BatchNorm):
         >>> output = net(input)
     """
 
-    def __init__(self, num_features, eps=1e-5, momentum=0.1, sync=True, activation='none', slope=0.01, inplace=True):
+    def __init__(self, num_features, eps=1e-5, momentum=0.1, sync=True, activation='none', slope=0.01):
         super(SyncBatchNorm, self).__init__(num_features, eps=eps, momentum=momentum, affine=True)
         self.activation = activation
-        self.inplace = False if activation == 'none' else inplace
         self.slope = slope
         self.devices = list(range(torch.cuda.device_count()))
         self.sync = sync if len(self.devices) > 1 else False
@@ -311,21 +183,17 @@ class SyncBatchNorm(_BatchNorm):
                 "master_queue": self.master_queue,
                 "worker_queue": self.worker_queues[self.worker_ids.index(x.get_device())]
             }
-        if self.inplace:
-            return inp_syncbatchnorm(x, self.weight, self.bias, self.running_mean, self.running_var,
-                                     extra, self.sync, self.training, self.momentum, self.eps,
-                                     self.activation, self.slope).view(input_shape)
-        else:
-            return syncbatchnorm(x, self.weight, self.bias, self.running_mean, self.running_var,
-                                 extra, self.sync, self.training, self.momentum, self.eps,
-                                 self.activation, self.slope).view(input_shape)
+
+        return syncbatchnorm(x, self.weight, self.bias, self.running_mean, self.running_var,
+                             extra, self.sync, self.training, self.momentum, self.eps,
+                             self.activation, self.slope).view(input_shape)
 
     def extra_repr(self):
         if self.activation == 'none':
             return 'sync={}'.format(self.sync)
         else:
-            return 'sync={}, act={}, slope={}, inplace={}'.format(
-                self.sync, self.activation, self.slope, self.inplace)
+            return 'sync={}, act={}, slope={}'.format(
+                self.sync, self.activation, self.slope)
 
 
 class BatchNorm1d(SyncBatchNorm):

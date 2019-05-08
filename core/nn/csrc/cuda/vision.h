@@ -82,12 +82,3 @@ at::Tensor inp_expectation_backward_cuda(
     const at::Tensor gamma_,
     const at::Tensor beta_,
     float eps);
-
-void leakyrelu_forward_cuda(
-    at::Tensor z,
-    float slope);
-
-void leakyrelu_backward_cuda(
-    at::Tensor z,
-    at::Tensor dz,
-    float slope);

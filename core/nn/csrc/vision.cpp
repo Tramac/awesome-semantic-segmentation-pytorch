@@ -16,6 +16,4 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
   m.def("expectation_forward", &expectation_forward, "expectation_forward");
   m.def("expectation_backward", &expectation_backward, "expectation_backward");
   m.def("inp_expectation_backward", &inp_expectation_backward, "inp_expectation_backward");
-  m.def("leakyrelu_forward", &leakyrelu_forward, "leakyrelu_forward");
-  m.def("leakyrelu_backward", &leakyrelu_backward, "leakyrelu_backward");
 }
