@@ -121,6 +121,7 @@ eval/
 # run result
 
 # model
+hrnet.py
 
 # nn
 nn/sync_bn/

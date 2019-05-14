@@ -8,7 +8,7 @@ This project aims at providing a concise, easy-to-use, modifiable reference impl
 <p align="center"><img width="100%" src="docs/weimar_000091_000019_gtFine_color.png" /></p>
 
 ## Update
-- add CCNet, PSANet
+- add CCNet, CGNet
 - add distributed training (Note: I have no enough device to test distributed, If you are interested in it, welcome to complete testing and fix bugs.)
 
 ## Installation
@@ -86,6 +86,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 - [PSANet](https://hszhao.github.io/papers/eccv18_psanet.pdf)
 - [DANet](https://arxiv.org/pdf/1809.02983)
 - [OCNet](https://arxiv.org/pdf/1809.00916)
+- [CGNet](https://arxiv.org/pdf/1811.08201)
 - [CCNet](https://arxiv.org/pdf/1811.11721)
 - [DUNet(DUpsampling)](https://arxiv.org/abs/1903.02120)
 
@@ -107,6 +108,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 │   │   ├── ocnet.py
 │   │   ├── ccnet.py
 │   │   ├── psanet.py
+│   │   ├── cgnet.py
 │   │   ├── ......
 ```
 
@@ -172,11 +174,13 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 ```
 
 ## To Do
+- [ ] add lednet
 - [ ] fix psanet
+- [ ] fix moved syncbn
 - [ ] add more models
 - [ ] train & evaluate
 - [ ] test distributed training
-- [x] fix SyncBN ([Why SyncBN?](https://tramac.github.io/2019/04/08/SyncBN/))
+- [x] fix syncbn ([Why SyncBN?](https://tramac.github.io/2019/04/08/SyncBN/))
 - [x] add distributed ([How DIST?](https://tramac.github.io/2019/04/22/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83-PyTorch/))
 
 ## References

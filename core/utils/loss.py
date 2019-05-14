@@ -113,7 +113,7 @@ class ICNetLoss(nn.CrossEntropyLoss):
 
 
 class OhemCrossEntropy2d(nn.Module):
-    def __init__(self, ignore_index=-1, thresh=0.7, min_kept=256, use_weight=True, **kwargs):
+    def __init__(self, ignore_index=-1, thresh=0.7, min_kept=100000, use_weight=True, **kwargs):
         super(OhemCrossEntropy2d, self).__init__()
         self.ignore_index = ignore_index
         self.thresh = float(thresh)

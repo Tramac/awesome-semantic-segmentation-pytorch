@@ -145,16 +145,17 @@ class ResNetV1b(nn.Module):
 
         layers = []
         if dilation in (1, 2):
-            layers.append(block(self.inplanes, planes, stride, dilation=1,
-                                downsample=downsample, previous_dilation=dilation))
+            layers.append(block(self.inplanes, planes, stride, dilation=1, downsample=downsample,
+                                previous_dilation=dilation, norm_layer=norm_layer))
         elif dilation == 4:
-            layers.append(block(self.inplanes, planes, stride, dilation=2,
-                                downsample=downsample, previous_dilation=dilation))
+            layers.append(block(self.inplanes, planes, stride, dilation=2, downsample=downsample,
+                                previous_dilation=dilation, norm_layer=norm_layer))
         else:
             raise RuntimeError("=> unknown dilation size: {}".format(dilation))
         self.inplanes = planes * block.expansion
         for _ in range(1, blocks):
-            layers.append(block(self.inplanes, planes, dilation=dilation, previous_dilation=dilation))
+            layers.append(block(self.inplanes, planes, dilation=dilation,
+                                previous_dilation=dilation, norm_layer=norm_layer))
 
         return nn.Sequential(*layers)
 
