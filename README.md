@@ -157,7 +157,7 @@ python ade20k.py --download-dir ../datasets/ade
 - **PASCAL VOC 2012**
 
 |Methods|Backbone|TrainSet|EvalSet|crops_size|epochs|JPU|Mean IoU|pixAcc|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
 |FCN32s|vgg16|train|val|480|60|✘|47.50|85.39|
 |FCN16s|vgg16|train|val|480|60|✘|49.16|85.98|
 |FCN8s|vgg16|train|val|480|60|✘|48.87|85.02|
