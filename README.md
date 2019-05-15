@@ -8,7 +8,7 @@ This project aims at providing a concise, easy-to-use, modifiable reference impl
 <p align="center"><img width="100%" src="docs/weimar_000091_000019_gtFine_color.png" /></p>
 
 ## Update
-- add CCNet, CGNet
+- add FastFCN, ESPNet
 - add distributed training (Note: I have no enough device to test distributed, If you are interested in it, welcome to complete testing and fix bugs.)
 
 ## Installation
@@ -31,12 +31,12 @@ python setup.py build develop
 ## Usage
 ### Train
 -----------------
-- Single GPU training
+- **Single GPU training**
 ```
 # for example, train fcn32_vgg16_pascal_voc:
 python train.py --model fcn32s --backbone vgg16 --dataset pascal_voc --lr 0.0001 --epochs 50
 ```
-- Multi-GPU training
+- **Multi-GPU training**
 
 ```
 # for example, train fcn32_vgg16_pascal_voc with 4 GPUs:
@@ -46,12 +46,12 @@ python -m torch.distributed.launch --nproc_per_node=$NGPUS train.py --model fcn3
 
 ### Evaluation
 -----------------
-- Single GPU training
+- **Single GPU training**
 ```
 # for example, evaluate fcn32_vgg16_pascal_voc
 python eval.py --model fcn32s --backbone vgg16 --dataset pascal_voc
 ```
-- Multi-GPU training
+- **Multi-GPU training**
 ```
 # for example, evaluate fcn32_vgg16_pascal_voc with 4 GPUs:
 export NGPUS=4
@@ -87,8 +87,10 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 - [DANet](https://arxiv.org/pdf/1809.02983)
 - [OCNet](https://arxiv.org/pdf/1809.00916)
 - [CGNet](https://arxiv.org/pdf/1811.08201)
+- [ESPNetv2](https://arxiv.org/abs/1811.11431)
 - [CCNet](https://arxiv.org/pdf/1811.11721)
 - [DUNet(DUpsampling)](https://arxiv.org/abs/1903.02120)
+- [FastFCN(JPU)](https://arxiv.org/abs/1903.11816)
 
 [DETAILS](https://github.com/Tramac/awesome-semantic-segmentation-pytorch/blob/master/docs/DETAILS.md) for model & backbone.
 ```
@@ -109,6 +111,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 │   │   ├── ccnet.py
 │   │   ├── psanet.py
 │   │   ├── cgnet.py
+│   │   ├── espnet.py
 │   │   ├── ......
 ```
 
@@ -153,14 +156,14 @@ python ade20k.py --download-dir ../datasets/ade
 ## Result
 - **PASCAL VOC 2012**
 
-|Methods|Backbone|TrainSet|EvalSet|crops_size|epochs|Mean IoU|pixAcc|
+|Methods|Backbone|TrainSet|EvalSet|crops_size|epochs|JPU|Mean IoU|pixAcc|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|FCN32s|vgg16|train|val|480|60|47.50|85.39|
-|FCN16s|vgg16|train|val|480|60|49.16|85.98|
-|FCN8s|vgg16|train|val|480|60|48.87|85.02|
-|FCN32s|resnet50|train|val|480|50|54.60|88.57|
-|PSPNet|resnet50|train|val|480|60|63.44|89.78|
-|DeepLabv3|resnet50|train|val|480|60|60.15|88.36|
+|FCN32s|vgg16|train|val|480|60|✘|47.50|85.39|
+|FCN16s|vgg16|train|val|480|60|✘|49.16|85.98|
+|FCN8s|vgg16|train|val|480|60|✘|48.87|85.02|
+|FCN32s|resnet50|train|val|480|50|✘|54.60|88.57|
+|PSPNet|resnet50|train|val|480|60|✘|63.44|89.78|
+|DeepLabv3|resnet50|train|val|480|60|✘|60.15|88.36|
 
 Note: `lr=1e-4`.
 
@@ -174,10 +177,10 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 ```
 
 ## To Do
-- [ ] add lednet, epcnet, fastfcn
+- [ ] add train script
+- [ ] add lednet
 - [ ] fix psanet
 - [ ] fix moved syncbn
-- [ ] add more models
 - [ ] train & evaluate
 - [ ] test distributed training
 - [x] fix syncbn ([Why SyncBN?](https://tramac.github.io/2019/04/08/SyncBN/))

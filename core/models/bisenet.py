@@ -4,12 +4,13 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from core.models.base_models.resnet import resnet18
+from core.nn import _ConvBNReLU
 
 __all__ = ['BiSeNet', 'get_bisenet', 'get_bisenet_resnet18_citys']
 
 
 class BiSeNet(nn.Module):
-    def __init__(self, nclass, backbone='resnet18', aux=False, pretrained_base=True, **kwargs):
+    def __init__(self, nclass, backbone='resnet18', aux=False, jpu=False, pretrained_base=True, **kwargs):
         super(BiSeNet, self).__init__()
         self.aux = aux
         self.spatial_path = SpatialPath(3, 128, **kwargs)
@@ -48,7 +49,7 @@ class _BiSeHead(nn.Module):
     def __init__(self, in_channels, inter_channels, nclass, norm_layer=nn.BatchNorm2d, **kwargs):
         super(_BiSeHead, self).__init__()
         self.block = nn.Sequential(
-            _ConvBNReLU(in_channels, inter_channels, 3, 1, 1, norm_layer=norm_layer, **kwargs),
+            _ConvBNReLU(in_channels, inter_channels, 3, 1, 1, norm_layer=norm_layer),
             nn.Dropout(0.1),
             nn.Conv2d(inter_channels, nclass, 1)
         )
@@ -58,31 +59,16 @@ class _BiSeHead(nn.Module):
         return x
 
 
-class _ConvBNReLU(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size=3, stride=1, padding=1, dilation=1,
-                 groups=1, norm_layer=nn.BatchNorm2d, bias=False, **kwargs):
-        super(_ConvBNReLU, self).__init__()
-        self.conv = nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding, dilation, groups, bias)
-        self.bn = norm_layer(out_channels)
-        self.relu = nn.ReLU(True)
-
-    def forward(self, x):
-        x = self.conv(x)
-        x = self.bn(x)
-        x = self.relu(x)
-        return x
-
-
 class SpatialPath(nn.Module):
     """Spatial path"""
 
     def __init__(self, in_channels, out_channels, norm_layer=nn.BatchNorm2d, **kwargs):
         super(SpatialPath, self).__init__()
         inter_channels = 64
-        self.conv7x7 = _ConvBNReLU(in_channels, inter_channels, 7, 2, 3, norm_layer=norm_layer, **kwargs)
-        self.conv3x3_1 = _ConvBNReLU(inter_channels, inter_channels, 3, 2, 1, norm_layer=norm_layer, **kwargs)
-        self.conv3x3_2 = _ConvBNReLU(inter_channels, inter_channels, 3, 2, 1, norm_layer=norm_layer, **kwargs)
-        self.conv1x1 = _ConvBNReLU(inter_channels, out_channels, 1, 1, 0, norm_layer=norm_layer, **kwargs)
+        self.conv7x7 = _ConvBNReLU(in_channels, inter_channels, 7, 2, 3, norm_layer=norm_layer)
+        self.conv3x3_1 = _ConvBNReLU(inter_channels, inter_channels, 3, 2, 1, norm_layer=norm_layer)
+        self.conv3x3_2 = _ConvBNReLU(inter_channels, inter_channels, 3, 2, 1, norm_layer=norm_layer)
+        self.conv1x1 = _ConvBNReLU(inter_channels, out_channels, 1, 1, 0, norm_layer=norm_layer)
 
     def forward(self, x):
         x = self.conv7x7(x)
@@ -113,10 +99,10 @@ class _GlobalAvgPooling(nn.Module):
 class AttentionRefinmentModule(nn.Module):
     def __init__(self, in_channels, out_channels, norm_layer=nn.BatchNorm2d, **kwargs):
         super(AttentionRefinmentModule, self).__init__()
-        self.conv3x3 = _ConvBNReLU(in_channels, out_channels, 3, 1, 1, norm_layer=norm_layer, **kwargs)
+        self.conv3x3 = _ConvBNReLU(in_channels, out_channels, 3, 1, 1, norm_layer=norm_layer)
         self.channel_attention = nn.Sequential(
             nn.AdaptiveAvgPool2d(1),
-            _ConvBNReLU(out_channels, out_channels, 1, 1, 0, norm_layer=norm_layer, **kwargs),
+            _ConvBNReLU(out_channels, out_channels, 1, 1, 0, norm_layer=norm_layer),
             nn.Sigmoid()
         )
 
@@ -144,15 +130,15 @@ class ContextPath(nn.Module):
         self.layer4 = pretrained.layer4
 
         inter_channels = 128
-        self.global_context = _GlobalAvgPooling(512, inter_channels, norm_layer, **kwargs)
+        self.global_context = _GlobalAvgPooling(512, inter_channels, norm_layer)
 
         self.arms = nn.ModuleList(
             [AttentionRefinmentModule(512, inter_channels, norm_layer, **kwargs),
              AttentionRefinmentModule(256, inter_channels, norm_layer, **kwargs)]
         )
         self.refines = nn.ModuleList(
-            [_ConvBNReLU(inter_channels, inter_channels, 3, 1, 1, norm_layer=norm_layer, **kwargs),
-             _ConvBNReLU(inter_channels, inter_channels, 3, 1, 1, norm_layer=norm_layer, **kwargs)]
+            [_ConvBNReLU(inter_channels, inter_channels, 3, 1, 1, norm_layer=norm_layer),
+             _ConvBNReLU(inter_channels, inter_channels, 3, 1, 1, norm_layer=norm_layer)]
         )
 
     def forward(self, x):
@@ -192,8 +178,8 @@ class FeatureFusion(nn.Module):
         self.conv1x1 = _ConvBNReLU(in_channels, out_channels, 1, 1, 0, norm_layer=norm_layer, **kwargs)
         self.channel_attention = nn.Sequential(
             nn.AdaptiveAvgPool2d(1),
-            _ConvBNReLU(out_channels, out_channels // reduction, 1, 1, 0, norm_layer=norm_layer, **kwargs),
-            _ConvBNReLU(out_channels // reduction, out_channels, 1, 1, 0, norm_layer=norm_layer, **kwargs),
+            _ConvBNReLU(out_channels, out_channels // reduction, 1, 1, 0, norm_layer=norm_layer),
+            _ConvBNReLU(out_channels // reduction, out_channels, 1, 1, 0, norm_layer=norm_layer),
             nn.Sigmoid()
         )
 

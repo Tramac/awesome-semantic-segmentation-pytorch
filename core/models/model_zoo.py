@@ -14,6 +14,7 @@ from .ocnet import *
 from .ccnet import *
 from .psanet import *
 from .cgnet import *
+from .espnet import *
 
 __all__ = ['get_model', 'get_model_list', 'get_segmentation_model']
 
@@ -70,6 +71,7 @@ _models = {
     'psanet_resnet101_citys': get_psanet_resnet101_citys,
     'psanet_resnet152_citys': get_psanet_resnet152_citys,
     'cgnet_citys': get_cgnet_citys,
+    'espnet_citys': get_espnet_citys,
 }
 
 
@@ -106,5 +108,6 @@ def get_segmentation_model(model, **kwargs):
         'ccnet': get_ccnet,
         'psanet': get_psanet,
         'cgnet': get_cgnet,
+        'espnet': get_espnet,
     }
     return models[model](**kwargs)

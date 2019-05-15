@@ -23,7 +23,6 @@ from core.utils.logger import setup_logger
 from core.utils.lr_scheduler import WarmupPolyLR
 from core.utils.score import SegmentationMetric
 from core.nn import SyncBatchNorm
-from torchsummary import summary
 
 
 def parse_args():
@@ -35,7 +34,7 @@ def parse_args():
                                  'danet', 'denseaspp', 'bisenet',
                                  'encnet', 'dunet', 'icnet',
                                  'enet', 'ocnet', 'ccnet', 'psanet',
-                                 'cgnet'],
+                                 'cgnet', 'espnet'],
                         help='model name (default: fcn32s)')
     parser.add_argument('--backbone', type=str, default='resnet50',
                         choices=['vgg16', 'resnet18', 'resnet50',
@@ -61,7 +60,7 @@ def parse_args():
                         help='Auxiliary loss')
     parser.add_argument('--aux-weight', type=float, default=0.4,
                         help='auxiliary loss weight')
-    parser.add_argument('--batch-size', type=int, default=8, metavar='N',
+    parser.add_argument('--batch-size', type=int, default=4, metavar='N',
                         help='input batch size for training (default: 8)')
     parser.add_argument('--start_epoch', type=int, default=0,
                         metavar='N', help='start epochs (default:0)')
@@ -166,7 +165,6 @@ class Trainer(object):
             self.model = torch.nn.parallel.DistributedDataParallel(self.model, device_ids=[args.local_rank],
                                                                    output_device=args.local_rank)
 
-        summary(self.model, input_size=(3, 224, 224))
         # resume checkpoint if needed
         if args.resume:
             if os.path.isfile(args.resume):

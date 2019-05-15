@@ -10,7 +10,8 @@ __all__ = ['DenseASPP', 'get_denseaspp', 'get_denseaspp_densenet121_citys',
 
 
 class DenseASPP(nn.Module):
-    def __init__(self, nclass, backbone='densenet121', aux=False, pretrained_base=True, dilate_scale=8, **kwargs):
+    def __init__(self, nclass, backbone='densenet121', aux=False, jpu=False,
+                 pretrained_base=True, dilate_scale=8, **kwargs):
         super(DenseASPP, self).__init__()
         self.nclass = nclass
         self.aux = aux

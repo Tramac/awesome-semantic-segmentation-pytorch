@@ -8,7 +8,7 @@ __all__ = ['ENet', 'get_enet', 'get_enet_citys']
 class ENet(nn.Module):
     """Efficient Neural Network"""
 
-    def __init__(self, nclass, backbone='', aux=False, pretrained_base=None, **kwargs):
+    def __init__(self, nclass, backbone='', aux=False, jpu=False, pretrained_base=None, **kwargs):
         super(ENet, self).__init__()
         self.initial = InitialBlock(13, **kwargs)
 

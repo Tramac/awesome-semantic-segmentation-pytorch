@@ -12,7 +12,7 @@ __all__ = ['ICNet', 'get_icnet', 'get_icnet_resnet50_citys',
 class ICNet(SegBaseModel):
     """Image Cascade Network"""
 
-    def __init__(self, nclass, backbone='resnet50', aux=False, pretrained_base=True, **kwargs):
+    def __init__(self, nclass, backbone='resnet50', aux=False, jpu=False, pretrained_base=True, **kwargs):
         super(ICNet, self).__init__(nclass, aux, backbone, pretrained_base=pretrained_base, **kwargs)
         self.conv_sub1 = nn.Sequential(
             _ConvBNReLU(3, 32, 3, 2, **kwargs),
