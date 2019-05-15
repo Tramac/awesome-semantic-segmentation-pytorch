@@ -23,6 +23,7 @@ from core.utils.logger import setup_logger
 from core.utils.lr_scheduler import WarmupPolyLR
 from core.utils.score import SegmentationMetric
 from core.nn import SyncBatchNorm
+from torchsummary import summary
 
 
 def parse_args():
@@ -52,6 +53,8 @@ def parse_args():
     parser.add_argument('--workers', '-j', type=int, default=4,
                         metavar='N', help='dataloader threads')
     # training hyper params
+    parser.add_argument('--jpu', action='store_true', default=False,
+                        help='JPU')
     parser.add_argument('--use-ohem', type=bool, default=False,
                         help='OHEM Loss for cityscapes dataset')
     parser.add_argument('--aux', action='store_true', default=False,
@@ -158,11 +161,12 @@ class Trainer(object):
         # create network
         BatchNorm2d = SyncBatchNorm if args.distributed else nn.BatchNorm2d
         self.model = get_segmentation_model(model=args.model, dataset=args.dataset, backbone=args.backbone,
-                                            aux=args.aux, norm_layer=BatchNorm2d).to(self.device)
+                                            aux=args.aux, jpu=args.jpu, norm_layer=BatchNorm2d).to(self.device)
         if args.distributed:
             self.model = torch.nn.parallel.DistributedDataParallel(self.model, device_ids=[args.local_rank],
                                                                    output_device=args.local_rank)
 
+        summary(self.model, input_size=(3, 224, 224))
         # resume checkpoint if needed
         if args.resume:
             if os.path.isfile(args.resume):

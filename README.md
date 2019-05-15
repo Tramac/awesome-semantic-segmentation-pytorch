@@ -174,7 +174,7 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 ```
 
 ## To Do
-- [ ] add lednet
+- [ ] add lednet, epcnet, fastfcn
 - [ ] fix psanet
 - [ ] fix moved syncbn
 - [ ] add more models
