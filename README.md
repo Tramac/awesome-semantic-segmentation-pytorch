@@ -91,6 +91,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 - [CCNet](https://arxiv.org/pdf/1811.11721)
 - [DUNet(DUpsampling)](https://arxiv.org/abs/1903.02120)
 - [FastFCN(JPU)](https://arxiv.org/abs/1903.11816)
+- [LEDNet](https://arxiv.org/abs/1905.02423)
 
 [DETAILS](https://github.com/Tramac/awesome-semantic-segmentation-pytorch/blob/master/docs/DETAILS.md) for model & backbone.
 ```
@@ -112,6 +113,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 │   │   ├── psanet.py
 │   │   ├── cgnet.py
 │   │   ├── espnet.py
+│   │   ├── lednet.py
 │   │   ├── ......
 ```
 
@@ -178,7 +180,7 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 
 ## To Do
 - [ ] add train script
-- [ ] add lednet
+- [ ] add lightnet
 - [ ] fix psanet
 - [ ] fix moved syncbn
 - [ ] train & evaluate
