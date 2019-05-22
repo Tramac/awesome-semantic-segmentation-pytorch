@@ -23,7 +23,7 @@ class SeparableConv2d(nn.Module):
 
 # copy from: https://github.com/wuhuikai/FastFCN/blob/master/encoding/nn/customize.py
 class JPU(nn.Module):
-    def __init__(self, in_channels, width=512, norm_layer=None, **kwargs):
+    def __init__(self, in_channels, width=512, norm_layer=nn.BatchNorm2d, **kwargs):
         super(JPU, self).__init__()
 
         self.conv5 = nn.Sequential(

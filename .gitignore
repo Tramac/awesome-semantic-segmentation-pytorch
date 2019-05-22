@@ -102,7 +102,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-debug.py
 
 # pycharm
 
@@ -121,7 +120,9 @@ eval/
 # run result
 
 # model
-hrnet.py
+/models/hrnet.py
+/models/psanet_old.py
+/scripts/debug.py
 
 # nn
 nn/sync_bn/

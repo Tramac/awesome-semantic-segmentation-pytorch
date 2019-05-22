@@ -34,7 +34,7 @@ class CCNet(SegBaseModel):
     """
 
     def __init__(self, nclass, backbone='resnet50', aux=False, pretrained_base=True, **kwargs):
-        super(CCNet, self).__init__(nclass, aux, backbone, pretrained_base, **kwargs)
+        super(CCNet, self).__init__(nclass, aux, backbone, pretrained_base=pretrained_base, **kwargs)
         self.head = _CCHead(nclass, **kwargs)
         if aux:
             self.auxlayer = _FCNHead(1024, nclass, **kwargs)

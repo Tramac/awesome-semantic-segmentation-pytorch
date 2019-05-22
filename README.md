@@ -181,7 +181,6 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 ## To Do
 - [ ] add train script
 - [ ] add lightnet
-- [ ] fix psanet
 - [ ] fix moved syncbn
 - [ ] train & evaluate
 - [ ] test distributed training

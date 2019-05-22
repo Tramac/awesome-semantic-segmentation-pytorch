@@ -28,7 +28,7 @@ from core.nn import SyncBatchNorm
 def parse_args():
     parser = argparse.ArgumentParser(description='Semantic Segmentation Training With Pytorch')
     # model and dataset
-    parser.add_argument('--model', type=str, default='lednet',
+    parser.add_argument('--model', type=str, default='psanet',
                         choices=['fcn32s', 'fcn16s', 'fcn8s',
                                  'fcn', 'psp', 'deeplabv3',
                                  'danet', 'denseaspp', 'bisenet',
@@ -162,8 +162,8 @@ class Trainer(object):
         self.model = get_segmentation_model(model=args.model, dataset=args.dataset, backbone=args.backbone,
                                             aux=args.aux, jpu=args.jpu, norm_layer=BatchNorm2d).to(self.device)
         if args.distributed:
-            self.model = torch.nn.parallel.DistributedDataParallel(self.model, device_ids=[args.local_rank],
-                                                                   output_device=args.local_rank)
+            self.model = nn.parallel.DistributedDataParallel(self.model, device_ids=[args.local_rank],
+                                                             output_device=args.local_rank)
 
         # resume checkpoint if needed
         if args.resume:

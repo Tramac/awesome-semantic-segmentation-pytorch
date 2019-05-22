@@ -3,9 +3,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from core.nn import CollectAttention, DistributeAttention
-from .segbase import SegBaseModel
-from .fcn import _FCNHead
+from core.nn import _ConvBNReLU
+from core.models.segbase import SegBaseModel
+from core.models.fcn import _FCNHead
 
 __all__ = ['PSANet', 'get_psanet', 'get_psanet_resnet50_voc', 'get_psanet_resnet101_voc',
            'get_psanet_resnet152_voc', 'get_psanet_resnet50_citys', 'get_psanet_resnet101_citys',
@@ -34,7 +34,7 @@ class PSANet(SegBaseModel):
     """
 
     def __init__(self, nclass, backbone='resnet', aux=False, pretrained_base=True, **kwargs):
-        super(PSANet, self).__init__(nclass, aux, backbone, pretrained_base, **kwargs)
+        super(PSANet, self).__init__(nclass, aux, backbone, pretrained_base=pretrained_base, **kwargs)
         self.head = _PSAHead(nclass, **kwargs)
         if aux:
             self.auxlayer = _FCNHead(1024, nclass, **kwargs)
@@ -59,100 +59,58 @@ class PSANet(SegBaseModel):
 class _PSAHead(nn.Module):
     def __init__(self, nclass, norm_layer=nn.BatchNorm2d, **kwargs):
         super(_PSAHead, self).__init__()
-        self.collect = _CollectModule(2048, 512, 60, 60, norm_layer, **kwargs)
-        self.distribute = _DistributeModule(2048, 512, 60, 60, norm_layer, **kwargs)
+        # psa_out_channels = crop_size // 8 ** 2
+        self.psa = _PointwiseSpatialAttention(2048, 3600, norm_layer)
 
-        self.conv_post = nn.Sequential(
-            nn.Conv2d(1024, 2048, 1, bias=False),
-            norm_layer(2048),
-            nn.ReLU(True))
+        self.conv_post = _ConvBNReLU(1024, 2048, 1, norm_layer=norm_layer)
         self.project = nn.Sequential(
-            nn.Conv2d(4096, 512, 3, padding=1, bias=False),
-            norm_layer(512),
-            nn.ReLU(True),
-            nn.Conv2d(512, nclass, 1)
-        )
+            _ConvBNReLU(4096, 512, 3, padding=1, norm_layer=norm_layer),
+            nn.Dropout2d(0.1, False),
+            nn.Conv2d(512, nclass, 1))
 
     def forward(self, x):
-        global_feature_collect = self.collect(x)
-        global_feature_distribute = self.distribute(x)
-
-        global_feature = torch.cat([global_feature_collect, global_feature_distribute], dim=1)
+        global_feature = self.psa(x)
         out = self.conv_post(global_feature)
-        out = F.interpolate(out, scale_factor=2, mode='bilinear', align_corners=True)
         out = torch.cat([x, out], dim=1)
         out = self.project(out)
 
         return out
 
 
-class _CollectModule(nn.Module):
-    def __init__(self, in_channels, reduced_channels, feat_w, feat_h, norm_layer, **kwargs):
-        super(_CollectModule, self).__init__()
-        self.conv_reduce = nn.Sequential(
-            nn.Conv2d(in_channels, reduced_channels, 1, bias=False),
-            norm_layer(reduced_channels),
-            nn.ReLU(True))
-        self.conv_adaption = nn.Sequential(
-            nn.Conv2d(reduced_channels, reduced_channels, 1, bias=False),
-            norm_layer(reduced_channels),
-            nn.ReLU(True),
-            nn.Conv2d(reduced_channels, (feat_w - 1) * (feat_h), 1, bias=False))
-        self.collect_attention = CollectAttention()
-
-        self.reduced_channels = reduced_channels
-        self.feat_w = feat_w
-        self.feat_h = feat_h
+class _PointwiseSpatialAttention(nn.Module):
+    def __init__(self, in_channels, out_channels, norm_layer=nn.BatchNorm2d, **kwargs):
+        super(_PointwiseSpatialAttention, self).__init__()
+        reduced_channels = 512
+        self.collect_attention = _AttentionGeneration(in_channels, reduced_channels, out_channels, norm_layer)
+        self.distribute_attention = _AttentionGeneration(in_channels, reduced_channels, out_channels, norm_layer)
 
     def forward(self, x):
-        x = self.conv_reduce(x)
-        # shrink
-        x_shrink = F.interpolate(x, scale_factor=1 / 2, mode='bilinear', align_corners=True)
-        x_adaption = self.conv_adaption(x_shrink)
-        ca = self.collect_attention(x_adaption)
-        global_feature_collect_list = list()
-        for i in range(x_shrink.shape[0]):
-            x_shrink_i = x_shrink[i].view(self.reduced_channels, -1)
-            ca_i = ca[i].view(ca.shape[1], -1)
-            global_feature_collect_list.append(
-                torch.mm(x_shrink_i, ca_i).view(1, self.reduced_channels, self.feat_h // 2, self.feat_w // 2))
-        global_feature_collect = torch.cat(global_feature_collect_list)
-
-        return global_feature_collect
+        collect_fm = self.collect_attention(x)
+        distribute_fm = self.distribute_attention(x)
+        psa_fm = torch.cat([collect_fm, distribute_fm], dim=1)
+        return psa_fm
 
 
-class _DistributeModule(nn.Module):
-    def __init__(self, in_channels, reduced_channels, feat_w, feat_h, norm_layer, **kwargs):
-        super(_DistributeModule, self).__init__()
-        self.conv_reduce = nn.Sequential(
-            nn.Conv2d(in_channels, reduced_channels, 1, bias=False),
-            norm_layer(reduced_channels),
-            nn.ReLU(True))
-        self.conv_adaption = nn.Sequential(
-            nn.Conv2d(reduced_channels, reduced_channels, 1, bias=False),
-            norm_layer(reduced_channels),
-            nn.ReLU(True),
-            nn.Conv2d(reduced_channels, (feat_w - 1) * (feat_h), 1, bias=False))
-        self.distribute_attention = DistributeAttention()
+class _AttentionGeneration(nn.Module):
+    def __init__(self, in_channels, reduced_channels, out_channels, norm_layer, **kwargs):
+        super(_AttentionGeneration, self).__init__()
+        self.conv_reduce = _ConvBNReLU(in_channels, reduced_channels, 1, norm_layer=norm_layer)
+        self.attention = nn.Sequential(
+            _ConvBNReLU(reduced_channels, reduced_channels, 1, norm_layer=norm_layer),
+            nn.Conv2d(reduced_channels, out_channels, 1, bias=False))
 
         self.reduced_channels = reduced_channels
-        self.feat_w = feat_w
-        self.feat_h = feat_h
 
     def forward(self, x):
-        x = self.conv_reduce(x)
-        x_shrink = F.interpolate(x, scale_factor=1 / 2, mode='bilinear', align_corners=True)
-        x_adaption = self.conv_adaption(x_shrink)
-        da = self.distribute_attention(x_adaption)
-        global_feature_distribute_list = list()
-        for i in range(x_shrink.shape[0]):
-            x_shrink_i = x_shrink[i].view(self.reduced_channels, -1)
-            da_i = da[i].view(da.shape[1], -1)
-            global_feature_distribute_list.append(
-                torch.mm(x_shrink_i, da_i).view(1, self.reduced_channels, self.feat_h // 2, self.feat_w // 2))
-        global_feature_distribute = torch.cat(global_feature_distribute_list)
+        reduce_x = self.conv_reduce(x)
+        attention = self.attention(reduce_x)
+        n, c, h, w = attention.size()
+        attention = attention.view(n, c, -1)
+        reduce_x = reduce_x.view(n, self.reduced_channels, -1)
+        fm = torch.bmm(reduce_x, torch.softmax(attention, dim=1))
+        fm = fm.view(n, self.reduced_channels, h, w)
 
-        return global_feature_distribute
+        return fm
 
 
 def get_psanet(dataset='pascal_voc', backbone='resnet50', pretrained=False, root='~/.torch/models',
@@ -164,7 +122,7 @@ def get_psanet(dataset='pascal_voc', backbone='resnet50', pretrained=False, root
         'coco': 'coco',
         'citys': 'citys',
     }
-    from ..data.dataloader import datasets
+    from core.data.dataloader import datasets
     model = PSANet(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
     if pretrained:
         from .model_store import get_model_file
