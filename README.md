@@ -92,6 +92,8 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 - [DUNet(DUpsampling)](https://arxiv.org/abs/1903.02120)
 - [FastFCN(JPU)](https://arxiv.org/abs/1903.11816)
 - [LEDNet](https://arxiv.org/abs/1905.02423)
+- [Fast-SCNN](https://github.com/Tramac/Fast-SCNN-pytorch)
+- [LightSeg](https://github.com/Tramac/Lightweight-Segmentation)
 
 [DETAILS](https://github.com/Tramac/awesome-semantic-segmentation-pytorch/blob/master/docs/DETAILS.md) for model & backbone.
 ```
