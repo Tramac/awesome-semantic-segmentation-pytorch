@@ -45,12 +45,12 @@ python -m torch.distributed.launch --nproc_per_node=$NGPUS train.py --model fcn3
 
 ### Evaluation
 -----------------
-- **Single GPU evaluation**
+- **Single GPU evaluating**
 ```
 # for example, evaluate fcn32_vgg16_pascal_voc
 python eval.py --model fcn32s --backbone vgg16 --dataset pascal_voc
 ```
-- **Multi-GPU evaluation**
+- **Multi-GPU evaluating**
 ```
 # for example, evaluate fcn32_vgg16_pascal_voc with 4 GPUs:
 export NGPUS=4

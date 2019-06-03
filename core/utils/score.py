@@ -78,21 +78,6 @@ def batch_pix_accuracy(output, target):
     return pixel_correct, pixel_labeled
 
 
-# numpy version
-# def batch_pix_accuracy(predict, target):
-#     """PixAcc"""
-#     # inputs are numpy array, output 4D, target 3D
-#     assert predict.shape == target.shape
-#     predict = predict.astype('int64') + 1
-#     target = target.astype('int64') + 1
-#
-#     pixel_labeled = np.sum(target > 0)
-#     pixel_correct = np.sum((predict == target) * (target > 0))
-#     assert pixel_correct <= pixel_labeled, "Correct area should be smaller than Labeled"
-#     return pixel_correct, pixel_labeled
-
-
-# pytorch version
 def batch_intersection_union(output, target, nclass):
     """mIoU"""
     # inputs are numpy array, output 4D, target 3D
@@ -112,29 +97,6 @@ def batch_intersection_union(output, target, nclass):
     area_union = area_pred + area_lab - area_inter
     assert torch.sum(area_inter > area_union).item() == 0, "Intersection area should be smaller than Union area"
     return area_inter.float(), area_union.float()
-
-
-# numpy version
-# def batch_intersection_union(predict, target, nclass):
-#     """mIoU"""
-#     # inputs are numpy array, output 4D, target 3D
-#     assert predict.shape == target.shape
-#     mini = 1
-#     maxi = nclass
-#     nbins = nclass
-#     predict = predict.astype('int64') + 1
-#     target = target.astype('int64') + 1
-#
-#     predict = predict * (target > 0).astype(predict.dtype)
-#     intersection = predict * (predict == target)
-#     # areas of intersection and union
-#     # element 0 in intersection occur the main difference from np.bincount. set boundary to -1 is necessary.
-#     area_inter, _ = np.histogram(intersection, bins=nbins, range=(mini, maxi))
-#     area_pred, _ = np.histogram(predict, bins=nbins, range=(mini, maxi))
-#     area_lab, _ = np.histogram(target, bins=nbins, range=(mini, maxi))
-#     area_union = area_pred + area_lab - area_inter
-#     assert (area_inter <= area_union).all(), "Intersection area should be smaller than Union area"
-#     return area_inter, area_union
 
 
 def pixelAccuracy(imPred, imLab):
