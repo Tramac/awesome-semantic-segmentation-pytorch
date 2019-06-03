@@ -9,7 +9,6 @@ This project aims at providing a concise, easy-to-use, modifiable reference impl
 
 ## Update
 - add FastFCN, ESPNet
-- add distributed training (Note: I have no enough device to test distributed, If you are interested in it, welcome to complete testing and fix bugs.)
 
 ## Installation
 ```
@@ -46,16 +45,16 @@ python -m torch.distributed.launch --nproc_per_node=$NGPUS train.py --model fcn3
 
 ### Evaluation
 -----------------
-- **Single GPU training**
+- **Single GPU evaluation**
 ```
 # for example, evaluate fcn32_vgg16_pascal_voc
 python eval.py --model fcn32s --backbone vgg16 --dataset pascal_voc
 ```
-- **Multi-GPU training**
+- **Multi-GPU evaluation**
 ```
 # for example, evaluate fcn32_vgg16_pascal_voc with 4 GPUs:
 export NGPUS=4
-python -m torch.distributed.launch --nproc_per_node=$NGPUS --model fcn32s --backbone vgg16 --dataset pascal_voc
+python -m torch.distributed.launch --nproc_per_node=$NGPUS eval.py --model fcn32s --backbone vgg16 --dataset pascal_voc
 ```
 ### Demo
 ```
@@ -181,11 +180,11 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 ```
 
 ## To Do
-- [ ] add train script
-- [x] add lightnet
-- [ ] fix moved syncbn
+- [x] add train script
+- [ ] add dfanet
+- [ ] remove syncbn
 - [ ] train & evaluate
-- [ ] test distributed training
+- [x] test distributed training
 - [x] fix syncbn ([Why SyncBN?](https://tramac.github.io/2019/04/08/SyncBN/))
 - [x] add distributed ([How DIST?](https://tramac.github.io/2019/04/22/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83-PyTorch/))
 
@@ -203,7 +202,7 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 
 [python-image]: https://img.shields.io/badge/Python-2.x|3.x-ff69b4.svg
 [python-url]: https://www.python.org/
-[pytorch-image]: https://img.shields.io/badge/PyTorch-1.0-2BAF2B.svg
+[pytorch-image]: https://img.shields.io/badge/PyTorch-1.1-2BAF2B.svg
 [pytorch-url]: https://pytorch.org/
 [lic-image]: http://dmlc.github.io/img/apache2.svg
 [lic-url]: https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/blob/master/LICENSE

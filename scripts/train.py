@@ -22,7 +22,6 @@ from core.utils.distributed import *
 from core.utils.logger import setup_logger
 from core.utils.lr_scheduler import WarmupPolyLR
 from core.utils.score import SegmentationMetric
-from core.nn import SyncBatchNorm
 
 
 def parse_args():
@@ -158,12 +157,9 @@ class Trainer(object):
                                           pin_memory=True)
 
         # create network
-        BatchNorm2d = SyncBatchNorm if args.distributed else nn.BatchNorm2d
+        BatchNorm2d = nn.SyncBatchNorm if args.distributed else nn.BatchNorm2d
         self.model = get_segmentation_model(model=args.model, dataset=args.dataset, backbone=args.backbone,
                                             aux=args.aux, jpu=args.jpu, norm_layer=BatchNorm2d).to(self.device)
-        if args.distributed:
-            self.model = nn.parallel.DistributedDataParallel(self.model, device_ids=[args.local_rank],
-                                                             output_device=args.local_rank)
 
         # resume checkpoint if needed
         if args.resume:
@@ -196,6 +192,10 @@ class Trainer(object):
                                          warmup_factor=args.warmup_factor,
                                          warmup_iters=args.warmup_iters,
                                          warmup_method=args.warmup_method)
+
+        if args.distributed:
+            self.model = nn.parallel.DistributedDataParallel(self.model, device_ids=[args.local_rank],
+                                                             output_device=args.local_rank)
 
         # evaluation metrics
         self.metric = SegmentationMetric(train_dataset.num_class)
@@ -237,7 +237,7 @@ class Trainer(object):
             if iteration % log_per_iters == 0 and save_to_disk:
                 logger.info(
                     "Iters: {:d}/{:d} || Lr: {:.6f} || Loss: {:.4f} || Cost Time: {} || Estimated Time: {}".format(
-                        iteration, max_iters, self.optimizer.param_groups[0]['lr'], losses.item(),
+                        iteration, max_iters, self.optimizer.param_groups[0]['lr'], losses_reduced.item(),
                         str(datetime.timedelta(seconds=int(time.time() - start_time))), eta_string))
 
             if iteration % save_per_iters == 0 and save_to_disk:
