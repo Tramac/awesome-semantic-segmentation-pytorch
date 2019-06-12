@@ -204,5 +204,5 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 [python-url]: https://www.python.org/
 [pytorch-image]: https://img.shields.io/badge/PyTorch-1.1-2BAF2B.svg
 [pytorch-url]: https://pytorch.org/
-[lic-image]: http://dmlc.github.io/img/apache2.svg
+[lic-image]: https://img.shields.io/badge/apache-2-blue.svg
 [lic-url]: https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/blob/master/LICENSE
