@@ -58,7 +58,7 @@ python -m torch.distributed.launch --nproc_per_node=$NGPUS eval.py --model fcn32
 cd ./scripts
 python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 ```
-
+- [DeepLabv3](https://arxiv.org/abs/1706.05587)
 ```
 .{SEG_ROOT}
 ├── scripts
@@ -76,6 +76,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 - [PSPNet](https://arxiv.org/pdf/1612.01105)
 - [ICNet](https://arxiv.org/pdf/1704.08545)
 - [DeepLabv3](https://arxiv.org/abs/1706.05587)
+- [DeepLabv3+](https://arxiv.org/pdf/1802.02611)
 - [DenseASPP](http://openaccess.thecvf.com/content_cvpr_2018/papers/Yang_DenseASPP_for_Semantic_CVPR_2018_paper.pdf)
 - [EncNet](https://arxiv.org/abs/1803.08904v1)
 - [BiSeNet](https://arxiv.org/abs/1808.00897)
@@ -100,6 +101,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 │   │   ├── bisenet.py
 │   │   ├── danet.py
 │   │   ├── deeplabv3.py
+│   │   ├── deeplabv3+.py
 │   │   ├── denseaspp.py
 │   │   ├── dunet.py
 │   │   ├── encnet.py
