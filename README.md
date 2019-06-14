@@ -7,9 +7,6 @@ This project aims at providing a concise, easy-to-use, modifiable reference impl
 
 <p align="center"><img width="100%" src="docs/weimar_000091_000019_gtFine_color.png" /></p>
 
-## Update
-- add FastFCN, ESPNet
-
 ## Installation
 ```
 # semantic-segmentation-pytorch dependencies
@@ -93,6 +90,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 - [LEDNet](https://arxiv.org/abs/1905.02423)
 - [Fast-SCNN](https://github.com/Tramac/Fast-SCNN-pytorch)
 - [LightSeg](https://github.com/Tramac/Lightweight-Segmentation)
+- [DFANet](https://arxiv.org/abs/1904.02216)
 
 [DETAILS](https://github.com/Tramac/awesome-semantic-segmentation-pytorch/blob/master/docs/DETAILS.md) for model & backbone.
 ```
@@ -115,6 +113,7 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 │   │   ├── cgnet.py
 │   │   ├── espnet.py
 │   │   ├── lednet.py
+│   │   ├── dfanet.py
 │   │   ├── ......
 ```
 
@@ -168,7 +167,7 @@ python ade20k.py --download-dir ../datasets/ade
 |PSPNet|resnet50|train|val|480|60|✘|63.44|89.78|
 |DeepLabv3|resnet50|train|val|480|60|✘|60.15|88.36|
 
-Note: `lr=1e-4`.
+Note: `lr=1e-4, batch_size=4, epochs=80`.
 
 ## Overfitting Test
 See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/master/tests) for details.
@@ -181,7 +180,6 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 
 ## To Do
 - [x] add train script
-- [ ] add dfanet
 - [ ] remove syncbn
 - [ ] train & evaluate
 - [x] test distributed training
@@ -204,5 +202,5 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 [python-url]: https://www.python.org/
 [pytorch-image]: https://img.shields.io/badge/PyTorch-1.1-2BAF2B.svg
 [pytorch-url]: https://pytorch.org/
-[lic-image]: https://img.shields.io/badge/apache-2-blue.svg
+[lic-image]: https://img.shields.io/badge/Apache-2.0-blue.svg
 [lic-url]: https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/blob/master/LICENSE
