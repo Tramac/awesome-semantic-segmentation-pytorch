@@ -27,13 +27,13 @@ from core.utils.score import SegmentationMetric
 def parse_args():
     parser = argparse.ArgumentParser(description='Semantic Segmentation Training With Pytorch')
     # model and dataset
-    parser.add_argument('--model', type=str, default='psanet',
+    parser.add_argument('--model', type=str, default='fcn',
                         choices=['fcn32s', 'fcn16s', 'fcn8s',
                                  'fcn', 'psp', 'deeplabv3',
                                  'danet', 'denseaspp', 'bisenet',
                                  'encnet', 'dunet', 'icnet',
                                  'enet', 'ocnet', 'ccnet', 'psanet',
-                                 'cgnet', 'espnet', 'lednet'],
+                                 'cgnet', 'espnet', 'lednet', 'dfanet'],
                         help='model name (default: fcn32s)')
     parser.add_argument('--backbone', type=str, default='resnet50',
                         choices=['vgg16', 'resnet18', 'resnet50',
