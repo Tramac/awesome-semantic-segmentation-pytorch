@@ -29,7 +29,7 @@ def parse_args():
     # model and dataset
     parser.add_argument('--model', type=str, default='fcn',
                         choices=['fcn32s', 'fcn16s', 'fcn8s',
-                                 'fcn', 'psp', 'deeplabv3',
+                                 'fcn', 'psp', 'deeplabv3', 'deeplabv3_plus',
                                  'danet', 'denseaspp', 'bisenet',
                                  'encnet', 'dunet', 'icnet',
                                  'enet', 'ocnet', 'ccnet', 'psanet',
