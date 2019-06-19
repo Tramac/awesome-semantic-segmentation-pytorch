@@ -10,7 +10,7 @@ import numpy as np
 
 from torchvision import transforms
 from core.models.model_zoo import get_segmentation_model
-from core.nn.loss import MixSoftmaxCrossEntropyLoss, EncNetLoss, ICNetLoss
+from core.utils.loss import MixSoftmaxCrossEntropyLoss, EncNetLoss, ICNetLoss
 from core.utils.lr_scheduler import LRScheduler
 from core.utils.score import hist_info, compute_score
 from core.utils.visualize import get_color_pallete
