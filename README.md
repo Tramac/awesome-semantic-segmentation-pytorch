@@ -58,7 +58,7 @@ python -m torch.distributed.launch --nproc_per_node=$NGPUS eval.py --model fcn32
 cd ./scripts
 python demo.py --model fcn32s_vgg16_voc --input-pic ./datasets/test.jpg
 ```
-- [DeepLabv3](https://arxiv.org/abs/1706.05587)
+
 ```
 .{SEG_ROOT}
 ├── scripts
