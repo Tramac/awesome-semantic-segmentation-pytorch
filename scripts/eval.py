@@ -8,6 +8,7 @@ root_path = os.path.split(cur_path)[0]
 sys.path.append(root_path)
 
 import torch
+import torch.nn as nn
 import torch.utils.data as data
 import torch.backends.cudnn as cudnn
 
@@ -43,10 +44,14 @@ class Evaluator(object):
                                           pin_memory=True)
 
         # create network
+        BatchNorm2d = nn.SyncBatchNorm if args.distributed else nn.BatchNorm2d
         self.model = get_segmentation_model(model=args.model, dataset=args.dataset, backbone=args.backbone,
-                                            aux=args.aux, pretrained=True, pretrained_base=False)
+                                            aux=args.aux, pretrained=True, pretrained_base=False,
+                                            local_rank=args.local_rank,
+                                            norm_layer=BatchNorm2d).to(self.device)
         if args.distributed:
-            self.model = self.model.module
+            self.model = nn.parallel.DistributedDataParallel(self.model,
+                device_ids=[args.local_rank], output_device=args.local_rank)
         self.model.to(self.device)
 
         self.metric = SegmentationMetric(val_dataset.num_class)
@@ -107,3 +112,4 @@ if __name__ == '__main__':
 
     evaluator = Evaluator(args)
     evaluator.eval()
+    torch.cuda.empty_cache()
