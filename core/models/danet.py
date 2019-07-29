@@ -191,7 +191,9 @@ def get_danet(dataset='citys', backbone='resnet50', pretrained=False,
     model = DANet(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
     if pretrained:
         from .model_store import get_model_file
-        model.load_state_dict(torch.load(get_model_file('danet_%s_%s' % (backbone, acronyms[dataset]), root=root)))
+        device = torch.device(kwargs['local_rank'])
+        model.load_state_dict(torch.load(get_model_file('danet_%s_%s' % (backbone, acronyms[dataset]), root=root),
+                              map_location=device))
     return model
 
 

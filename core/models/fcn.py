@@ -161,7 +161,9 @@ def get_fcn32s(dataset='pascal_voc', backbone='vgg16', pretrained=False, root='~
     model = FCN32s(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
     if pretrained:
         from .model_store import get_model_file
-        model.load_state_dict(torch.load(get_model_file('fcn32s_%s_%s' % (backbone, acronyms[dataset]), root=root)))
+        device = torch.device(kwargs['local_rank'])
+        model.load_state_dict(torch.load(get_model_file('fcn32s_%s_%s' % (backbone, acronyms[dataset]), root=root),
+                              map_location=device))
     return model
 
 
@@ -178,7 +180,9 @@ def get_fcn16s(dataset='pascal_voc', backbone='vgg16', pretrained=False, root='~
     model = FCN16s(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
     if pretrained:
         from .model_store import get_model_file
-        model.load_state_dict(torch.load(get_model_file('fcn16s_%s_%s' % (backbone, acronyms[dataset]), root=root)))
+        device = torch.device(kwargs['local_rank'])
+        model.load_state_dict(torch.load(get_model_file('fcn16s_%s_%s' % (backbone, acronyms[dataset]), root=root),
+                              map_location=device))
     return model
 
 
@@ -195,7 +199,9 @@ def get_fcn8s(dataset='pascal_voc', backbone='vgg16', pretrained=False, root='~/
     model = FCN8s(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
     if pretrained:
         from .model_store import get_model_file
-        model.load_state_dict(torch.load(get_model_file('fcn8s_%s_%s' % (backbone, acronyms[dataset]), root=root)))
+        device = torch.device(kwargs['local_rank'])
+        model.load_state_dict(torch.load(get_model_file('fcn8s_%s_%s' % (backbone, acronyms[dataset]), root=root),
+                              map_location=device))
     return model
 
 

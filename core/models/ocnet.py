@@ -320,8 +320,10 @@ def get_ocnet(dataset='citys', backbone='resnet50', oc_arch='base', pretrained=F
                   pretrained_base=pretrained_base, **kwargs)
     if pretrained:
         from .model_store import get_model_file
+        device = torch.device(kwargs['local_rank'])
         model.load_state_dict(torch.load(get_model_file('%s_ocnet_%s_%s' % (
-            oc_arch, backbone, acronyms[dataset]), root=root)))
+            oc_arch, backbone, acronyms[dataset]), root=root),
+            map_location=device))
     return model
 
 
