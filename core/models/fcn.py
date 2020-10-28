@@ -156,7 +156,7 @@ def get_fcn32s(dataset='pascal_voc', backbone='vgg16', pretrained=False, root='~
         'ade20k': 'ade',
         'coco': 'coco',
         'citys': 'citys',
-        'sbu': 'sub',
+        'sbu': 'sbu',
     }
     from ..data.dataloader import datasets
     model = FCN32s(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
@@ -176,7 +176,7 @@ def get_fcn16s(dataset='pascal_voc', backbone='vgg16', pretrained=False, root='~
         'ade20k': 'ade',
         'coco': 'coco',
         'citys': 'citys',
-        'sbu': 'sub',
+        'sbu': 'sbu',
     }
     from ..data.dataloader import datasets
     model = FCN16s(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
@@ -196,7 +196,7 @@ def get_fcn8s(dataset='pascal_voc', backbone='vgg16', pretrained=False, root='~/
         'ade20k': 'ade',
         'coco': 'coco',
         'citys': 'citys',
-        'sbu': 'sub',
+        'sbu': 'sbu',
     }
     from ..data.dataloader import datasets
     model = FCN8s(datasets[dataset].NUM_CLASS, backbone=backbone, pretrained_base=pretrained_base, **kwargs)
