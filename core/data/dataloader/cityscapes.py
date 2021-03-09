@@ -37,7 +37,7 @@ class CitySegmentation(SegmentationDataset):
     BASE_DIR = 'cityscapes'
     NUM_CLASS = 19
 
-    def __init__(self, root='../datasets/citys', split='train', mode=None, transform=None, **kwargs):
+    def __init__(self, root='/content/data, split='train', mode=None, transform=None, **kwargs):
         super(CitySegmentation, self).__init__(root, split, mode, transform, **kwargs)
         # self.root = os.path.join(root, self.BASE_DIR)
         assert os.path.exists(self.root), "Please setup the dataset using ../datasets/cityscapes.py"
