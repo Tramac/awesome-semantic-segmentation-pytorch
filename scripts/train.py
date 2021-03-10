@@ -26,8 +26,8 @@ from core.utils.score import SegmentationMetric
 
 from torch.utils.tensorboard import SummaryWriter
 # 定义该次实验名称
-tang_log_dir='/content/drive/MyDrive/deeplabv3/log/mytest'
-
+tang_log_dir=input()
+writer = SummaryWriter(tang_log_dir)
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Semantic Segmentation Training With Pytorch')
@@ -219,7 +219,7 @@ class Trainer(object):
         logger.info('Start training, Total Epochs: {:d} = Total Iterations {:d}'.format(epochs, max_iters))
         
         ###tang3
-        writer = SummaryWriter(tang_log_dir)
+        
         
         self.model.train()
         for iteration, (images, targets, _) in enumerate(self.train_loader):
