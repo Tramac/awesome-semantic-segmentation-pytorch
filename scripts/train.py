@@ -24,6 +24,10 @@ from core.utils.lr_scheduler import WarmupPolyLR
 from core.utils.score import SegmentationMetric
 
 
+from torch.utils.tensorboard import SummaryWriter
+# 定义该次实验名称
+writer = SummaryWriter('/content/drive/MyDrive/deeplabv3/log/mytest')
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Semantic Segmentation Training With Pytorch')
     # model and dataset
@@ -147,6 +151,7 @@ class Trainer(object):
         val_sampler = make_data_sampler(val_dataset, False, args.distributed)
         val_batch_sampler = make_batch_data_sampler(val_sampler, args.batch_size)
 
+        #数据增强修改点
         self.train_loader = data.DataLoader(dataset=train_dataset,
                                             batch_sampler=train_batch_sampler,
                                             num_workers=args.workers,
@@ -155,12 +160,12 @@ class Trainer(object):
                                           batch_sampler=val_batch_sampler,
                                           num_workers=args.workers,
                                           pin_memory=True)
-
-        # create network
+        
+        # create network  初始化网络
         BatchNorm2d = nn.SyncBatchNorm if args.distributed else nn.BatchNorm2d
         self.model = get_segmentation_model(model=args.model, dataset=args.dataset, backbone=args.backbone,
                                             aux=args.aux, jpu=args.jpu, norm_layer=BatchNorm2d).to(self.device)
-
+        
         # resume checkpoint if needed
         if args.resume:
             if os.path.isfile(args.resume):
@@ -180,6 +185,8 @@ class Trainer(object):
         if hasattr(self.model, 'exclusive'):
             for module in self.model.exclusive:
                 params_list.append({'params': getattr(self.model, module).parameters(), 'lr': args.lr * 10})
+                
+         #optimizer修改点
         self.optimizer = torch.optim.SGD(params_list,
                                          lr=args.lr,
                                          momentum=args.momentum,
@@ -239,14 +246,18 @@ class Trainer(object):
                     "Iters: {:d}/{:d} || Lr: {:.6f} || Loss: {:.4f} || Cost Time: {} || Estimated Time: {}".format(
                         iteration, max_iters, self.optimizer.param_groups[0]['lr'], losses_reduced.item(),
                         str(datetime.timedelta(seconds=int(time.time() - start_time))), eta_string))
-
+                ###AAA1
+                writer.add_scalar('loss', losses_reduced.item(), iteration)
+                writer.add_scalar('Learn rate', self.optimizer.param_groups[0]['lr'], iteration)
+                
             if iteration % save_per_iters == 0 and save_to_disk:
                 save_checkpoint(self.model, self.args, is_best=False)
 
             if not self.args.skip_val and iteration % val_per_iters == 0:
-                self.validation()
+                self.validation(iteration)
                 self.model.train()
-
+            
+                
         save_checkpoint(self.model, self.args, is_best=False)
         total_training_time = time.time() - start_time
         total_training_str = str(datetime.timedelta(seconds=total_training_time))
@@ -254,7 +265,7 @@ class Trainer(object):
             "Total training time: {} ({:.4f}s / it)".format(
                 total_training_str, total_training_time / max_iters))
 
-    def validation(self):
+    def validation(self,iteration):
         # total_inter, total_union, total_correct, total_label = 0, 0, 0, 0
         is_best = False
         self.metric.reset()
@@ -273,7 +284,10 @@ class Trainer(object):
             self.metric.update(outputs[0], target)
             pixAcc, mIoU = self.metric.get()
             logger.info("Sample: {:d}, Validation pixAcc: {:.3f}, mIoU: {:.3f}".format(i + 1, pixAcc, mIoU))
-
+        ###AAA2    
+        writer.add_scalar('mIOU', mIoU, iteration)
+        writer.add_scalar('pixAcc', pixAcc, iteration)
+        
         new_pred = (pixAcc + mIoU) / 2
         if new_pred > self.best_pred:
             is_best = True
