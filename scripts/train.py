@@ -27,7 +27,7 @@ from core.utils.score import SegmentationMetric
 from torch.utils.tensorboard import SummaryWriter
 # 定义该次实验名称
 
-writer = SummaryWriter("/content/drive/MyDrive/deeplabv3/log/resnet152/tang1")
+writer = SummaryWriter("/content/log")
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Semantic Segmentation Training With Pytorch')
