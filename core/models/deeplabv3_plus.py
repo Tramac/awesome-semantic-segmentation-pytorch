@@ -84,7 +84,7 @@ class DeepLabV3Plus(nn.Module):
         size = x.size()[2:]
         c1, c3, c4 = self.base_forward(x)
         outputs = list()
-        x = self.head(c4, c1)
+        x = self.head(c4, c1)   #跳级融合
         x = F.interpolate(x, size, mode='bilinear', align_corners=True)
         outputs.append(x)
         if self.aux:
