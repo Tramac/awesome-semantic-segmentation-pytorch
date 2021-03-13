@@ -102,6 +102,11 @@ def parse_args():
                         help='run validation every val-epoch')
     parser.add_argument('--skip-val', action='store_true', default=False,
                         help='skip validation during training')
+    
+    ###AAAAA网盘保存路径
+    parser.add_argument('--dirtang', type=str, default=None,
+                        help='input the dir of train info ')
+    
     args = parser.parse_args()
 
     # default settings for epochs, batch_size and lr
@@ -134,7 +139,12 @@ class Trainer(object):
     def __init__(self, args):
         self.args = args
         self.device = torch.device(args.device)
-
+        
+        
+        ####AAAA我定义的命令
+        self.cmd_tang1='cp -f ~/.torch/models/* ' +args.dirtang+'/pth'  #临时保存命令 
+        self.cmd_tang2='cp -f /content/log/*  ' +args.dirtang+'/log'
+        
         # image transform
         input_transform = transforms.Compose([
             transforms.ToTensor(),
@@ -259,6 +269,11 @@ class Trainer(object):
 
             if not self.args.skip_val and iteration % val_per_iters == 0:
                 self.validation(iteration)
+                
+                #AAAAA
+                os.system(str(self.cmd_tang1))
+                os.system(str(self.cmd_tang2))   #val之后保存到云盘
+                
                 self.model.train()
             
                 
