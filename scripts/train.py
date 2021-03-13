@@ -241,6 +241,9 @@ class Trainer(object):
 
             outputs = self.model(images)
             loss_dict = self.criterion(outputs, targets)
+            
+            ###AAA
+            del outputs  #减少内存消耗
 
             losses = sum(loss for loss in loss_dict.values())
 
