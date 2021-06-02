@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser(
     description='Predict segmentation result from a given image')
 parser.add_argument('--model', type=str, default='fcn32s_vgg16_voc',
                     help='model name (default: fcn32_vgg16)')
-parser.add_argument('--dataset', type=str, default='pascal_aug', choices=['pascal_voc/pascal_aug/ade20k/citys'],
+parser.add_argument('--dataset', type=str, default='pascal_aug', choices=['pascal_voc, pascal_aug, ade20k, citys'],
                     help='dataset name (default: pascal_voc)')
 parser.add_argument('--save-folder', default='~/.torch/models',
                     help='Directory for saving checkpoint models')
