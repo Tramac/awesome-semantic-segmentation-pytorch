@@ -56,9 +56,12 @@ python -m torch.distributed.launch --nproc_per_node=$NGPUS eval.py --model fcn32
 ### Demo
 ```
 cd ./scripts
-python demo.py --model fcn32s_vgg16_voc --input-pic ../datasets/test.jpg
-or
+#for new users:
 python demo.py --model fcn32s_vgg16_voc --input-pic ../tests/test_img.jpg
+#you should add 'test.jpg' by yourself
+python demo.py --model fcn32s_vgg16_voc --input-pic ../datasets/test.jpg
+
+
 
 ```
 
