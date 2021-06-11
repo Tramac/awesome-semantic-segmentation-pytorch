@@ -24,6 +24,7 @@ parser.add_argument('--input-pic', type=str, default='../datasets/voc/VOC2012/JP
                     help='path to the input picture')
 parser.add_argument('--outdir', default='./eval', type=str,
                     help='path to save the predict result')
+parser.add_argument('--local_rank', type=int, default=0)
 args = parser.parse_args()
 
 
@@ -41,7 +42,7 @@ def demo(config):
     image = Image.open(config.input_pic).convert('RGB')
     images = transform(image).unsqueeze(0).to(device)
 
-    model = get_model(args.model, pretrained=True, root=args.save_folder).to(device)
+    model = get_model(args.model, local_rank=args.local_rank, pretrained=True, root=args.save_folder).to(device)
     print('Finished loading model!')
 
     model.eval()
