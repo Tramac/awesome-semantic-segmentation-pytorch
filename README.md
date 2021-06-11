@@ -197,6 +197,9 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 - [gloun-cv](https://github.com/dmlc/gluon-cv)
 - [imagenet](https://github.com/pytorch/examples/tree/master/imagenet)
 
+## WeChat&QQ
+<p align=""><img width="25%" src="docs/WeChat.jpg" /><img width="25%" src="docs/QQ.jpg" /></p>
+
 <!--
 [![python-image]][python-url]
 [![pytorch-image]][pytorch-url]
