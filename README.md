@@ -204,7 +204,7 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 - [imagenet](https://github.com/pytorch/examples/tree/master/imagenet)
 
 ## WeChat&QQ
-<p align=""><img width="25%" src="docs/WeChat.jpg" /><img width="25%" src="docs/QQ.jpg" /></p>
+<p align=""><img width="25%" src="docs/WeChat.jpeg" /><img width="25%" src="docs/QQ.jpg" /></p>
 
 <!--
 [![python-image]][python-url]
