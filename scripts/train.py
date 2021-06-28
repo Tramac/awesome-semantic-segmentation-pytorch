@@ -28,21 +28,17 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Semantic Segmentation Training With Pytorch')
     # model and dataset
     parser.add_argument('--model', type=str, default='fcn',
-                        choices=['fcn32s', 'fcn16s', 'fcn8s',
-                                 'fcn', 'psp', 'deeplabv3', 'deeplabv3_plus',
-                                 'danet', 'denseaspp', 'bisenet',
-                                 'encnet', 'dunet', 'icnet',
-                                 'enet', 'ocnet', 'ccnet', 'psanet',
-                                 'cgnet', 'espnet', 'lednet', 'dfanet'],
+                        choices=['fcn32s', 'fcn16s', 'fcn8s', 'fcn', 'psp', 'deeplabv3', 
+                            'deeplabv3_plus', 'danet', 'denseaspp', 'bisenet', 'encnet', 
+                            'dunet', 'icnet', 'enet', 'ocnet', 'psanet', 'cgnet', 'espnet', 
+                            'lednet', 'dfanet'],
                         help='model name (default: fcn32s)')
     parser.add_argument('--backbone', type=str, default='resnet50',
-                        choices=['vgg16', 'resnet18', 'resnet50',
-                                 'resnet101', 'resnet152', 'densenet121',
-                                 'densenet161', 'densenet169', 'densenet201'],
+                        choices=['vgg16', 'resnet18', 'resnet50', 'resnet101', 'resnet152', 
+                            'densenet121', 'densenet161', 'densenet169', 'densenet201'],
                         help='backbone name (default: vgg16)')
     parser.add_argument('--dataset', type=str, default='pascal_voc',
-                        choices=['pascal_voc', 'pascal_aug', 'ade20k',
-                                 'citys', 'sbu'],
+                        choices=['pascal_voc', 'pascal_aug', 'ade20k', 'citys', 'sbu'],
                         help='dataset name (default: pascal_voc)')
     parser.add_argument('--base-size', type=int, default=520,
                         help='base image size')

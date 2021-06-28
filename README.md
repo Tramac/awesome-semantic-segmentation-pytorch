@@ -1,4 +1,7 @@
 # Semantic Segmentation on PyTorch
+
+English | [简体中文](/README_zh-CN.md)
+
 [![python-image]][python-url]
 [![pytorch-image]][pytorch-url]
 [![lic-image]][lic-url]
@@ -8,6 +11,7 @@ This project aims at providing a concise, easy-to-use, modifiable reference impl
 <p align="center"><img width="100%" src="docs/weimar_000091_000019_gtFine_color.png" /></p>
 
 ## Installation
+
 ```
 # semantic-segmentation-pytorch dependencies
 pip install ninja tqdm
@@ -17,11 +21,6 @@ conda install pytorch torchvision -c pytorch
 
 # install PyTorch Segmentation
 git clone https://github.com/Tramac/awesome-semantic-segmentation-pytorch.git
-
-# the following will install the lib with symbolic links, so that you can modify
-# the files if you want and won't need to re-build it
-cd awesome-semantic-segmentation-pytorch/core/nn
-python setup.py build develop
 ```
 
 ## Usage
@@ -60,9 +59,6 @@ cd ./scripts
 python demo.py --model fcn32s_vgg16_voc --input-pic ../tests/test_img.jpg
 #you should add 'test.jpg' by yourself
 python demo.py --model fcn32s_vgg16_voc --input-pic ../datasets/test.jpg
-
-
-
 ```
 
 ```
@@ -91,7 +87,6 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ../datasets/test.jpg
 - [OCNet](https://arxiv.org/pdf/1809.00916)
 - [CGNet](https://arxiv.org/pdf/1811.08201)
 - [ESPNetv2](https://arxiv.org/abs/1811.11431)
-- [CCNet](https://arxiv.org/pdf/1811.11721)
 - [DUNet(DUpsampling)](https://arxiv.org/abs/1903.02120)
 - [FastFCN(JPU)](https://arxiv.org/abs/1903.11816)
 - [LEDNet](https://arxiv.org/abs/1905.02423)
@@ -116,7 +111,6 @@ python demo.py --model fcn32s_vgg16_voc --input-pic ../datasets/test.jpg
 │   │   ├── icnet.py
 │   │   ├── enet.py
 │   │   ├── ocnet.py
-│   │   ├── ccnet.py
 │   │   ├── psanet.py
 │   │   ├── cgnet.py
 │   │   ├── espnet.py
@@ -203,8 +197,7 @@ See [TEST](https://github.com/Tramac/Awesome-semantic-segmentation-pytorch/tree/
 - [gloun-cv](https://github.com/dmlc/gluon-cv)
 - [imagenet](https://github.com/pytorch/examples/tree/master/imagenet)
 
-## WeChat&QQ
-<p align=""><img width="25%" src="docs/WeChat.jpeg" /><img width="25%" src="docs/QQ.jpg" /></p>
+
 
 <!--
 [![python-image]][python-url]

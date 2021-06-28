@@ -1,0 +1,8 @@
+numpy
+torch>=1.1.0
+torchvision>=0.3.0
+math
+pickle
+logging
+Pillow
+shutil
