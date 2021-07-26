@@ -164,7 +164,7 @@ python ade20k.py --download-dir ../datasets/ade
 
 ## 版本
 
-- v0.1.0：想较于master分支，该版本包含了`ccnet`与`psanet`，需要依赖编译产出自定义层，如有需要按照分支说明操作即可。
+- v0.1.0：相较于master分支，该版本包含了`ccnet`与`psanet`，需要依赖编译产出自定义层，如有需要按照分支说明操作即可。
 
 ## To Do
 
