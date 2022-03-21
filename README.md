@@ -25,6 +25,9 @@ python demo.py --model swnet_resnet_citys --input-pic ../tests/test_img.jpg
 #you should add 'test.jpg' by yourself
 python demo.py --model swnet_resnet_citys --input-pic ../datasets/test.jpg
 
+### performance evaluation
+![image](https://user-images.githubusercontent.com/43395674/159203398-86f4874e-7b0f-48a3-8414-cdf662d56f99.png)
+![image](https://user-images.githubusercontent.com/43395674/159203405-7b656176-2e93-4d67-98e6-6d650204b0d6.png)
 
 
 #### Dataset
