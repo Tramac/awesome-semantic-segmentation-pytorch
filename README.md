@@ -45,5 +45,5 @@ You can run script to download dataset, such as:
 cd ./core/data/downloader
 python ade20k.py --download-dir ../datasets/ade
 
-Acknowledgement: we thank the code support from "awesome-semantic-segmentation-pytorch (https://github.com/Tramac/Awesome-semantic-segmentation-pytorch)". The swnet is a improvement from enet.
+Acknowledgement: we thanks the code support from "awesome-semantic-segmentation-pytorch (https://github.com/Tramac/Awesome-semantic-segmentation-pytorch)". The swnet is a improvement from enet.
  
