@@ -1,4 +1,4 @@
-"""Efficient Neural Network"""
+"""A improved slightweight model"""
 import torch
 import torch.nn as nn
 
@@ -160,7 +160,7 @@ class ENet(nn.Module):
 
 
 class InitialBlock(nn.Module):
-    """ENet initial block"""
+    """swnet initial block"""
 
     def __init__(self, out_channels, norm_layer=nn.BatchNorm2d, **kwargs):
         super(InitialBlock, self).__init__()
