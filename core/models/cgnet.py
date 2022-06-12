@@ -153,7 +153,7 @@ class ContextGuidedBlock(nn.Module):
             self.reduce = nn.Conv2d(inter_channels * 2, out_channels, 1, bias=False)
         else:
             self.conv = _ConvBNPReLU(in_channels, inter_channels, 1, 1, 0, norm_layer=norm_layer, **kwargs)
-            self.reduce = nn.Indentity()
+            self.reduce = nn.Identity()
         self.f_loc = _ChannelWiseConv(inter_channels, inter_channels, **kwargs)
         self.f_sur = _ChannelWiseConv(inter_channels, inter_channels, dilation, **kwargs)
         self.bn = norm_layer(inter_channels * 2)
