@@ -24,6 +24,11 @@ from core.utils.lr_scheduler import WarmupPolyLR
 from core.utils.score import SegmentationMetric
 
 
+from torch.utils.tensorboard import SummaryWriter
+# 定义该次实验名称
+
+writer = SummaryWriter("/content/log")
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Semantic Segmentation Training With Pytorch')
     # model and dataset
@@ -93,6 +98,11 @@ def parse_args():
                         help='run validation every val-epoch')
     parser.add_argument('--skip-val', action='store_true', default=False,
                         help='skip validation during training')
+    
+    ###AAAAA网盘保存路径
+    parser.add_argument('--dirtang', type=str, default=None,
+                        help='input the dir of train info ')
+    
     args = parser.parse_args()
 
     # default settings for epochs, batch_size and lr
@@ -125,7 +135,12 @@ class Trainer(object):
     def __init__(self, args):
         self.args = args
         self.device = torch.device(args.device)
-
+        
+        
+        ####AAAA我定义的命令
+        self.cmd_tang1='cp -f ~/.torch/models/* ' +args.dirtang+'/pth'  #临时保存命令 
+        self.cmd_tang2='cp -f /content/log/*  ' +args.dirtang+'/log'
+        
         # image transform
         input_transform = transforms.Compose([
             transforms.ToTensor(),
@@ -143,6 +158,7 @@ class Trainer(object):
         val_sampler = make_data_sampler(val_dataset, False, args.distributed)
         val_batch_sampler = make_batch_data_sampler(val_sampler, args.batch_size)
 
+        #数据增强修改点
         self.train_loader = data.DataLoader(dataset=train_dataset,
                                             batch_sampler=train_batch_sampler,
                                             num_workers=args.workers,
@@ -151,12 +167,12 @@ class Trainer(object):
                                           batch_sampler=val_batch_sampler,
                                           num_workers=args.workers,
                                           pin_memory=True)
-
-        # create network
+        
+        # create network  初始化网络
         BatchNorm2d = nn.SyncBatchNorm if args.distributed else nn.BatchNorm2d
         self.model = get_segmentation_model(model=args.model, dataset=args.dataset, backbone=args.backbone,
                                             aux=args.aux, jpu=args.jpu, norm_layer=BatchNorm2d).to(self.device)
-
+        
         # resume checkpoint if needed
         if args.resume:
             if os.path.isfile(args.resume):
@@ -176,6 +192,8 @@ class Trainer(object):
         if hasattr(self.model, 'exclusive'):
             for module in self.model.exclusive:
                 params_list.append({'params': getattr(self.model, module).parameters(), 'lr': args.lr * 10})
+                
+         #optimizer修改点
         self.optimizer = torch.optim.SGD(params_list,
                                          lr=args.lr,
                                          momentum=args.momentum,
@@ -205,7 +223,10 @@ class Trainer(object):
         save_per_iters = self.args.save_epoch * self.args.iters_per_epoch
         start_time = time.time()
         logger.info('Start training, Total Epochs: {:d} = Total Iterations {:d}'.format(epochs, max_iters))
-
+        
+        ###tang3
+        
+        
         self.model.train()
         for iteration, (images, targets, _) in enumerate(self.train_loader):
             iteration = iteration + 1
@@ -216,6 +237,9 @@ class Trainer(object):
 
             outputs = self.model(images)
             loss_dict = self.criterion(outputs, targets)
+            
+            ###AAA
+            del outputs  #减少内存消耗
 
             losses = sum(loss for loss in loss_dict.values())
 
@@ -235,14 +259,23 @@ class Trainer(object):
                     "Iters: {:d}/{:d} || Lr: {:.6f} || Loss: {:.4f} || Cost Time: {} || Estimated Time: {}".format(
                         iteration, max_iters, self.optimizer.param_groups[0]['lr'], losses_reduced.item(),
                         str(datetime.timedelta(seconds=int(time.time() - start_time))), eta_string))
-
+                ###AAA1
+                writer.add_scalar('loss', losses_reduced.item(), iteration)
+                writer.add_scalar('Learn rate', self.optimizer.param_groups[0]['lr'], iteration)
+                
             if iteration % save_per_iters == 0 and save_to_disk:
                 save_checkpoint(self.model, self.args, is_best=False)
 
             if not self.args.skip_val and iteration % val_per_iters == 0:
-                self.validation()
+                self.validation(iteration)
+                
+                #AAAAA
+                os.system(str(self.cmd_tang1))
+                os.system(str(self.cmd_tang2))   #val之后保存到云盘
+                
                 self.model.train()
-
+            
+                
         save_checkpoint(self.model, self.args, is_best=False)
         total_training_time = time.time() - start_time
         total_training_str = str(datetime.timedelta(seconds=total_training_time))
@@ -250,7 +283,7 @@ class Trainer(object):
             "Total training time: {} ({:.4f}s / it)".format(
                 total_training_str, total_training_time / max_iters))
 
-    def validation(self):
+    def validation(self,iteration):
         # total_inter, total_union, total_correct, total_label = 0, 0, 0, 0
         is_best = False
         self.metric.reset()
@@ -269,7 +302,10 @@ class Trainer(object):
             self.metric.update(outputs[0], target)
             pixAcc, mIoU = self.metric.get()
             logger.info("Sample: {:d}, Validation pixAcc: {:.3f}, mIoU: {:.3f}".format(i + 1, pixAcc, mIoU))
-
+        ###AAA2    
+        writer.add_scalar('mIOU', mIoU, iteration)
+        writer.add_scalar('pixAcc', pixAcc, iteration)
+        writer.flush()
         new_pred = (pixAcc + mIoU) / 2
         if new_pred > self.best_pred:
             is_best = True

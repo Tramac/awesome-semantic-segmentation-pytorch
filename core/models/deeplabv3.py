@@ -58,7 +58,7 @@ class DeepLabV3(SegBaseModel):
 class _DeepLabHead(nn.Module):
     def __init__(self, nclass, norm_layer=nn.BatchNorm2d, norm_kwargs=None, **kwargs):
         super(_DeepLabHead, self).__init__()
-        self.aspp = _ASPP(2048, [12, 24, 36], norm_layer=norm_layer, norm_kwargs=norm_kwargs, **kwargs)
+        self.aspp = _ASPP(2048, [6, 12, 18], norm_layer=norm_layer, norm_kwargs=norm_kwargs, **kwargs)
         self.block = nn.Sequential(
             nn.Conv2d(256, 256, 3, padding=1, bias=False),
             norm_layer(256, **({} if norm_kwargs is None else norm_kwargs)),
